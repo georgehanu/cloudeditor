@@ -10,7 +10,6 @@ const { addObjectToPage } = require("../stores/actions/project");
 const ProjectUtils = require("../utils/ProjectUtils");
 
 let plugins;
-
 class Renderer extends React.Component {
   render() {
     this.updatePlugins(this.props);
@@ -41,7 +40,7 @@ class Renderer extends React.Component {
         </button>
         <button
           onClick={() => this.props.changeTypeHandler("fabricjs")}
-          style={{ position: "absolute", left: "0px", top: "0px" }}
+          style={{ position: "absolute", left: "0px", top: "25px" }}
         >
           ChangeType fabricjs
         </button>
