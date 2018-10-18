@@ -1,3 +1,4 @@
+const { append } = require("ramda");
 const {
   CHANGE_PROJECT_TITLE,
   ADD_OBJECT,
@@ -26,15 +27,19 @@ const addObject = (state, action) => {
 const addObjectToPage = (state, action) => {
   const { object, pageId } = action;
   const page = {
-    [pageId]: {
-      ...state.pages[pageId],
-      objectsIds: state.pages[pageId].objectsIds.concat(object.id)
-    }
+    ...state.pages[pageId],
+    objectsIds: state.pages[pageId].objectsIds.concat(object.id)
   };
 
   return {
     ...state,
-    pages: { ...state.pages, [pageId]: page },
+    pages: {
+      ...state.pages,
+      [pageId]: {
+        ...state.pages[pageId],
+        objectsIds: append(object.id, state.pages[pageId].objectsIds)
+      }
+    },
     objects: {
       ...state.objects,
       [object.id]: object

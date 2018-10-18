@@ -57,6 +57,7 @@ const getRandomProject = cfg => {
   let project = getProjectTemplate(cfg);
   let page1 = getProjectPageTemplate(cfg);
   let page2 = getProjectPageTemplate(cfg);
+  let page3 = getProjectPageTemplate(cfg);
 
   let img1 = getEmptyObject({
     type: "image",
@@ -112,7 +113,8 @@ const getRandomProject = cfg => {
     ...project,
     pages: {
       [page1.id]: page1,
-      [page2.id]: page2
+      [page2.id]: page2,
+      [page3.id]: page3
     },
     objects: {
       [img1.id]: img1,
@@ -122,7 +124,7 @@ const getRandomProject = cfg => {
       [img5.id]: img5
     },
     pagesOrder: [page1.id, page2.id],
-    activePage: page1.id
+    activePage: page3.id
   };
 };
 
