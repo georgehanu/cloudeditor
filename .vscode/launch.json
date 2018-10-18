@@ -9,13 +9,8 @@
       "request": "launch",
       "name": "Launch Chrome",
       "url": "http://localhost:8080",
+      "userDataDir": "D:/js_work/.vscode/chrome",
       "webRoot": "${workspaceFolder}"
-    },
-    {
-      "type": "node",
-      "request": "launch",
-      "name": "Launch Program",
-      "program": "${workspaceFolder}\\index.js"
     }
   ]
 }
