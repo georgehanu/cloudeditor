@@ -33,10 +33,16 @@ class Renderer extends React.Component {
         >
           Add Image
         </button>
-        <button onClick={() => this.props.changeTypeHandler("html5")}>
+        <button
+          onClick={() => this.props.changeTypeHandler("html5")}
+          style={{ position: "absolute", left: "0px", top: "0px" }}
+        >
           ChangeType html5
         </button>
-        <button onClick={() => this.props.changeTypeHandler("fabricjs")}>
+        <button
+          onClick={() => this.props.changeTypeHandler("fabricjs")}
+          style={{ position: "absolute", left: "0px", top: "0px" }}
+        >
           ChangeType fabricjs
         </button>
       </React.Fragment>
