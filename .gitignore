@@ -1,6 +1,6 @@
 /node_modules
 public/*
 !public/index.html
-.vscode/*
 yarn.lock
 package-lock.json
+/.vscode/
