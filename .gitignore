@@ -2,4 +2,5 @@
 /.vscode
 package-lock.json
 yarn.lock
-/public/mix-manifest.json
+public/*
+!public/index.html
