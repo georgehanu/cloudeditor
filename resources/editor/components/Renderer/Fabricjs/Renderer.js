@@ -2,6 +2,93 @@ const React = require("react");
 const { Image, IText, Fabric } = require("../../../packages/core/react-fabric");
 
 class FabricjsRenderer extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      editorContainer: null,
+      isReadyComponent: false,
+      width: 0,
+      height: 0,
+      canvasOffsetX: 0,
+      canvasOffsetY: 0,
+      canvasWorkingWidth: 0,
+      canvasWorkingHeight: 0,
+      canvasScale: 1
+    };
+  }
+  componentDidMount() {
+    let designerMaxWidth = 1400,
+      designerMaxHeight = 800,
+      adjustment = 60,
+      newW = 0,
+      newH = 0,
+      offsetX,
+      offsetY;
+    var parentDimmension = this.editorContainer.getBoundingClientRect();
+
+    parentDimmension.height =
+      parentDimmension.height > designerMaxHeight
+        ? designerMaxHeight
+        : parentDimmension.height - adjustment;
+    parentDimmension.width =
+      parentDimmension.width > designerMaxWidth
+        ? designerMaxWidth
+        : parentDimmension.widtht - adjustment;
+
+    let containerRatio = parentDimmension.width / parentDimmension.height,
+      productRatio = this.props.activePage.width / this.props.activePage.height;
+
+    if (containerRatio >= productRatio) {
+      newW = (parentDimmension.height - adjustment) * productRatio;
+      newH = parentDimmension.height - adjustment;
+    } else {
+      newW = parentDimmension.width - adjustment;
+      newH = (parentDimmension.width - adjustment) / productRatio;
+    }
+    offsetX = (parentDimmension.width - newW) / 2;
+    offsetY = (parentDimmension.height - newH) / 2;
+
+    this.setState({
+      isReadyComponent: true,
+      width: parentDimmension.width,
+      height: parentDimmension.height,
+      canvasOffsetX: offsetX,
+      canvasOffsetY: offsetY,
+      canvasWorkingWidth: newW,
+      canvasWorkingHeight: newH,
+      canvasScale: newW / this.props.activePage.width
+    });
+  }
+  onBeforeOverlayHandler = params => {
+    if (params.canvas.interactive) {
+      var lowPoint = fabric.util.transformPoint(
+          new fabric.Point(
+            params.canvas.getCanvasOffsetX(),
+            params.canvas.getCanvasOffsetY()
+          ),
+          params.canvas.viewportTransform
+        ),
+        upPoint = fabric.util.transformPoint(
+          new fabric.Point(
+            params.canvas.getCanvasWorkingWidth(),
+            params.canvas.getCanvasWorkingHeight()
+          ),
+          params.canvas.viewportTransform,
+          1
+        ),
+        n = params.canvas.getWidth(),
+        r = params.canvas.getHeight();
+
+      params.ctx.fillStyle = params.canvas.translucentOverlayOutside;
+      params.ctx.beginPath();
+      params.ctx.rect(0, 0, n, r);
+
+      params.ctx.rect(lowPoint.x, lowPoint.y, upPoint.x, upPoint.y);
+      params.ctx.fill("evenodd");
+      params.ctx.closePath();
+    }
+  };
+
   render() {
     const { activePage: page } = this.props;
     const { objects } = page;
@@ -29,13 +116,31 @@ class FabricjsRenderer extends React.Component {
       }
       return null;
     });
+    let isReadyComponent = this.state.isReadyComponent;
 
     return (
-      <div>
-        <div>
-          <Fabric width={page.width} height={page.height}>
-            {elements}
-          </Fabric>
+      <div className="fabric_container">
+        <div
+          style={{ background: "#F3F4F6", height: "100%" }}
+          className="canvasContainer"
+          ref={editorContainer => {
+            this.editorContainer = editorContainer;
+          }}
+        >
+          {isReadyComponent && (
+            <Fabric
+              width={this.state.width}
+              height={this.state.height}
+              canvasOffsetX={this.state.canvasOffsetX}
+              canvasOffsetY={this.state.canvasOffsetY}
+              canvasWorkingWidth={this.state.canvasWorkingWidth}
+              canvasWorkingHeight={this.state.canvasWorkingHeight}
+              event_before_overlay_render={this.onBeforeOverlayHandler}
+              canvasScale={this.state.canvasScale}
+            >
+              {elements}
+            </Fabric>
+          )}
         </div>
       </div>
     );
