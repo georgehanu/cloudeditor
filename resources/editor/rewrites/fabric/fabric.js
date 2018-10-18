@@ -1,12 +1,6 @@
 const { fabric } = require("fabric");
 const logger = require("../../utils/LoggerUtils");
 
-fabric.Canvas.prototype.renderAll = (function(renderAll) {
-  return function() {
-    logger.info("myrender");
-    return renderAll.call(this);
-  };
-})(fabric.Canvas.prototype.renderAll);
 fabric.util.object.extend(fabric.StaticCanvas.prototype, {
   canvasContainer: "",
   canvasOffsetX: 0,

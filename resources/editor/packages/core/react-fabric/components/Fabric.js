@@ -13,7 +13,7 @@ class Fabric extends React.Component {
     this._stage = createElement("Canvas", this.props, this.canvasRef.current);
     //this._stage = new fabric.Canvas(this.canvasRef.current);
     window.canvas = this._stage.instance;
-    this._stage._applyProps(this.props, {});
+    // this._stage._applyProps(this.props, {});
 
     this._mountNode = FabricRenderer.createContainer(this._stage);
 
@@ -24,6 +24,10 @@ class Fabric extends React.Component {
     logger.info("componentDidUpdate");
     this._stage._applyProps(this.props, prevProps);
     FabricRenderer.updateContainer(this.props.children, this._mountNode, this);
+  }
+  componentWillUnmount() {
+    FabricRenderer.updateContainer(null, this._mountNode, this);
+    this._stage.destroy();
   }
 
   render() {

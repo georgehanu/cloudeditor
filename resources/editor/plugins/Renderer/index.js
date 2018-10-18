@@ -6,6 +6,8 @@ const {
 
 const { rendererTypeSelector } = require("../../stores/selectors/renderer");
 const { activePageSelector } = require("../../stores/selectors/project");
+const { selectedObjectSelector } = require("../../stores/selectors/project");
+const { addObjectIdToSelected } = require("../../stores/actions/project");
 
 module.exports = renderType => {
   const components = require("./" + renderType + "/index");
@@ -20,13 +22,28 @@ module.exports = renderType => {
   const mapStateToProps = state => {
     return {
       type: renderTypeSelector1(state),
-      activePage: activePageSelector(state)
+      activePage: activePageSelector(state),
+      activeObjects: selectedObjectSelector(state)
     };
   };
 
-  registerSelectors({ renderTypeSelector1, activePageSelector });
+  const mapDispatchToProps = dispatch => {
+    return {
+      addObjectToSelectedHandler: objectId =>
+        dispatch(addObjectIdToSelected({ objectId }))
+    };
+  };
 
-  const Renderer = connect(mapStateToProps)(components.Renderer);
+  registerSelectors({
+    renderTypeSelector1,
+    activePageSelector,
+    selectedObjectSelector
+  });
+
+  const Renderer = connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(components.Renderer);
 
   return {
     Renderer: Renderer

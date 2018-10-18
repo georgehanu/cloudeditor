@@ -2,24 +2,24 @@ const React = require("react");
 const { Image, IText, Fabric } = require("../../../packages/core/react-fabric");
 
 class FabricjsRenderer extends React.Component {
+  state = {
+    editorContainer: null,
+    isReadyComponent: false,
+    width: 0,
+    height: 0,
+    canvasOffsetX: 0,
+    canvasOffsetY: 0,
+    canvasWorkingWidth: 0,
+    canvasWorkingHeight: 0,
+    canvasScale: 1
+  };
   constructor(props) {
     super(props);
-    this.state = {
-      editorContainer: null,
-      isReadyComponent: false,
-      width: 0,
-      height: 0,
-      canvasOffsetX: 0,
-      canvasOffsetY: 0,
-      canvasWorkingWidth: 0,
-      canvasWorkingHeight: 0,
-      canvasScale: 1
-    };
   }
   componentDidMount() {
+    const adjustment = 60;
     let designerMaxWidth = 1400,
       designerMaxHeight = 800,
-      adjustment = 60,
       newW = 0,
       newH = 0,
       offsetX,
@@ -59,6 +59,7 @@ class FabricjsRenderer extends React.Component {
       canvasScale: newW / this.props.activePage.width
     });
   }
+
   onBeforeOverlayHandler = params => {
     if (params.canvas.interactive) {
       var lowPoint = fabric.util.transformPoint(
@@ -88,7 +89,18 @@ class FabricjsRenderer extends React.Component {
       params.ctx.closePath();
     }
   };
-
+  onSelectedCreatedHandler = args => {
+    if (args && args.selected) {
+      this.props.addObjectToSelectedHandler(args.target.id);
+      //console.log(this.props);
+      //const { activePage: page } = this.props;
+      // debugger;
+      // this.setState({ ...this.state, activeObject: args.selected });
+    }
+  };
+  onClearedCreatedHandler = args => {
+    // this.setState({ ...this.state, activeObject: null });
+  };
   render() {
     const { activePage: page } = this.props;
     const { objects } = page;
@@ -117,7 +129,7 @@ class FabricjsRenderer extends React.Component {
       return null;
     });
     let isReadyComponent = this.state.isReadyComponent;
-
+    console.log("--------------------------------------------------");
     return (
       <div className="fabric_container">
         <div
@@ -136,6 +148,9 @@ class FabricjsRenderer extends React.Component {
               canvasWorkingWidth={this.state.canvasWorkingWidth}
               canvasWorkingHeight={this.state.canvasWorkingHeight}
               event_before_overlay_render={this.onBeforeOverlayHandler}
+              event_selection_created={this.onSelectedCreatedHandler}
+              // event_selection_updated={this.onSelectedCreatedHandler}
+              //  event_selection_cleared={this.onClearedCreatedHandler}
               canvasScale={this.state.canvasScale}
             >
               {elements}

@@ -7,7 +7,7 @@ const EDITOR_WORKSPACE = process.env.MIX_EDITOR_WORKSPACE;
 
 i18n
   .use(Backend)
-  .use(LanguageDetector)
+  // .use(LanguageDetector)
   .use(reactI18nextModule)
   .init({
     fallbackLng: "en-US",
