@@ -42,10 +42,8 @@ fabric.util.object.extend(fabric.StaticCanvas.prototype, {
 });
 
 fabric.util.object.extend(fabric.Image.prototype, {
-  cx: 0,
-  cy: 0,
-  cw: 0,
-  ch: 0,
+  cropWidth: 0,
+  cropHeight: 0,
   originalWidth: 0,
   originalHeight: 0,
   resizeTimes: 5,
@@ -57,6 +55,8 @@ fabric.util.object.extend(fabric.Image.prototype, {
   _lastScaleX: 1,
   _lastScaleY: 1,
   _savedProps: {},
+  fitMethod: "",
+  editable: 1,
   _dimensionAffectingProps: {
     width: 1,
     height: 1,
@@ -119,8 +119,8 @@ fabric.util.object.extend(fabric.Image.prototype, {
       }
       var pointer = this.canvas.getPointer(options.e);
       if (this.isEditing) {
-        this._savedProps["startCx"] = this.cx;
-        this._savedProps["startCy"] = this.cy;
+        this._savedProps["startCx"] = this.cropX;
+        this._savedProps["startCy"] = this.cropY;
         this._savedProps["startX"] = pointer.x;
         this._savedProps["startY"] = pointer.y;
       }
@@ -141,7 +141,7 @@ fabric.util.object.extend(fabric.Image.prototype, {
   initMouseupHandler: function() {
     this.on("mouseup", function(options) {
       this.__isMousedown = 0;
-
+      console.log(this._isObjectMoved(options.e));
       if (!this.editable || this._isObjectMoved(options.e)) {
         return;
       }
@@ -235,8 +235,8 @@ fabric.util.object.extend(fabric.Image.prototype, {
     this.borderColor = this.editingBorderColor;
     this.borderDashArray = this.editingBorderDashArray;
 
-    this.hasControls = this.selectable = 0;
-    this.lockMovementX = this.lockMovementY = 0;
+    this.hasControls = this.selectable = false;
+    this.lockMovementX = this.lockMovementY = true;
   },
   _saveEditingProps: function(e) {
     var point = this.canvas.getPointer(e);
@@ -248,8 +248,8 @@ fabric.util.object.extend(fabric.Image.prototype, {
     this._savedProps["selectable"] = this.selectable;
     this._savedProps["startX"] = point.x;
     this._savedProps["startY"] = point.y;
-    this._savedProps["startCx"] = this.cx;
-    this._savedProps["startCy"] = this.cy;
+    this._savedProps["startCx"] = this.cropX;
+    this._savedProps["startCy"] = this.cropY;
     this._savedProps["borderDashArray"] = this.borderDashArray;
   },
   _restoreEditingProps: function() {
@@ -280,34 +280,36 @@ fabric.util.object.extend(fabric.Image.prototype, {
       var point = this.canvas.getPointer(e),
         originalWidth = this._originalElement.width,
         originalHeight = this._originalElement.height,
-        widthRatio = this.cw / (this.width * this.scaleX),
-        heightRatio = this.ch / (this.height * this.scaleY);
+        widthRatio = this.cropWidth / (this.width * this.scaleX),
+        heightRatio = this.cropHeight / (this.height * this.scaleY);
 
       xPos = point.x;
       yPos = point.y;
 
       if (e) {
         var scaleX =
-          this.cw / (this.cw - this.leftSlider * this.unitResizeX * 2);
+          this.cropWidth /
+          (this.cropWidth - this.leftSlider * this.unitResizeX * 2);
         var scaleY =
-          this.ch / (this.ch - this.leftSlider * this.unitResizeY * 2);
+          this.cropHeight /
+          (this.cropHeight - this.leftSlider * this.unitResizeY * 2);
         var flipX = this.flipX ? -1 : 1;
         var flipY = this.flipY ? -1 : 1;
         var xPos = this.limit(
           this._savedProps.startCx -
             (flipX * (xPos - this._savedProps.startX) * widthRatio) / scaleX,
           -(this.unitResizeX * this.leftSlider),
-          imgW - this.cw + this.unitResizeX * this.leftSlider
+          imgW - this.cropWidth + this.unitResizeX * this.leftSlider
         );
         var yPos = this.limit(
           this._savedProps.startCy -
             (flipY * (yPos - this._savedProps.startY) * heightRatio) / scaleY,
           -(this.unitResizeY * this.leftSlider),
-          imgH - this.ch + this.unitResizeY * this.leftSlider
+          imgH - this.cropHeight + this.unitResizeY * this.leftSlider
         );
 
-        this.cx = xPos;
-        this.cy = yPos;
+        this.cropX = xPos;
+        this.cropY = yPos;
 
         this.canvas.renderAll();
       }
@@ -390,19 +392,51 @@ fabric.util.object.extend(fabric.Image.prototype, {
       if (cw > originalWidth) cw = originalWidth;
       if (ch > originalHeight) ch = originalHeight;
     }
-    this.cx = cx;
-    this.cy = cy;
-    this.cw = cw;
-    this.ch = ch;
-    this.unitResizeX = (this.cw - this.cw / this.resizeTimes) / 2 / 100;
-    this.unitResizeY = (this.ch - this.ch / this.resizeTimes) / 2 / 100;
+
+    this.cropX = cx;
+    this.cropY = cy;
+    this.cropWidth = cw;
+    this.cropHeight = ch;
+    this.unitResizeX =
+      (this.cropWidth - this.cropWidth / this.resizeTimes) / 2 / 100;
+    this.unitResizeY =
+      (this.cropHeight - this.cropHeight / this.resizeTimes) / 2 / 100;
   }
 });
 fabric.Image.prototype.initialize = (function(initialize) {
   return function(element, options) {
     initialize.call(this, element, options);
-    //this.initBehavior();
+    this.initBehavior();
   };
 })(fabric.Image.prototype.initialize);
 
+fabric.Image.prototype._renderFill = (function(_renderFill) {
+  return function(ctx) {
+    var w = this.cropWidth,
+      h = this.cropHeight,
+      sW = w * this._filterScalingX,
+      sH = h * this._filterScalingY,
+      x = -this.width / 2,
+      y = -this.height / 2,
+      elementToDraw = this._element;
+    elementToDraw &&
+      ctx.drawImage(
+        elementToDraw,
+        this.cropX * this._filterScalingX + this.unitResizeX * this.leftSlider,
+        this.cropY * this._filterScalingY + this.unitResizeY * this.leftSlider,
+        sW - 2 * this.unitResizeX * this.leftSlider,
+        sH - 2 * this.unitResizeY * this.leftSlider,
+        x,
+        y,
+        this.width,
+        this.height
+      );
+  };
+})(fabric.Image.prototype._renderFill);
+fabric.Image.prototype._initConfig = (function(_initConfig) {
+  return function(options) {
+    _initConfig.call(this, options);
+    this._setViewBox(options);
+  };
+})(fabric.Image.prototype._initConfig);
 module.exports = { fabric };

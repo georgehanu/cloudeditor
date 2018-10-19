@@ -16,7 +16,11 @@ class Image extends FabricObject {
     tmpImage.onload = () => {
       logger.info("tmpImage loaded");
       this._updatePicture();
+      this._updatePlaceholder();
     };
+  }
+  _updatePlaceholder() {
+    this.instance._setViewBox({});
   }
 }
 
