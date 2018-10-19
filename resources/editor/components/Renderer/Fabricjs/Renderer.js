@@ -49,6 +49,17 @@ const updatePageOffset = (props, editorContainer) => {
 };
 
 class FabricjsRenderer extends React.Component {
+  state = {
+    editorContainer: null,
+    isReadyComponent: false,
+    width: 0,
+    height: 0,
+    canvasOffsetX: 0,
+    canvasOffsetY: 0,
+    canvasWorkingWidth: 0,
+    canvasWorkingHeight: 0,
+    canvasScale: 1
+  };
   constructor(props) {
     super(props);
 
@@ -111,7 +122,18 @@ class FabricjsRenderer extends React.Component {
       params.ctx.closePath();
     }
   };
-
+  onSelectedCreatedHandler = args => {
+    if (args && args.selected) {
+      this.props.addObjectToSelectedHandler(args.target.id);
+      //console.log(this.props);
+      //const { activePage: page } = this.props;
+      // debugger;
+      // this.setState({ ...this.state, activeObject: args.selected });
+    }
+  };
+  onClearedCreatedHandler = args => {
+    // this.setState({ ...this.state, activeObject: null });
+  };
   render() {
     const { activePage: page } = this.props;
     const { objects } = page;
@@ -140,7 +162,7 @@ class FabricjsRenderer extends React.Component {
       return null;
     });
     let isReadyComponent = this.state.isReadyComponent;
-
+    console.log("--------------------------------------------------");
     return (
       <div className="fabric_container">
         <div
@@ -157,6 +179,9 @@ class FabricjsRenderer extends React.Component {
               canvasWorkingWidth={this.state.canvasWorkingWidth}
               canvasWorkingHeight={this.state.canvasWorkingHeight}
               event_before_overlay_render={this.onBeforeOverlayHandler}
+              event_selection_created={this.onSelectedCreatedHandler}
+              // event_selection_updated={this.onSelectedCreatedHandler}
+              //  event_selection_cleared={this.onClearedCreatedHandler}
               canvasScale={this.state.canvasScale}
             >
               {elements}

@@ -2,7 +2,8 @@ const { append } = require("ramda");
 const {
   CHANGE_PROJECT_TITLE,
   ADD_OBJECT,
-  ADD_OBJECT_TO_PAGE
+  ADD_OBJECT_TO_PAGE,
+  ADD_OBJECT_ID_TO_SELECTED
 } = require("../actionTypes/project");
 const ProjectUtils = require("../../utils/ProjectUtils");
 const { handleActions } = require("redux-actions");
@@ -63,6 +64,9 @@ module.exports = handleActions(
     },
     [ADD_OBJECT_TO_PAGE]: (state, action) => {
       return addObjectToPage(state, action.payload);
+    },
+    [ADD_OBJECT_ID_TO_SELECTED]: (state, action) => {
+      return { ...state, selectedObjectsIds: action.payload };
     }
   },
   initialState
