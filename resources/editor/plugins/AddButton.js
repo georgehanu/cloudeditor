@@ -1,27 +1,28 @@
 const React = require("react");
 const { connect } = require("react-redux");
 const assign = require("object-assign");
-const { addObject } = require("../stores/actions/project");
+const { addObjectToPage } = require("../stores/actions/project");
 const { changeTheme } = require("../stores/actions/theme");
 const ProjectUtils = require("../utils/ProjectUtils");
 
 const emptyImage = ProjectUtils.getEmptyObject({
-  type: "image"
+  type: "image",
+  width: Math.random() * 500,
+  height: Math.random() * 500,
+  left: Math.random() * 500,
+  top: Math.random() * 500
 });
 
 class AddButton extends React.Component {
   render() {
+    const { activePage: pageId } = this.props;
     return (
       <div>
         <div>Current Theme = {this.props.theme}</div>
-        <button onClick={() => this.props.addObjectHandler(emptyImage)}>
-          {this.props.title}
-        </button>
-        <button onClick={() => this.props.changeThemeHandler("dark")}>
-          Dark
-        </button>
-        <button onClick={() => this.props.changeThemeHandler("base")}>
-          Base
+        <button
+          onClick={() => this.props.addObjectToPageHandler(emptyImage, pageId)}
+        >
+          Add Image
         </button>
       </div>
     );
@@ -33,13 +34,15 @@ class AddButton extends React.Component {
 const mapStateToProps = state => {
   return {
     title: state.addButton.title,
-    theme: state.theme.theme
+    theme: state.theme.theme,
+    activePage: state.project.activePage
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
-    addObjectHandler: object => dispatch(addObject(object)),
+    addObjectToPageHandler: (object, pageId) =>
+      dispatch(addObjectToPage({ object, pageId })),
     changeThemeHandler: theme => dispatch(changeTheme(theme))
   };
 };
