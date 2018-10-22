@@ -3,7 +3,8 @@ const {
   ADD_OBJECT,
   ADD_OBJECT_TO_PAGE,
   ADD_OBJECT_ID_TO_SELECTED,
-  REMOVE_SELECTION
+  REMOVE_SELECTION,
+  AFTER_OBJECT_MOVED
 } = require("../actionTypes/project");
 const { createActions } = require("redux-actions");
 
@@ -12,13 +13,15 @@ const {
   addObject,
   addObjectToPage,
   addObjectIdToSelected,
-  removeSelection
+  removeSelection,
+  afterObjectMoved
 } = createActions(
   CHANGE_PROJECT_TITLE,
   ADD_OBJECT,
   ADD_OBJECT_TO_PAGE,
   ADD_OBJECT_ID_TO_SELECTED,
-  REMOVE_SELECTION
+  REMOVE_SELECTION,
+  AFTER_OBJECT_MOVED
 );
 
 module.exports = {
@@ -26,5 +29,6 @@ module.exports = {
   addObject,
   addObjectToPage,
   addObjectIdToSelected,
-  removeSelection
+  removeSelection,
+  afterObjectMoved
 };

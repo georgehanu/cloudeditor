@@ -8,6 +8,7 @@ const { rendererTypeSelector } = require("../../stores/selectors/renderer");
 const { activePageSelector } = require("../../stores/selectors/project");
 const { selectedObjectSelector } = require("../../stores/selectors/project");
 const { addObjectIdToSelected } = require("../../stores/actions/project");
+const { afterObjectMoved } = require("../../stores/actions/project");
 const { removeSelection } = require("../../stores/actions/project");
 
 module.exports = renderType => {
@@ -32,7 +33,9 @@ module.exports = renderType => {
     return {
       addObjectToSelectedHandler: objectId =>
         dispatch(addObjectIdToSelected(objectId)),
-      removeSelection: args => dispatch(removeSelection())
+      removeSelection: args => dispatch(removeSelection()),
+      afterObjectMovedHandler: transform =>
+        dispatch(afterObjectMoved(transform))
     };
   };
 

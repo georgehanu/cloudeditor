@@ -1,10 +1,11 @@
-const { append } = require("ramda");
+const { append, merge } = require("ramda");
 const {
   CHANGE_PROJECT_TITLE,
   ADD_OBJECT,
   ADD_OBJECT_TO_PAGE,
   ADD_OBJECT_ID_TO_SELECTED,
-  REMOVE_SELECTION
+  REMOVE_SELECTION,
+  AFTER_OBJECT_MOVED
 } = require("../actionTypes/project");
 const ProjectUtils = require("../../utils/ProjectUtils");
 const { handleActions } = require("redux-actions");
@@ -48,7 +49,12 @@ const addObjectToPage = (state, action) => {
     }
   };
 };
-
+const changeElementPosition = (state, obj_id, props) => {
+  return {
+    ...state,
+    objects: { ...state.objects, [obj_id]: merge(state.objects[obj_id], props) }
+  };
+};
 const emptyProject = ProjectUtils.getRandomProject();
 
 const initialState = {
@@ -71,6 +77,13 @@ module.exports = handleActions(
     },
     [REMOVE_SELECTION]: state => {
       return { ...state, selectedObjectsIds: [] };
+    },
+    [AFTER_OBJECT_MOVED]: (state, action) => {
+      return changeElementPosition(
+        state,
+        action.payload.id,
+        action.payload.props
+      );
     }
   },
   initialState

@@ -133,6 +133,18 @@ class FabricjsRenderer extends React.Component {
   onSelectedClearedHandler = args => {
     this.props.removeSelection();
   };
+  onObjectMovedHandler = args => {
+    if (args && args.target) {
+      let transform = {
+        id: args.target.id,
+        props: {
+          left: args.target.left,
+          top: args.target.top
+        }
+      };
+      this.props.afterObjectMovedHandler(transform);
+    }
+  };
   render() {
     const { activePage: page } = this.props;
     const { objects } = page;
@@ -182,6 +194,7 @@ class FabricjsRenderer extends React.Component {
               event_selection_created={this.onSelectedCreatedHandler}
               event_selection_updated={this.onSelectedCreatedHandler}
               event_selection_cleared={this.onSelectedClearedHandler}
+              event_object_moved={this.onObjectMovedHandler}
               canvasScale={this.state.canvasScale}
             >
               {elements}
