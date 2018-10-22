@@ -55,8 +55,12 @@ fabric.util.object.extend(fabric.Image.prototype, {
   _lastScaleX: 1,
   _lastScaleY: 1,
   _savedProps: {},
-  fitMethod: "",
   editable: 1,
+  fitMethod: "cover", //cover,contain
+  canvasX: 0,
+  canvasY: 0,
+  canvasW: 0,
+  canvasH: 0,
   _dimensionAffectingProps: {
     width: 1,
     height: 1,
@@ -121,6 +125,9 @@ fabric.util.object.extend(fabric.Image.prototype, {
       if (this.isEditing) {
         this._savedProps["startCx"] = this.cropX;
         this._savedProps["startCy"] = this.cropY;
+        this._savedProps["startCanvasX"] = this.canvasX;
+        this._savedProps["startCanvasY"] = this.canvasY;
+        this._savedProps["startCy"] = this.cropY;
         this._savedProps["startX"] = pointer.x;
         this._savedProps["startY"] = pointer.y;
       }
@@ -141,12 +148,9 @@ fabric.util.object.extend(fabric.Image.prototype, {
   initMouseupHandler: function() {
     this.on("mouseup", function(options) {
       this.__isMousedown = 0;
-      console.log(this._isObjectMoved(options.e));
       if (!this.editable || this._isObjectMoved(options.e)) {
         return;
       }
-      var newPointer = this.canvas.getPointer(options.e);
-
       if (this.__lastSelected && !this.__corner) {
         this.enterEditing(options.e);
       }
@@ -250,6 +254,8 @@ fabric.util.object.extend(fabric.Image.prototype, {
     this._savedProps["startY"] = point.y;
     this._savedProps["startCx"] = this.cropX;
     this._savedProps["startCy"] = this.cropY;
+    this._savedProps["startCanvasX"] = this.canvasX;
+    this._savedProps["startCanvasY"] = this.canvasY;
     this._savedProps["borderDashArray"] = this.borderDashArray;
   },
   _restoreEditingProps: function() {
@@ -272,44 +278,72 @@ fabric.util.object.extend(fabric.Image.prototype, {
       xPos,
       yPos,
       imgW = this._originalElement.width,
-      imgH = this._originalElement.height,
-      x,
-      y;
+      imgH = this._originalElement.height;
 
     if (this.canvas) {
-      var point = this.canvas.getPointer(e),
-        originalWidth = this._originalElement.width,
-        originalHeight = this._originalElement.height,
-        widthRatio = this.cropWidth / (this.width * this.scaleX),
-        heightRatio = this.cropHeight / (this.height * this.scaleY);
+      var point = this.canvas.getPointer(e);
+      let widthRatio = 1,
+        heightRatio = 1;
 
       xPos = point.x;
       yPos = point.y;
 
       if (e) {
-        var scaleX =
-          this.cropWidth /
-          (this.cropWidth - this.leftSlider * this.unitResizeX * 2);
-        var scaleY =
-          this.cropHeight /
-          (this.cropHeight - this.leftSlider * this.unitResizeY * 2);
-        var flipX = this.flipX ? -1 : 1;
-        var flipY = this.flipY ? -1 : 1;
-        var xPos = this.limit(
-          this._savedProps.startCx -
-            (flipX * (xPos - this._savedProps.startX) * widthRatio) / scaleX,
-          -(this.unitResizeX * this.leftSlider),
-          imgW - this.cropWidth + this.unitResizeX * this.leftSlider
-        );
-        var yPos = this.limit(
-          this._savedProps.startCy -
-            (flipY * (yPos - this._savedProps.startY) * heightRatio) / scaleY,
-          -(this.unitResizeY * this.leftSlider),
-          imgH - this.cropHeight + this.unitResizeY * this.leftSlider
-        );
+        let scaleX = 1,
+          scaleY = 1,
+          flipX = this.flipX ? -1 : 1,
+          flipY = this.flipY ? -1 : 1;
+        switch (this.fitMethod) {
+          case "contain":
+            scaleX = (this.width * this.scaleX) / this.width;
+            scaleY = (this.width * this.scaleY) / this.width;
 
-        this.cropX = xPos;
-        this.cropY = yPos;
+            xPos = this.limit(
+              this._savedProps.startCanvasX +
+                (flipX * (xPos - this._savedProps.startX)) / scaleX,
+              -this.width / 2,
+              this.width / 2 - this.canvasW
+            );
+            yPos = this.limit(
+              this._savedProps.startCanvasY +
+                (flipY * (yPos - this._savedProps.startY)) / scaleY,
+              -this.height / 2,
+              this.height / 2 - this.canvasH
+            );
+
+            this.canvasX = xPos;
+            this.canvasY = yPos;
+            break;
+          case "cover":
+            widthRatio = this.cropWidth / (this.width * this.scaleX);
+            heightRatio = this.cropHeight / (this.height * this.scaleY);
+            scaleX =
+              this.cropWidth /
+              (this.cropWidth - this.leftSlider * this.unitResizeX * 2);
+            scaleY =
+              this.cropHeight /
+              (this.cropHeight - this.leftSlider * this.unitResizeY * 2);
+            xPos = this.limit(
+              this._savedProps.startCx -
+                (flipX * (xPos - this._savedProps.startX) * widthRatio) /
+                  scaleX,
+              -(this.unitResizeX * this.leftSlider),
+              imgW - this.cropWidth + this.unitResizeX * this.leftSlider
+            );
+            yPos = this.limit(
+              this._savedProps.startCy -
+                (flipY * (yPos - this._savedProps.startY) * heightRatio) /
+                  scaleY,
+              -(this.unitResizeY * this.leftSlider),
+              imgH - this.cropHeight + this.unitResizeY * this.leftSlider
+            );
+
+            this.cropX = xPos;
+            this.cropY = yPos;
+            break;
+          default:
+            break;
+        }
 
         this.canvas.renderAll();
       }
@@ -363,44 +397,80 @@ fabric.util.object.extend(fabric.Image.prototype, {
       cy = options.cy ? parseFloat(options.cy) : 0,
       cw = options.cw ? parseFloat(options.cw) : 0,
       ch = options.ch ? parseFloat(options.ch) : 0,
-      ar = 1,
       imageMargins = {
         width: this.width * scaleX,
         height: this.height * scaleY
       };
-
+    let canvasX = 0,
+      canvasY = 0,
+      canvasH,
+      canvasW,
+      rBlockRatio = imageMargins.width / imageMargins.height,
+      imageRatio = this._element.width / this._element.height;
     if (cw == 0 || ch == 0) {
-      /// decide which gap to fill
-
-      if (nw < imageMargins.width) ar = imageMargins.width / nw;
-      if (Math.abs(ar - 1) < 1e-14 && nh < imageMargins.height)
-        ar = imageMargins.height / nh; // updated see http://stackoverflow.com/questions/21961839/simulation-background-size-cover-in-canvas
-
-      nw *= ar;
-      nh *= ar;
-
-      /// calc source rectangle
-      cw = originalWidth / (nw / imageMargins.width);
-      ch = originalHeight / (nh / imageMargins.height);
-
-      cx = (originalWidth - cw) * 0.5;
-      cy = (originalHeight - ch) * 0.5;
-
-      /// make sure source rectangle is valid
-      if (cx < 0) cx = 0;
-      if (cy < 0) cy = 0;
-      if (cw > originalWidth) cw = originalWidth;
-      if (ch > originalHeight) ch = originalHeight;
+      switch (this.fitMethod) {
+        case "contain":
+          if (cw == 0 || ch == 0) {
+            if (imageRatio > rBlockRatio) {
+              canvasW = this.width;
+              canvasH = (this.width / imageRatio / this.scaleY) * this.scaleX;
+              canvasX = -this.width / 2 + (this.width - canvasW) * 0.5;
+              canvasY = -this.height / 2 + (this.height - canvasH) * 0.5;
+            } else {
+              canvasW =
+                ((this.height * imageRatio) / this.scaleX) * this.scaleY;
+              canvasH = this.height;
+              canvasX = -this.width / 2 + (this.width - canvasW) * 0.5;
+              canvasY = -this.height / 2 + (this.height - canvasH) * 0.5;
+            }
+            cx = 0;
+            cy = 0;
+            cw = this._element.width;
+            ch = this._element.height;
+          }
+          break;
+        case "cover":
+          let ar = 1;
+          /// decide which gap to fill
+          if (nw < imageMargins.width) {
+            ar = imageMargins.width / nw;
+          }
+          if (Math.abs(ar - 1) < 1e-14 && nh < imageMargins.height) {
+            ar = imageMargins.height / nh; // updated see http://stackoverflow.com/questions/21961839/simulation-background-size-cover-in-canvas
+          }
+          nw *= ar;
+          nh *= ar;
+          /// calc source rectangle
+          cw = originalWidth / (nw / imageMargins.width);
+          ch = originalHeight / (nh / imageMargins.height);
+          cx = (originalWidth - cw) * 0.5;
+          cy = (originalHeight - ch) * 0.5;
+          /// make sure source rectangle is valid
+          if (cx < 0) cx = 0;
+          if (cy < 0) cy = 0;
+          if (cw > originalWidth) cw = originalWidth;
+          if (ch > originalHeight) ch = originalHeight;
+          canvasX = -this.width / 2;
+          canvasY = -this.height / 2;
+          canvasW = this.width;
+          canvasH = this.height;
+          break;
+      }
     }
 
     this.cropX = cx;
     this.cropY = cy;
     this.cropWidth = cw;
     this.cropHeight = ch;
+
     this.unitResizeX =
       (this.cropWidth - this.cropWidth / this.resizeTimes) / 2 / 100;
     this.unitResizeY =
       (this.cropHeight - this.cropHeight / this.resizeTimes) / 2 / 100;
+    this.canvasX = canvasX;
+    this.canvasY = canvasY;
+    this.canvasW = canvasW;
+    this.canvasH = canvasH;
   }
 });
 fabric.Image.prototype.initialize = (function(initialize) {
@@ -416,8 +486,6 @@ fabric.Image.prototype._renderFill = (function(_renderFill) {
       h = this.cropHeight,
       sW = w * this._filterScalingX,
       sH = h * this._filterScalingY,
-      x = -this.width / 2,
-      y = -this.height / 2,
       elementToDraw = this._element;
     elementToDraw &&
       ctx.drawImage(
@@ -426,10 +494,10 @@ fabric.Image.prototype._renderFill = (function(_renderFill) {
         this.cropY * this._filterScalingY + this.unitResizeY * this.leftSlider,
         sW - 2 * this.unitResizeX * this.leftSlider,
         sH - 2 * this.unitResizeY * this.leftSlider,
-        x,
-        y,
-        this.width,
-        this.height
+        this.canvasX,
+        this.canvasY,
+        this.canvasW,
+        this.canvasH
       );
   };
 })(fabric.Image.prototype._renderFill);
