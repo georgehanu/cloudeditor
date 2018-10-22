@@ -8,6 +8,7 @@ const { rendererTypeSelector } = require("../../stores/selectors/renderer");
 const { activePageSelector } = require("../../stores/selectors/project");
 const { selectedObjectSelector } = require("../../stores/selectors/project");
 const { addObjectIdToSelected } = require("../../stores/actions/project");
+const { removeSelection } = require("../../stores/actions/project");
 
 module.exports = renderType => {
   const components = require("./" + renderType + "/index");
@@ -30,7 +31,8 @@ module.exports = renderType => {
   const mapDispatchToProps = dispatch => {
     return {
       addObjectToSelectedHandler: objectId =>
-        dispatch(addObjectIdToSelected({ objectId }))
+        dispatch(addObjectIdToSelected(objectId)),
+      removeSelection: args => dispatch(removeSelection())
     };
   };
 

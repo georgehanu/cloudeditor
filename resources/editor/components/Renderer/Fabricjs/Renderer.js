@@ -2,7 +2,7 @@ const React = require("react");
 const { number } = require("prop-types");
 const { Image, IText, Fabric } = require("../../../packages/core/react-fabric");
 const { fabric } = require("../../../rewrites/fabric/fabric");
-
+const { map } = require("ramda");
 const updatePageOffset = (props, editorContainer) => {
   const { designerMaxWidth, designerMaxHeight, adjustment, activePage } = props;
 
@@ -123,20 +123,20 @@ class FabricjsRenderer extends React.Component {
     }
   };
   onSelectedCreatedHandler = args => {
-    if (args && args.selected) {
-      this.props.addObjectToSelectedHandler(args.target.id);
-      //console.log(this.props);
-      //const { activePage: page } = this.props;
-      // debugger;
-      // this.setState({ ...this.state, activeObject: args.selected });
+    if (args && args.selected && args.selected.length) {
+      let selectedIds = [];
+
+      selectedIds = map(obj => obj.id, args.selected);
+      this.props.addObjectToSelectedHandler(selectedIds);
     }
   };
-  onClearedCreatedHandler = args => {
-    // this.setState({ ...this.state, activeObject: null });
+  onSelectedClearedHandler = args => {
+    this.props.removeSelection();
   };
   render() {
     const { activePage: page } = this.props;
     const { objects } = page;
+
     let elements = Object.keys(objects).map(obKey => {
       const object = objects[obKey];
       switch (object.type) {
@@ -180,8 +180,8 @@ class FabricjsRenderer extends React.Component {
               canvasWorkingHeight={this.state.canvasWorkingHeight}
               event_before_overlay_render={this.onBeforeOverlayHandler}
               event_selection_created={this.onSelectedCreatedHandler}
-              // event_selection_updated={this.onSelectedCreatedHandler}
-              //  event_selection_cleared={this.onClearedCreatedHandler}
+              event_selection_updated={this.onSelectedCreatedHandler}
+              event_selection_cleared={this.onSelectedClearedHandler}
               canvasScale={this.state.canvasScale}
             >
               {elements}

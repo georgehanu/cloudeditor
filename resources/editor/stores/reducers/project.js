@@ -3,7 +3,8 @@ const {
   CHANGE_PROJECT_TITLE,
   ADD_OBJECT,
   ADD_OBJECT_TO_PAGE,
-  ADD_OBJECT_ID_TO_SELECTED
+  ADD_OBJECT_ID_TO_SELECTED,
+  REMOVE_SELECTION
 } = require("../actionTypes/project");
 const ProjectUtils = require("../../utils/ProjectUtils");
 const { handleActions } = require("redux-actions");
@@ -67,6 +68,9 @@ module.exports = handleActions(
     },
     [ADD_OBJECT_ID_TO_SELECTED]: (state, action) => {
       return { ...state, selectedObjectsIds: action.payload };
+    },
+    [REMOVE_SELECTION]: state => {
+      return { ...state, selectedObjectsIds: [] };
     }
   },
   initialState

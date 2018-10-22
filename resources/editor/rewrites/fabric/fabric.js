@@ -1,6 +1,6 @@
 const { fabric } = require("fabric");
 const logger = require("../../utils/LoggerUtils");
-
+const uuidv4 = require("uuid/v4");
 fabric.util.object.extend(fabric.StaticCanvas.prototype, {
   canvasContainer: "",
   canvasOffsetX: 0,
@@ -507,4 +507,10 @@ fabric.Image.prototype._initConfig = (function(_initConfig) {
     this._setViewBox(options);
   };
 })(fabric.Image.prototype._initConfig);
+fabric.ActiveSelection.prototype.initialize = (function(_initialize) {
+  return function(objects, options) {
+    _initialize.call(this, objects, options);
+    this.id = uuidv4();
+  };
+})(fabric.ActiveSelection.prototype.initialize);
 module.exports = { fabric };

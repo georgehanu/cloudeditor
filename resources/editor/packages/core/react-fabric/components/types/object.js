@@ -164,7 +164,7 @@ const objectDefaults = {
   strokeLineCap: "butt",
   strokeLineJoin: "miter",
   strokeMiterLimit: 4,
-  strokeWidth: 1,
+  strokeWidth: 0,
   top: 0,
   transformMatrix: null,
   transparentCorners: true,
