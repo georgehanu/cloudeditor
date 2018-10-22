@@ -153,21 +153,9 @@ class FabricjsRenderer extends React.Component {
       const object = objects[obKey];
       switch (object.type) {
         case "image":
-          return (
-            <Image
-              key={object.id}
-              {...object}
-              onMoving={this.onMovingHandler}
-            />
-          );
+          return <Image key={object.id} {...object} />;
         case "text":
-          return (
-            <IText
-              key={object.id}
-              {...object}
-              onMoving={this.onMovingHandler}
-            />
-          );
+          return <IText key={object.id} {...object} />;
         default:
           break;
       }
