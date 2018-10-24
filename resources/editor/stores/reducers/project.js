@@ -1,4 +1,4 @@
-const { append, merge } = require("ramda");
+const { append, merge, forEachObjIndexed } = require("ramda");
 const {
   CHANGE_PROJECT_TITLE,
   ADD_OBJECT,
@@ -73,7 +73,27 @@ module.exports = handleActions(
       return addObjectToPage(state, action.payload);
     },
     [ADD_OBJECT_ID_TO_SELECTED]: (state, action) => {
-      return { ...state, selectedObjectsIds: action.payload };
+      let objects = state.objects;
+      switch (action.payload.type) {
+        case "activeSelection":
+          let point = {
+            ...{ x: 0, y: 0 },
+            x: action.payload.centerPoint.x,
+            y: action.payload.centerPoint.y
+          };
+          forEachObjIndexed((value, key) => {
+            if (action.payload.selectedIds.indexOf(value.id) > -1) {
+              value.left -= point.x;
+              value.top -= point.y;
+            }
+          }, objects);
+          break;
+      }
+      return {
+        ...state,
+        selectedObjectsIds: action.payload.selectedObjectsIds,
+        objects: objects
+      };
     },
     [REMOVE_SELECTION]: state => {
       return { ...state, selectedObjectsIds: [] };

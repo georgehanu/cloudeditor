@@ -2,7 +2,7 @@ const {
   createSelectorWithDependencies: createSelector
 } = require("reselect-tools");
 
-const { pick } = require("ramda");
+const { pick, merge, forEachObjIndexed } = require("ramda");
 
 const pagesSelector = state =>
   (state && state.project && state.project.pages) || {};
@@ -14,15 +14,36 @@ const activePageIdSelector = state =>
 const selectedObjectsIdsSelector = state =>
   (state && state.project && state.project.selectedObjectsIds) || [];
 
+const activeSelectionSelector = state =>
+  (state && state.project && state.project.activeSelection) || null;
+
 const activePageSelector = createSelector(
   [pagesSelector, objectsSelector, activePageIdSelector],
   (pages, objects, pageId) => {
+    let getObjectsInGroup = (pageObjectsIds, allObjects) => {
+      let result = {};
+      result = pick(pageObjectsIds, allObjects);
+
+      forEachObjIndexed(obj => {
+        if (obj.type == "group") {
+          obj._elements = getObjectsInGroup(obj._objectsIds, allObjects);
+        }
+      }, result);
+      return result;
+    };
     const page = pages[pageId];
+    let pageObjects = {};
+    //getAlsoGroupObjects
+
+    pageObjects = merge(
+      pageObjects,
+      getObjectsInGroup(page.objectsIds, objects)
+    );
     const activePage = {
       id: page.id,
       width: page.width,
       height: page.height,
-      objects: pick(page.objectsIds, objects),
+      objects: pageObjects,
       background: page.background
     };
 
@@ -44,5 +65,6 @@ const selectedObjectSelector = createSelector(
 module.exports = {
   activePageSelector,
   activePageIdSelector,
-  selectedObjectSelector
+  selectedObjectSelector,
+  activeSelectionSelector
 };

@@ -1,8 +1,15 @@
 const React = require("react");
 const { number } = require("prop-types");
-const { Image, IText, Fabric } = require("../../../packages/core/react-fabric");
+const {
+  Image,
+  IText,
+  Fabric,
+  Group
+} = require("../../../packages/core/react-fabric");
 const { fabric } = require("../../../rewrites/fabric/fabric");
 const { map } = require("ramda");
+const ProjectUtils = require("../../../utils/ProjectUtils");
+
 const updatePageOffset = (props, editorContainer) => {
   const { designerMaxWidth, designerMaxHeight, adjustment, activePage } = props;
 
@@ -62,7 +69,7 @@ class FabricjsRenderer extends React.Component {
   };
   constructor(props) {
     super(props);
-
+    debugger;
     this.editorContainer = React.createRef();
     this.state = {
       isReadyComponent: false,
@@ -124,10 +131,21 @@ class FabricjsRenderer extends React.Component {
   };
   onSelectedCreatedHandler = args => {
     if (args && args.selected && args.selected.length) {
-      let selectedIds = [];
-
+      let selectedIds = [],
+        type = args.target.type,
+        centerPoint = args.target.getCenterPoint();
       selectedIds = map(obj => obj.id, args.selected);
-      this.props.addObjectToSelectedHandler(selectedIds);
+      this.props.addObjectToSelectedHandler({
+        selectedIds: selectedIds,
+        type: type,
+        centerPoint: centerPoint
+      });
+
+      let activeSelection = ProjectUtils.getEmptyObject({
+        type: "activeSelection",
+        left: Math.random() * 500,
+        top: Math.random() * 500
+      });
     }
   };
   onSelectedClearedHandler = args => {
@@ -145,22 +163,65 @@ class FabricjsRenderer extends React.Component {
       this.props.afterObjectMovedHandler(transform);
     }
   };
-  render() {
-    const { activePage: page } = this.props;
-    const { objects } = page;
-
+  drawElements(objects) {
     let elements = Object.keys(objects).map(obKey => {
       const object = objects[obKey];
+      if (object.parentId) {
+        return null;
+      }
       switch (object.type) {
         case "image":
           return <Image key={object.id} {...object} />;
         case "text":
           return <IText key={object.id} {...object} />;
+        case "group":
+          debugger;
+          return (
+            <Group key={object.id} {...object}>
+              {this.drawElements(object._elements)}
+            </Group>
+          );
+        case "activeSelection":
+          //compute objects <Image .....
+          return <activeSelection key={object.id} {...object} />;
         default:
           break;
       }
       return null;
     });
+
+    const el1 = ProjectUtils.getEmptyObject({
+      type: "image",
+      width: Math.random() * 500,
+      height: Math.random() * 500,
+      left: Math.random() * 500,
+      top: Math.random() * 500
+    });
+    const el2 = ProjectUtils.getEmptyObject({
+      type: "image",
+      width: Math.random() * 500,
+      height: Math.random() * 500,
+      left: Math.random() * 500,
+      top: Math.random() * 500
+    });
+    return elements;
+    return elements.concat(
+      this.drawElements(
+        {
+          [el1.id]: el1,
+          [el2.id]: el2
+        },
+        level + 1
+      )
+    );
+    return elements;
+  }
+  render() {
+    const { activePage: page } = this.props;
+    const { objects } = page;
+
+    let elements = this.drawElements(objects, 0);
+
     let isReadyComponent = this.state.isReadyComponent;
     console.log("--------------------------------------------------");
     return (

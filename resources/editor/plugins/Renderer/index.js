@@ -5,8 +5,11 @@ const {
 } = require("reselect-tools");
 
 const { rendererTypeSelector } = require("../../stores/selectors/renderer");
-const { activePageSelector } = require("../../stores/selectors/project");
-const { selectedObjectSelector } = require("../../stores/selectors/project");
+const {
+  activePageSelector,
+  activeSelectionSelector,
+  selectedObjectSelector
+} = require("../../stores/selectors/project");
 const { addObjectIdToSelected } = require("../../stores/actions/project");
 const { afterObjectMoved } = require("../../stores/actions/project");
 const { removeSelection } = require("../../stores/actions/project");
@@ -14,7 +17,7 @@ const { removeSelection } = require("../../stores/actions/project");
 module.exports = renderType => {
   const components = require("./" + renderType + "/index");
 
-  const renderTypeSelector1 = createSelector(
+  const renderTypeSelector = createSelector(
     [rendererTypeSelector],
     rendererType => {
       rendererType;
@@ -23,16 +26,17 @@ module.exports = renderType => {
 
   const mapStateToProps = state => {
     return {
-      type: renderTypeSelector1(state),
+      type: renderTypeSelector(state),
       activePage: activePageSelector(state),
-      activeObjects: selectedObjectSelector(state)
+      activeObjects: selectedObjectSelector(state),
+      activeSelection: activeSelectionSelector(state)
     };
   };
 
   const mapDispatchToProps = dispatch => {
     return {
-      addObjectToSelectedHandler: objectId =>
-        dispatch(addObjectIdToSelected(objectId)),
+      addObjectToSelectedHandler: props =>
+        dispatch(addObjectIdToSelected(props)),
       removeSelection: args => dispatch(removeSelection()),
       afterObjectMovedHandler: transform =>
         dispatch(afterObjectMoved(transform))
@@ -40,7 +44,7 @@ module.exports = renderType => {
   };
 
   registerSelectors({
-    renderTypeSelector1,
+    renderTypeSelector,
     activePageSelector,
     selectedObjectSelector
   });

@@ -7,7 +7,8 @@ const getProjectTemplate = cfg => {
     pagesOrder: [],
     activePage: null,
     objects: {},
-    selectedObjectsIds: []
+    selectedObjectsIds: [],
+    activeSelection: null
   };
   return project;
 };
@@ -75,6 +76,31 @@ const getRandomProject = cfg => {
     top: Math.random() * 500,
     src: defaultImages[parseInt(Math.random() * defaultImages.length)]
   });
+  let img6 = getEmptyObject({
+    type: "image",
+    width: 100,
+    height: 100,
+    left: -250,
+    top: -250,
+    src: defaultImages[parseInt(Math.random() * defaultImages.length)]
+  });
+  let img7 = getEmptyObject({
+    type: "image",
+    width: 100,
+    height: 100,
+    left: 100,
+    top: 100,
+    src: defaultImages[parseInt(Math.random() * defaultImages.length)]
+  });
+  let group = getEmptyObject({
+    type: "group",
+    width: 500,
+    height: 500,
+    left: 100,
+    top: 100,
+    _objectsIds: [img6.id, img7.id]
+  });
+
   let img3 = getEmptyObject({
     type: "image",
     width: Math.random() * 500,
@@ -102,7 +128,7 @@ const getRandomProject = cfg => {
 
   page1 = {
     ...page1,
-    objectsIds: [img1.id, img2.id, img3.id]
+    objectsIds: [img1.id, img2.id, img3.id, group.id]
   };
 
   page2 = {
@@ -121,7 +147,10 @@ const getRandomProject = cfg => {
       [img2.id]: img2,
       [img3.id]: img3,
       [img4.id]: img4,
-      [img5.id]: img5
+      [img5.id]: img5,
+      [img6.id]: img6,
+      [img7.id]: img7,
+      [group.id]: group
     },
     pagesOrder: [page1.id, page2.id],
     activePage: page1.id
@@ -157,6 +186,24 @@ const getEmptyObject = cfg => {
             cfg.src ||
             "https://images.pexels.com/photos/67636/rose-blue-flower-rose-blooms-67636.jpeg"
         };
+      case "activeSelection":
+        return {
+          ...object,
+          type: cfg.type,
+          left: cfg.left,
+          top: cfg.top
+        };
+      case "group":
+        return {
+          ...object,
+          type: cfg.type,
+          width: cfg.width || 500,
+          height: cfg.height || 500,
+          left: cfg.left || 500,
+          top: cfg.top || 500,
+          _objectsIds: cfg._objectsIds || []
+        };
+        break;
     }
   }
 };

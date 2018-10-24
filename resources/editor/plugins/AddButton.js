@@ -5,13 +5,14 @@ const { addObjectToPage } = require("../stores/actions/project");
 const { changeTheme } = require("../stores/actions/theme");
 const ProjectUtils = require("../utils/ProjectUtils");
 
-const emptyImage = ProjectUtils.getEmptyObject({
-  type: "image",
-  width: Math.random() * 500,
-  height: Math.random() * 500,
-  left: Math.random() * 500,
-  top: Math.random() * 500
-});
+const emptyImage = () =>
+  ProjectUtils.getEmptyObject({
+    type: "image",
+    width: Math.random() * 500,
+    height: Math.random() * 500,
+    left: Math.random() * 500,
+    top: Math.random() * 500
+  });
 
 class AddButton extends React.Component {
   render() {
@@ -20,7 +21,9 @@ class AddButton extends React.Component {
       <div>
         <div>Current Theme = {this.props.theme}</div>
         <button
-          onClick={() => this.props.addObjectToPageHandler(emptyImage, pageId)}
+          onClick={() =>
+            this.props.addObjectToPageHandler(emptyImage(), pageId)
+          }
         >
           Add Image
         </button>
