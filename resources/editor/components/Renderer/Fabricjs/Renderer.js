@@ -69,7 +69,6 @@ class FabricjsRenderer extends React.Component {
   };
   constructor(props) {
     super(props);
-    debugger;
     this.editorContainer = React.createRef();
     this.state = {
       isReadyComponent: false,
@@ -130,6 +129,33 @@ class FabricjsRenderer extends React.Component {
     }
   };
   onSelectedCreatedHandler = args => {
+    if (args && args.target) {
+      switch (args.target.type) {
+        case "activeSelection":
+          debugger;
+          let activeSelectionData = {
+            id: args.target.id,
+            props: {
+              left: args.target.left,
+              top: args.target.top,
+              width: args.target.width,
+              height: args.target.height
+            },
+            objectProps: map(obj => {
+              return {
+                id: obj.id,
+                left: obj.left,
+                top: obj.top
+              };
+            }, args.selected)
+          };
+          this.props.updateSelectionObjectsCoordsHandler(activeSelectionData);
+          break;
+        default:
+          break;
+      }
+    }
+    /*
     if (args && args.selected && args.selected.length) {
       let selectedIds = [],
         type = args.target.type,
@@ -146,7 +172,7 @@ class FabricjsRenderer extends React.Component {
         left: Math.random() * 500,
         top: Math.random() * 500
       });
-    }
+    }*/
   };
   onSelectedClearedHandler = args => {
     this.props.removeSelection();
@@ -175,7 +201,6 @@ class FabricjsRenderer extends React.Component {
         case "text":
           return <IText key={object.id} {...object} />;
         case "group":
-          debugger;
           return (
             <Group key={object.id} {...object}>
               {this.drawElements(object._elements)}
@@ -189,31 +214,6 @@ class FabricjsRenderer extends React.Component {
       }
       return null;
     });
-
-    const el1 = ProjectUtils.getEmptyObject({
-      type: "image",
-      width: Math.random() * 500,
-      height: Math.random() * 500,
-      left: Math.random() * 500,
-      top: Math.random() * 500
-    });
-    const el2 = ProjectUtils.getEmptyObject({
-      type: "image",
-      width: Math.random() * 500,
-      height: Math.random() * 500,
-      left: Math.random() * 500,
-      top: Math.random() * 500
-    });
-    return elements;
-    return elements.concat(
-      this.drawElements(
-        {
-          [el1.id]: el1,
-          [el2.id]: el2
-        },
-        level + 1
-      )
-    );
     return elements;
   }
   render() {

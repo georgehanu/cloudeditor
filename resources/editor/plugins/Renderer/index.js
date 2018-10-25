@@ -13,6 +13,9 @@ const {
 const { addObjectIdToSelected } = require("../../stores/actions/project");
 const { afterObjectMoved } = require("../../stores/actions/project");
 const { removeSelection } = require("../../stores/actions/project");
+const {
+  updateSelectionObjectsCoords
+} = require("../../stores/actions/project");
 
 module.exports = renderType => {
   const components = require("./" + renderType + "/index");
@@ -39,7 +42,9 @@ module.exports = renderType => {
         dispatch(addObjectIdToSelected(props)),
       removeSelection: args => dispatch(removeSelection()),
       afterObjectMovedHandler: transform =>
-        dispatch(afterObjectMoved(transform))
+        dispatch(afterObjectMoved(transform)),
+      updateSelectionObjectsCoordsHandler: props =>
+        dispatch(updateSelectionObjectsCoords(props))
     };
   };
 

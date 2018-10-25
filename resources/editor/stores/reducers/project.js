@@ -1,11 +1,12 @@
-const { append, merge, forEachObjIndexed } = require("ramda");
+const { append, mergeDeepLeft, forEachObjIndexed, reduce } = require("ramda");
 const {
   CHANGE_PROJECT_TITLE,
   ADD_OBJECT,
   ADD_OBJECT_TO_PAGE,
   ADD_OBJECT_ID_TO_SELECTED,
   REMOVE_SELECTION,
-  AFTER_OBJECT_MOVED
+  AFTER_OBJECT_MOVED,
+  UPDATE_SELECTION_OBJECTS_COORDS
 } = require("../actionTypes/project");
 const ProjectUtils = require("../../utils/ProjectUtils");
 const { handleActions } = require("redux-actions");
@@ -104,6 +105,24 @@ module.exports = handleActions(
         action.payload.id,
         action.payload.props
       );
+    },
+    [UPDATE_SELECTION_OBJECTS_COORDS]: (state, action) => {
+      let objectsChanges = reduce(
+        (acc, value) => {
+          const key = value.id;
+          delete value.id;
+          acc[key] = value;
+          return acc;
+        },
+        {},
+        action.payload.objectProps
+      );
+      debugger;
+      return {
+        ...state,
+        activeSelection: action.payload.props,
+        objects: mergeDeepLeft(objectsChanges, state.objects)
+      };
     }
   },
   initialState
