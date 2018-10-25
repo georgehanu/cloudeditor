@@ -132,7 +132,6 @@ class FabricjsRenderer extends React.Component {
     if (args && args.target) {
       switch (args.target.type) {
         case "activeSelection":
-          debugger;
           let activeSelectionData = {
             id: args.target.id,
             props: {
@@ -152,41 +151,71 @@ class FabricjsRenderer extends React.Component {
           this.props.updateSelectionObjectsCoordsHandler(activeSelectionData);
           break;
         default:
+          this.props.addObjectToSelectedHandler(args.target.id);
           break;
       }
     }
-    /*
-    if (args && args.selected && args.selected.length) {
-      let selectedIds = [],
-        type = args.target.type,
-        centerPoint = args.target.getCenterPoint();
-      selectedIds = map(obj => obj.id, args.selected);
-      this.props.addObjectToSelectedHandler({
-        selectedIds: selectedIds,
-        type: type,
-        centerPoint: centerPoint
-      });
-
-      let activeSelection = ProjectUtils.getEmptyObject({
-        type: "activeSelection",
-        left: Math.random() * 500,
-        top: Math.random() * 500
-      });
-    }*/
   };
   onSelectedClearedHandler = args => {
-    this.props.removeSelection();
+    if (args && args.deselected) {
+      let selectionData = {
+        objectProps: map(obj => {
+          return { id: obj.id, left: obj.left, top: obj.top };
+        }, args.deselected)
+      };
+      this.props.removeSelection(selectionData);
+    }
   };
   onObjectMovedHandler = args => {
     if (args && args.target) {
-      let transform = {
-        id: args.target.id,
-        props: {
-          left: args.target.left,
-          top: args.target.top
-        }
+      switch (args.target.type) {
+        case "activeSelection":
+          let activeSelectionData = {
+            id: args.target.id,
+            props: {
+              left: args.target.left,
+              top: args.target.top,
+              width: args.target.width,
+              height: args.target.height
+            },
+            objectProps: []
+          };
+          this.props.updateSelectionObjectsCoordsHandler(activeSelectionData);
+          break;
+        default:
+          this.props.afterObjectMovedHandler({
+            id: args.target.id,
+            props: {
+              left: args.target.left,
+              top: args.target.top
+            }
+          });
+          break;
+      }
+    }
+  };
+  onObjectPropChangedHandler = args => {
+    if (args && args.target) {
+      let objProps = {
+        left: args.target.left,
+        top: args.target.top,
+        angle: args.target.angle,
+        scaleX: args.target.scaleX,
+        scaleY: args.target.scaleY,
+        skewX: args.target.skewX,
+        skewY: args.target.skewY
       };
-      this.props.afterObjectMovedHandler(transform);
+      switch (args.target.type) {
+        case "activeSelection":
+          this.props.updateActiveSelectionProps(objProps);
+          break;
+        default:
+          this.props.updateObjectProps({
+            id: args.target.id,
+            props: objProps
+          });
+          break;
+      }
     }
   };
   drawElements(objects) {
@@ -206,9 +235,10 @@ class FabricjsRenderer extends React.Component {
               {this.drawElements(object._elements)}
             </Group>
           );
-        case "activeSelection":
+          //case "activeSelection":
           //compute objects <Image .....
-          return <activeSelection key={object.id} {...object} />;
+          //return <activeSelection key={object.id} {...object} />;
+          break;
         default:
           break;
       }
@@ -244,6 +274,9 @@ class FabricjsRenderer extends React.Component {
               event_selection_updated={this.onSelectedCreatedHandler}
               event_selection_cleared={this.onSelectedClearedHandler}
               event_object_moved={this.onObjectMovedHandler}
+              event_object_scaled={this.onObjectPropChangedHandler}
+              event_object_rotated={this.onObjectPropChangedHandler}
+              event_object_skewed={this.onObjectPropChangedHandler}
               canvasScale={this.state.canvasScale}
             >
               {elements}

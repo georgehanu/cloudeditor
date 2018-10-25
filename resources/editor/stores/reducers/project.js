@@ -1,4 +1,10 @@
-const { append, mergeDeepLeft, forEachObjIndexed, reduce } = require("ramda");
+const {
+  append,
+  mergeDeepLeft,
+  forEachObjIndexed,
+  reduce,
+  merge
+} = require("ramda");
 const {
   CHANGE_PROJECT_TITLE,
   ADD_OBJECT,
@@ -6,7 +12,9 @@ const {
   ADD_OBJECT_ID_TO_SELECTED,
   REMOVE_SELECTION,
   AFTER_OBJECT_MOVED,
-  UPDATE_SELECTION_OBJECTS_COORDS
+  UPDATE_SELECTION_OBJECTS_COORDS,
+  UPDATE_OBJECT_PROPS,
+  UPDATE_ACTIVE_SELECTION_PROPS
 } = require("../actionTypes/project");
 const ProjectUtils = require("../../utils/ProjectUtils");
 const { handleActions } = require("redux-actions");
@@ -74,30 +82,25 @@ module.exports = handleActions(
       return addObjectToPage(state, action.payload);
     },
     [ADD_OBJECT_ID_TO_SELECTED]: (state, action) => {
-      let objects = state.objects;
-      switch (action.payload.type) {
-        case "activeSelection":
-          let point = {
-            ...{ x: 0, y: 0 },
-            x: action.payload.centerPoint.x,
-            y: action.payload.centerPoint.y
-          };
-          forEachObjIndexed((value, key) => {
-            if (action.payload.selectedIds.indexOf(value.id) > -1) {
-              value.left -= point.x;
-              value.top -= point.y;
-            }
-          }, objects);
-          break;
-      }
+      return { ...state, selectedObjectsIds: [action.payload] };
+    },
+    [REMOVE_SELECTION]: (state, action) => {
+      let objectsChanges = reduce(
+        (acc, value) => {
+          const key = value.id;
+          delete value.id;
+          acc[key] = value;
+          return acc;
+        },
+        {},
+        action.payload.objectProps
+      );
       return {
         ...state,
-        selectedObjectsIds: action.payload.selectedObjectsIds,
-        objects: objects
+        activeSelection: null,
+        objects: mergeDeepLeft(objectsChanges, state.objects),
+        selectedObjectsIds: []
       };
-    },
-    [REMOVE_SELECTION]: state => {
-      return { ...state, selectedObjectsIds: [] };
     },
     [AFTER_OBJECT_MOVED]: (state, action) => {
       return changeElementPosition(
@@ -117,11 +120,28 @@ module.exports = handleActions(
         {},
         action.payload.objectProps
       );
-      debugger;
       return {
         ...state,
         activeSelection: action.payload.props,
         objects: mergeDeepLeft(objectsChanges, state.objects)
+      };
+    },
+    [UPDATE_OBJECT_PROPS]: (state, action) => {
+      return {
+        ...state,
+        objects: {
+          ...state.objects,
+          [action.payload.id]: merge(
+            state.objects[action.payload.id],
+            action.payload.props
+          )
+        }
+      };
+    },
+    [UPDATE_ACTIVE_SELECTION_PROPS]: (state, action) => {
+      return {
+        ...state,
+        activeSelection: action.payload
       };
     }
   },
