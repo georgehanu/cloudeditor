@@ -15,7 +15,7 @@ class Renderer extends React.Component {
     this.updatePlugins(this.props);
     return (
       <React.Fragment>
-        {<plugins.Renderer>{this.props.type}</plugins.Renderer>}
+        {<plugins.Renderer />}
         <button
           onClick={() =>
             this.props.addObjectToPageHandler(

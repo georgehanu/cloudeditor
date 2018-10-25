@@ -82,10 +82,12 @@
     "recompose": "^0.30.0",
     "redux": "^4.0.1",
     "redux-actions": "^2.6.1",
+    "redux-observable": "^1.0.0",
     "redux-saga": "^0.16.2",
     "redux-thunk": "^2.3.0",
     "reselect": "^4.0.0",
     "reselect-tools": "0.0.6",
+    "rxjs": "^6.3.3",
     "uuid": "^3.3.2"
   }
 }

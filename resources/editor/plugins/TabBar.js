@@ -5,19 +5,8 @@ const assign = require("object-assign");
 
 class TabBar extends React.Component {
   render() {
-    const images = this.props.images.map(image => {
-      return (
-        <img
-          key="x"
-          src={image.src}
-          width={image.width}
-          height={image.height}
-        />
-      );
-    });
     return (
       <div className="tabBar">
-        {images}
         {this.props.expanded ? 1 : 0}
         <button onClick={this.props.toogleTabBarHandler}>toogle</button>
       </div>
@@ -27,8 +16,7 @@ class TabBar extends React.Component {
 
 const mapStateToProps = state => {
   return {
-    expanded: state.tabBar.expanded,
-    images: state.addButton.images
+    expanded: state.tabBar.expanded
   };
 };
 

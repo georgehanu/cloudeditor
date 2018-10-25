@@ -2,7 +2,7 @@ const React = require("react");
 
 class Html5Renderer extends React.Component {
   render() {
-    return <div>Html5Renderer -> {this.props.children}</div>;
+    return <div className="render-container">adasd</div>;
   }
 }
 
