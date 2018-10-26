@@ -473,6 +473,20 @@ fabric.util.object.extend(fabric.Image.prototype, {
     this.canvasH = canvasH;
   }
 });
+fabric.Object.prototype.getMainProps = function() {
+  return {
+    left: this.left,
+    top: this.top,
+    angle: this.angle,
+    scaleX: this.scaleX,
+    scaleY: this.scaleY,
+    skewX: this.skewX,
+    skewY: this.skewY,
+    angle: this.angle,
+    flipX: this.flipX,
+    flipY: this.flipY
+  };
+};
 fabric.Image.prototype.initialize = (function(initialize) {
   return function(element, options) {
     initialize.call(this, element, options);

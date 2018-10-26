@@ -196,15 +196,7 @@ class FabricjsRenderer extends React.Component {
   };
   onObjectPropChangedHandler = args => {
     if (args && args.target) {
-      let objProps = {
-        left: args.target.left,
-        top: args.target.top,
-        angle: args.target.angle,
-        scaleX: args.target.scaleX,
-        scaleY: args.target.scaleY,
-        skewX: args.target.skewX,
-        skewY: args.target.skewY
-      };
+      let objProps = args.target.getMainProps();
       switch (args.target.type) {
         case "activeSelection":
           this.props.updateActiveSelectionProps(objProps);
@@ -235,10 +227,6 @@ class FabricjsRenderer extends React.Component {
               {this.drawElements(object._elements)}
             </Group>
           );
-          //case "activeSelection":
-          //compute objects <Image .....
-          //return <activeSelection key={object.id} {...object} />;
-          break;
         default:
           break;
       }

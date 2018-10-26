@@ -169,7 +169,14 @@ const getEmptyPage = cfg => {
 const getEmptyObject = cfg => {
   let object = {
     id: uuidv4(),
-    type: false
+    type: false,
+    scaleX: 1,
+    scaleY: 1,
+    flipX: false,
+    flipY: false,
+    skewX: 0,
+    skewY: 0,
+    angle: 0
   };
 
   if (cfg && cfg.type) {

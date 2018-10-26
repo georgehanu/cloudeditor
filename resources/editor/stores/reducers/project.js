@@ -11,7 +11,6 @@ const {
   ADD_OBJECT_TO_PAGE,
   ADD_OBJECT_ID_TO_SELECTED,
   REMOVE_SELECTION,
-  AFTER_OBJECT_MOVED,
   UPDATE_SELECTION_OBJECTS_COORDS,
   UPDATE_OBJECT_PROPS,
   UPDATE_ACTIVE_SELECTION_PROPS
@@ -58,12 +57,7 @@ const addObjectToPage = (state, action) => {
     }
   };
 };
-const changeElementPosition = (state, obj_id, props) => {
-  return {
-    ...state,
-    objects: { ...state.objects, [obj_id]: merge(state.objects[obj_id], props) }
-  };
-};
+
 const emptyProject = ProjectUtils.getRandomProject();
 
 const initialState = {
@@ -101,13 +95,6 @@ module.exports = handleActions(
         objects: mergeDeepLeft(objectsChanges, state.objects),
         selectedObjectsIds: []
       };
-    },
-    [AFTER_OBJECT_MOVED]: (state, action) => {
-      return changeElementPosition(
-        state,
-        action.payload.id,
-        action.payload.props
-      );
     },
     [UPDATE_SELECTION_OBJECTS_COORDS]: (state, action) => {
       let objectsChanges = reduce(
