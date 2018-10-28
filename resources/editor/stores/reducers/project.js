@@ -76,6 +76,7 @@ module.exports = handleActions(
       return addObjectToPage(state, action.payload);
     },
     [ADD_OBJECT_ID_TO_SELECTED]: (state, action) => {
+      debugger;
       return { ...state, selectedObjectsIds: [action.payload] };
     },
     [REMOVE_SELECTION]: (state, action) => {

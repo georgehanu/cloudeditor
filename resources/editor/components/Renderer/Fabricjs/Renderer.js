@@ -11,46 +11,28 @@ const { map } = require("ramda");
 const ProjectUtils = require("../../../utils/ProjectUtils");
 
 const updatePageOffset = (props, editorContainer) => {
-  const { designerMaxWidth, designerMaxHeight, adjustment, activePage } = props;
+  const { adjustment, activePage } = props;
 
-  let newW = 0,
-    newH = 0,
-    offsetX = 0,
-    offsetY = 0;
+  let parentDimension = editorContainer.getBoundingClientRect();
+  parentDimension.width -= adjustment;
+  parentDimension.height -= adjustment;
 
-  const parentDimension = editorContainer.getBoundingClientRect();
-
-  parentDimension.height =
-    parentDimension.height > designerMaxHeight
-      ? designerMaxHeight
-      : parentDimension.height - adjustment;
-  parentDimension.width =
-    parentDimension.width > designerMaxWidth
-      ? designerMaxWidth
-      : parentDimension.width - adjustment;
-
-  let containerRatio = parentDimension.width / parentDimension.height,
-    productRatio = activePage.width / activePage.height;
-
-  if (containerRatio >= productRatio) {
-    newW = (parentDimension.height - adjustment) * productRatio;
-    newH = parentDimension.height - adjustment;
-  } else {
-    newW = parentDimension.width - adjustment;
-    newH = (parentDimension.width - adjustment) / productRatio;
-  }
-  offsetX = (parentDimension.width - newW) / 2;
-  offsetY = (parentDimension.height - newH) / 2;
+  let scale = Math.min(
+    parentDimension.height / activePage.height,
+    parentDimension.width / activePage.width
+  );
+  let pageWidth = activePage.width * scale,
+    pageHeight = activePage.height * scale;
 
   const result = {
     isReadyComponent: true,
     width: parentDimension.width,
     height: parentDimension.height,
-    canvasOffsetX: offsetX,
-    canvasOffsetY: offsetY,
-    canvasWorkingWidth: newW,
-    canvasWorkingHeight: newH,
-    canvasScale: newW / activePage.width
+    canvasOffsetX: (parentDimension.width - pageWidth) / 2,
+    canvasOffsetY: (parentDimension.height - pageHeight) / 2,
+    canvasWorkingWidth: pageWidth,
+    canvasWorkingHeight: pageHeight,
+    scale: scale
   };
   return result;
 };
@@ -65,7 +47,7 @@ class FabricjsRenderer extends React.Component {
     canvasOffsetY: 0,
     canvasWorkingWidth: 0,
     canvasWorkingHeight: 0,
-    canvasScale: 1
+    scale: 1
   };
   constructor(props) {
     super(props);
@@ -78,7 +60,7 @@ class FabricjsRenderer extends React.Component {
       canvasOffsetY: 0,
       canvasWorkingWidth: 0,
       canvasWorkingHeight: 0,
-      canvasScale: 1
+      scale: 1
     };
   }
 
@@ -166,29 +148,24 @@ class FabricjsRenderer extends React.Component {
       this.props.removeSelection(selectionData);
     }
   };
+  performActionHandler = args => {
+    debugger;
+  };
   onObjectMovedHandler = args => {
     if (args && args.target) {
       switch (args.target.type) {
         case "activeSelection":
           let activeSelectionData = {
             id: args.target.id,
-            props: {
-              left: args.target.left,
-              top: args.target.top,
-              width: args.target.width,
-              height: args.target.height
-            },
+            props: args.target.getMainProps(),
             objectProps: []
           };
           this.props.updateSelectionObjectsCoordsHandler(activeSelectionData);
           break;
         default:
-          this.props.afterObjectMovedHandler({
+          this.props.updateObjectProps({
             id: args.target.id,
-            props: {
-              left: args.target.left,
-              top: args.target.top
-            }
+            props: args.target.getMainProps()
           });
           break;
       }
@@ -216,6 +193,10 @@ class FabricjsRenderer extends React.Component {
       if (object.parentId) {
         return null;
       }
+      object.width *= this.state.scale;
+      object.height *= this.state.scale;
+      object.left += this.state.canvasOffsetX;
+      object.top += this.state.canvasOffsetY;
       switch (object.type) {
         case "image":
           return <Image key={object.id} {...object} />;
@@ -271,20 +252,18 @@ class FabricjsRenderer extends React.Component {
             </Fabric>
           )}
         </div>
+
+        <div style={{ position: "absolute", left: "200px", top: "0px" }} />
       </div>
     );
   }
 }
 
 FabricjsRenderer.propTypes = {
-  designerMaxWidth: number,
-  designerMaxHeight: number,
   adjustment: number
 };
 
 FabricjsRenderer.defaultProps = {
-  designerMaxWidth: 1400,
-  designerMaxHeight: 800,
   adjustment: 60
 };
 
