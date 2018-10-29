@@ -7,7 +7,6 @@ fabric.util.object.extend(fabric.StaticCanvas.prototype, {
   canvasOffsetY: 0,
   canvasWorkingWidth: 0,
   canvasWorkingHeight: 0,
-  canvasScale: 1,
   translucentOverlayOutside: "rgba(243,244,246,0.6)",
   setCanvasOffsetX: function(offsetX) {
     this.canvasOffsetX = offsetX;
@@ -477,11 +476,8 @@ fabric.Object.prototype.getMainProps = function() {
   return {
     left: this.left,
     top: this.top,
-    angle: this.angle,
-    scaleX: this.scaleX,
-    scaleY: this.scaleY,
-    skewX: this.skewX,
-    skewY: this.skewY,
+    width: this.width,
+    height: this.height,
     angle: this.angle,
     flipX: this.flipX,
     flipY: this.flipY

@@ -62,18 +62,18 @@ const getRandomProject = cfg => {
 
   let img1 = getEmptyObject({
     type: "image",
-    width: Math.random() * 500,
-    height: Math.random() * 500,
-    left: Math.random() * 500,
-    top: Math.random() * 500,
+    width: 200,
+    height: 200,
+    left: 0,
+    top: 0,
     src: defaultImages[parseInt(Math.random() * defaultImages.length)]
   });
   let img2 = getEmptyObject({
     type: "image",
-    width: Math.random() * 500,
-    height: Math.random() * 500,
-    left: Math.random() * 500,
-    top: Math.random() * 500,
+    width: 150,
+    height: 150,
+    left: 300,
+    top: 300,
     src: defaultImages[parseInt(Math.random() * defaultImages.length)]
   });
   let img6 = getEmptyObject({
@@ -96,17 +96,17 @@ const getRandomProject = cfg => {
     type: "group",
     width: 500,
     height: 500,
-    left: 100,
-    top: 100,
+    left: 400,
+    top: 400,
     _objectsIds: [img6.id, img7.id]
   });
 
   let img3 = getEmptyObject({
     type: "image",
-    width: Math.random() * 500,
-    height: Math.random() * 500,
-    left: Math.random() * 500,
-    top: Math.random() * 500,
+    width: 50,
+    height: 50,
+    left: 350,
+    top: 0,
     src: defaultImages[parseInt(Math.random() * defaultImages.length)]
   });
   let img4 = getEmptyObject({
@@ -133,7 +133,7 @@ const getRandomProject = cfg => {
 
   page2 = {
     ...page2,
-    objectsIds: [img4.id, img5.id]
+    objectsIds: []
   };
   return {
     ...project,
@@ -146,8 +146,6 @@ const getRandomProject = cfg => {
       [img1.id]: img1,
       [img2.id]: img2,
       [img3.id]: img3,
-      [img4.id]: img4,
-      [img5.id]: img5,
       [img6.id]: img6,
       [img7.id]: img7,
       [group.id]: group
@@ -170,12 +168,6 @@ const getEmptyObject = cfg => {
   let object = {
     id: uuidv4(),
     type: false,
-    scaleX: 1,
-    scaleY: 1,
-    flipX: false,
-    flipY: false,
-    skewX: 0,
-    skewY: 0,
     angle: 0
   };
 
@@ -185,10 +177,10 @@ const getEmptyObject = cfg => {
         return {
           ...object,
           type: cfg.type,
-          width: cfg.width || 500,
-          height: cfg.height || 500,
-          left: cfg.left || 500,
-          top: cfg.top || 500,
+          width: cfg.width,
+          height: cfg.height,
+          left: cfg.left,
+          top: cfg.top,
           src:
             cfg.src ||
             "https://images.pexels.com/photos/67636/rose-blue-flower-rose-blooms-67636.jpeg"

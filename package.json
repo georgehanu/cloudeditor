@@ -86,6 +86,7 @@
     "redux-thunk": "^2.3.0",
     "reselect": "^4.0.0",
     "reselect-tools": "0.0.6",
+    "underscore": "^1.9.1",
     "uuid": "^3.3.2"
   }
 }

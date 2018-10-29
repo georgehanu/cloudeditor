@@ -6,8 +6,7 @@ const {
   REMOVE_SELECTION,
 
   UPDATE_SELECTION_OBJECTS_COORDS,
-  UPDATE_OBJECT_PROPS,
-  UPDATE_ACTIVE_SELECTION_PROPS
+  UPDATE_OBJECT_PROPS
 } = require("../actionTypes/project");
 const { createActions } = require("redux-actions");
 
@@ -19,8 +18,7 @@ const {
   removeSelection,
 
   updateSelectionObjectsCoords,
-  updateObjectProps,
-  updateActiveSelectionProps
+  updateObjectProps
 } = createActions(
   CHANGE_PROJECT_TITLE,
   ADD_OBJECT,
@@ -29,8 +27,7 @@ const {
   REMOVE_SELECTION,
 
   UPDATE_SELECTION_OBJECTS_COORDS,
-  UPDATE_OBJECT_PROPS,
-  UPDATE_ACTIVE_SELECTION_PROPS
+  UPDATE_OBJECT_PROPS
 );
 
 module.exports = {
@@ -41,6 +38,5 @@ module.exports = {
   removeSelection,
 
   updateSelectionObjectsCoords,
-  updateObjectProps,
-  updateActiveSelectionProps
+  updateObjectProps
 };

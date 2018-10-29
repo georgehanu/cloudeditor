@@ -1,5 +1,6 @@
 const React = require("react");
 const { number } = require("prop-types");
+const { debounce } = require("underscore");
 const {
   Image,
   IText,
@@ -71,7 +72,7 @@ class FabricjsRenderer extends React.Component {
 
   componentDidMount() {
     this.updatePageOffset();
-    window.addEventListener("resize", this.updatePageOffset);
+    window.addEventListener("resize", debounce(this.updatePageOffset));
   }
 
   /**
@@ -125,8 +126,8 @@ class FabricjsRenderer extends React.Component {
             objectProps: map(obj => {
               return {
                 id: obj.id,
-                left: obj.left,
-                top: obj.top
+                left: (obj.left - this.state.canvasOffsetX) / this.state.scale,
+                top: (obj.top - this.state.canvasOffsetY) / this.state.scale
               };
             }, args.selected)
           };
@@ -142,43 +143,41 @@ class FabricjsRenderer extends React.Component {
     if (args && args.deselected) {
       let selectionData = {
         objectProps: map(obj => {
-          return { id: obj.id, left: obj.left, top: obj.top };
+          return {
+            id: obj.id,
+            left: (obj.left - this.state.canvasOffsetX) / this.state.scale,
+            top: (obj.top - this.state.canvasOffsetY) / this.state.scale,
+            angle: obj.angle
+          };
         }, args.deselected)
       };
       this.props.removeSelection(selectionData);
     }
   };
-  performActionHandler = args => {
-    debugger;
-  };
-  onObjectMovedHandler = args => {
-    if (args && args.target) {
-      switch (args.target.type) {
-        case "activeSelection":
-          let activeSelectionData = {
-            id: args.target.id,
-            props: args.target.getMainProps(),
-            objectProps: []
-          };
-          this.props.updateSelectionObjectsCoordsHandler(activeSelectionData);
-          break;
-        default:
-          this.props.updateObjectProps({
-            id: args.target.id,
-            props: args.target.getMainProps()
-          });
-          break;
-      }
-    }
-  };
+
   onObjectPropChangedHandler = args => {
     if (args && args.target) {
       let objProps = args.target.getMainProps();
       switch (args.target.type) {
         case "activeSelection":
-          this.props.updateActiveSelectionProps(objProps);
+          let activeSelectionData = {
+            id: args.target.id,
+            props: objProps,
+            objectProps: []
+          };
+          this.props.updateSelectionObjectsCoordsHandler(activeSelectionData);
           break;
         default:
+          objProps.left =
+            (objProps.left - this.state.canvasOffsetX) / this.state.scale;
+          objProps.top =
+            (objProps.top - this.state.canvasOffsetY) / this.state.scale;
+          objProps.width =
+            (objProps.width / this.state.scale) * args.target.scaleX;
+          objProps.height =
+            (objProps.height / this.state.scale) * args.target.scaleY;
+          objProps.scaleX = 1;
+          objProps.scaleY = 1;
           this.props.updateObjectProps({
             id: args.target.id,
             props: objProps
@@ -187,16 +186,22 @@ class FabricjsRenderer extends React.Component {
       }
     }
   };
-  drawElements(objects) {
+  drawElements(objects, needOffset) {
     let elements = Object.keys(objects).map(obKey => {
-      const object = objects[obKey];
+      const object = { ...objects[obKey] };
+
       if (object.parentId) {
         return null;
       }
       object.width *= this.state.scale;
       object.height *= this.state.scale;
-      object.left += this.state.canvasOffsetX;
-      object.top += this.state.canvasOffsetY;
+      object.left = object.left * this.state.scale;
+      object.top = object.top * this.state.scale;
+      if (needOffset) {
+        object.left += this.state.canvasOffsetX;
+        object.top += this.state.canvasOffsetY;
+      }
+
       switch (object.type) {
         case "image":
           return <Image key={object.id} {...object} />;
@@ -205,7 +210,7 @@ class FabricjsRenderer extends React.Component {
         case "group":
           return (
             <Group key={object.id} {...object}>
-              {this.drawElements(object._elements)}
+              {this.drawElements(object._elements, false)}
             </Group>
           );
         default:
@@ -219,7 +224,7 @@ class FabricjsRenderer extends React.Component {
     const { activePage: page } = this.props;
     const { objects } = page;
 
-    let elements = this.drawElements(objects, 0);
+    let elements = this.drawElements(objects, 1);
 
     let isReadyComponent = this.state.isReadyComponent;
     console.log("--------------------------------------------------");
@@ -242,18 +247,14 @@ class FabricjsRenderer extends React.Component {
               event_selection_created={this.onSelectedCreatedHandler}
               event_selection_updated={this.onSelectedCreatedHandler}
               event_selection_cleared={this.onSelectedClearedHandler}
-              event_object_moved={this.onObjectMovedHandler}
+              event_object_moved={this.onObjectPropChangedHandler}
               event_object_scaled={this.onObjectPropChangedHandler}
               event_object_rotated={this.onObjectPropChangedHandler}
-              event_object_skewed={this.onObjectPropChangedHandler}
-              canvasScale={this.state.canvasScale}
             >
               {elements}
             </Fabric>
           )}
         </div>
-
-        <div style={{ position: "absolute", left: "200px", top: "0px" }} />
       </div>
     );
   }
