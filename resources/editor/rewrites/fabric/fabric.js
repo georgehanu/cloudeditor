@@ -141,7 +141,7 @@ fabric.util.object.extend(fabric.Image.prototype, {
       var _this = this;
       setTimeout(function() {
         _this.selected = 1;
-      }, 100);
+      }, 10);
     });
   },
   initMouseupHandler: function() {
@@ -174,12 +174,17 @@ fabric.util.object.extend(fabric.Image.prototype, {
       }
     }.bind(this);
     canvas.on("selection:cleared", canvas._canvasImageSelectionClearedHandlder);
+    canvas.on("selection:updated", canvas._canvasImageSelectionClearedHandlder);
     canvas.on("object:selected", canvas._canvasImageSelectionClearedHandlder);
     canvas.on("mouse:up", canvas._mouseUpImageHandler);
   },
   _removeCanvasHandlers: function(canvas) {
     canvas.off(
       "selection:cleared",
+      canvas._canvasImageSelectionClearedHandlder
+    );
+    canvas.off(
+      "selection:updated",
       canvas._canvasImageSelectionClearedHandlder
     );
     canvas.off("object:selected", canvas._canvasImageSelectionClearedHandlder);
