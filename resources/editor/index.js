@@ -1,3 +1,4 @@
+//.replace(/^\//, ''); into node_modules\laravel-mix\src\builder\Entry.js
 const startEditor = require("./Editor");
 
 const EDITOR_WORKSPACE = process.env.MIX_EDITOR_WORKSPACE;
