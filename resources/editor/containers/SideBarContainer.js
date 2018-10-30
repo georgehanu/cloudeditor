@@ -28,13 +28,14 @@ class SideBarContainer extends React.Component {
   };
   render() {
     const Container = this.props.container;
+
     return (
-      <div id={this.props.id} style={{ color: "blue" }}>
-        <div
-          id={this.props.id + "-container"}
-          style={this.props.style}
-          className={this.props.className}
-        >
+      <div
+        id={this.props.id}
+        style={{ color: "blue" }}
+        className={this.props.className}
+      >
+        <div id={this.props.id + "-container"} style={this.props.style}>
           {this.renderTools()}
         </div>
       </div>

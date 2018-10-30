@@ -8,14 +8,6 @@ const logger = require("../../../../utils/LoggerUtils");
 
 const UPDATE_SIGNAL = {};
 
-const propsToSkip = {
-  children: true,
-  ref: true,
-  key: true,
-  style: true,
-  image: true
-};
-
 const hostConfig = {
   appendInitialChild(canvas, child) {
     logger.info("appendInitialChild", canvas, child);
@@ -121,10 +113,12 @@ const hostConfig = {
   },
 
   removeChild(parentInstance, child) {
+    parentInstance.instance.remove(child.instance);
     logger.info("removeChild", parentInstance, child);
   },
 
   removeChildFromContainer(parentInstance, child) {
+    parentInstance.instance.remove(child.instance);
     logger.info("removeChildFromContainer", parentInstance, child);
   },
 
@@ -146,6 +140,7 @@ const hostConfig = {
       oldProps,
       newProps
     );
+
     instance._applyProps(newProps, oldProps);
   }
 };

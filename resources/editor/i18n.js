@@ -1,13 +1,13 @@
-import i18n from "i18next";
-import Backend from "i18next-xhr-backend";
-import LanguageDetector from "i18next-browser-languagedetector";
-import { reactI18nextModule } from "react-i18next";
+const Backend = require("i18next-xhr-backend");
+//const LanguageDetector = require( "i18next-browser-languagedetector");
+const { reactI18nextModule } = require("react-i18next");
+const i18n = require("i18next");
 
 const EDITOR_WORKSPACE = process.env.MIX_EDITOR_WORKSPACE;
 
 i18n
   .use(Backend)
-  .use(LanguageDetector)
+  //.use(LanguageDetector)
   .use(reactI18nextModule)
   .init({
     fallbackLng: "en-US",

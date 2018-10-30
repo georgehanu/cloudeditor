@@ -26,12 +26,18 @@ const staticCanvasTypes = shape({
   skipOffscreen: bool,
   stateful: bool,
   svgViewportTransformation: bool,
-  viewportTransform: array
+  viewportTransform: array,
+  canvasOffsetX: number,
+  canvasOffsetY: number,
+  canvasWorkingWidth: number,
+  canvasWorkingHeight: number,
+  translucentOverlayOutside: string,
+  canvasContainer: string
 });
 
 const staticCanvasDefaults = {
   allowTouchScrolling: true,
-  backgroundColor: "",
+  backgroundColor: "rgb(255,255,255)",
   backgroundImage: null,
   backgroundVpt: true,
   controlsAboveOverlay: false,
@@ -47,7 +53,13 @@ const staticCanvasDefaults = {
   stateful: false,
   svgViewportTransformation: true,
   viewportTransform: fabric.iMatrix.concat(),
-  vptCoords: []
+  vptCoords: [],
+  canvasOffsetX: 300,
+  canvasOffsetY: 100,
+  canvasWorkingWidth: 400,
+  canvasWorkingHeight: 500,
+  canvasContainer: "",
+  translucentOverlayOutside: "rgba(243,244,246,0.6)"
 };
 
 module.exports = { staticCanvasTypes, staticCanvasDefaults };

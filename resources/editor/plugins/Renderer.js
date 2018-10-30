@@ -10,33 +10,23 @@ const { addObjectToPage } = require("../stores/actions/project");
 const ProjectUtils = require("../utils/ProjectUtils");
 
 let plugins;
-
 class Renderer extends React.Component {
   render() {
     this.updatePlugins(this.props);
     return (
       <React.Fragment>
         {<plugins.Renderer>{this.props.type}</plugins.Renderer>}
+
         <button
-          onClick={() =>
-            this.props.addObjectToPageHandler(
-              ProjectUtils.getEmptyObject({
-                type: "image",
-                width: Math.random() * 500,
-                height: Math.random() * 500,
-                left: Math.random() * 500,
-                top: Math.random() * 500
-              }),
-              this.props.pageId
-            )
-          }
+          onClick={() => this.props.changeTypeHandler("html5")}
+          style={{ position: "absolute", left: "0px", top: "0px" }}
         >
-          Add Image
-        </button>
-        <button onClick={() => this.props.changeTypeHandler("html5")}>
           ChangeType html5
         </button>
-        <button onClick={() => this.props.changeTypeHandler("fabricjs")}>
+        <button
+          onClick={() => this.props.changeTypeHandler("fabricjs")}
+          style={{ position: "absolute", left: "0px", top: "25px" }}
+        >
           ChangeType fabricjs
         </button>
       </React.Fragment>
@@ -84,5 +74,7 @@ const RendererPlugin = connect(
 
 module.exports = {
   Renderer: assign(RendererPlugin),
-  reducers: { renderer: require("../stores/reducers/renderer") }
+  reducers: {
+    renderer: require("../stores/reducers/renderer")
+  }
 };

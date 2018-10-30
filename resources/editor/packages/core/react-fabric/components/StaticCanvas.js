@@ -32,15 +32,18 @@ class StaticCanvas {
     const { instance } = this;
     let updatedProps = {};
     let hasUpdates = false;
-    for (let key in oldProps) {
+    for (var key in oldProps) {
       if (this.propsToSkip[key]) {
         continue;
       }
 
-      const isOldEvent = key.slice(0, 2) === "on";
+      const isOldEvent = key.slice(0, 5) === "event";
       const propChanged = oldProps[key] !== props[key];
       if (isOldEvent && propChanged) {
-        const oldEventName = key.substr(2).toLowerCase();
+        const oldEventName = key
+          .substr(6)
+          .toLowerCase()
+          .replace(/_/g, ":");
         instance.off(oldEventName, oldProps[key]);
       }
       var toRemove = !props.hasOwnProperty(key);
@@ -48,15 +51,18 @@ class StaticCanvas {
         instance.set(key, undefined);
       }
     }
-    for (let key in props) {
+    for (var key in props) {
       if (this.propsToSkip[key]) {
         continue;
       }
-      const isNewEvent = key.slice(0, 2) === "on";
+      const isNewEvent = key.slice(0, 5) === "event";
       const toAdd = oldProps ? oldProps[key] !== props[key] : true;
       if (isNewEvent && toAdd) {
         if (props[key]) {
-          const newEventName = key.substr(2).toLowerCase();
+          const newEventName = key
+            .substr(6)
+            .toLowerCase()
+            .replace(/_/g, ":");
           instance.on(newEventName, props[key]);
         }
       }
@@ -70,14 +76,23 @@ class StaticCanvas {
     }
 
     if (hasUpdates) {
-      logger.info("hasUpdates", updatedProps);
-      instance.set(updatedProps);
+      this._updateDimmensions(updatedProps);
+      const { width, height, ...otherProps } = updatedProps;
+      instance.set(otherProps);
       this._updatePicture(instance);
     }
   }
 
   _updatePicture() {
     return this.instance.requestRenderAll();
+  }
+  _updateDimmensions(updatedProps) {
+    const dim = {
+      width: updatedProps.width || this.instance.width,
+      height: updatedProps.height || this.instance.height
+    };
+
+    this.instance.setDimensions(dim);
   }
 }
 
