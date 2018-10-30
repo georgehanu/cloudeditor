@@ -1,6 +1,7 @@
 const React = require("react");
 const randomColor = require("randomcolor");
 require("webpack-jquery-ui/draggable");
+require("webpack-jquery-ui/resizable");
 
 class ObjectBlock extends React.PureComponent {
   constructor(props) {
@@ -9,8 +10,12 @@ class ObjectBlock extends React.PureComponent {
   }
 
   componentDidMount() {
-    const element = this.ell;
-    if (this.el.current) {
+    const element = this.el.current;
+    if (element) {
+      console.log(element);
+      $(element)
+        .draggable()
+        .resizable();
     }
   }
 
