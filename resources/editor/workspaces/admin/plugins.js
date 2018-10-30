@@ -8,7 +8,7 @@ const plugins = {
   SideBar: SideBar,
   AddButton: AddButton,
   TabBar: TabBar,
-  Renderer: Renderer,
+  //Renderer: Renderer,
   Html5Renderer: Html5Renderer
 };
 

@@ -124,7 +124,7 @@ const getRandomProject = cfg => {
       [img5.id]: img5
     },
     pagesOrder: [page1.id, page2.id],
-    activePage: page3.id
+    activePage: page1.id
   };
 };
 

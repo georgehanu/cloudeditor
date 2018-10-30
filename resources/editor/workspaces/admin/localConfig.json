@@ -11,8 +11,7 @@
       },
       "AddButton",
       "TabBar",
-      "Html5Renderer",
-      "Renderer"
+      "Html5Renderer"
     ]
   }
 }
