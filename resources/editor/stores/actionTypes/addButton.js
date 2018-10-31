@@ -1,2 +1,2 @@
-const ADD_IMAGE = "ADD_IMAGE";
-module.exports = { ADD_IMAGE };
+const ADD_IMAGE_FROM_BUTTON = "ADD_IMAGE_FROM_BUTTON";
+module.exports = { ADD_IMAGE_FROM_BUTTON };

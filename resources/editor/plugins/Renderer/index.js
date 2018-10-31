@@ -13,7 +13,7 @@ module.exports = renderType => {
   const renderTypeSelector1 = createSelector(
     [rendererTypeSelector],
     rendererType => {
-      rendererType;
+      return { rendererType };
     }
   );
 

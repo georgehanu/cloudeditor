@@ -10,13 +10,12 @@ const { addObjectToPage } = require("../stores/actions/project");
 const ProjectUtils = require("../utils/ProjectUtils");
 
 let plugins;
-
 class Renderer extends React.Component {
   render() {
     this.updatePlugins(this.props);
     return (
       <React.Fragment>
-        {<plugins.Renderer>{this.props.type}</plugins.Renderer>}
+        {<plugins.Renderer />}
         <button
           onClick={() =>
             this.props.addObjectToPageHandler(
@@ -33,10 +32,16 @@ class Renderer extends React.Component {
         >
           Add Image
         </button>
-        <button onClick={() => this.props.changeTypeHandler("html5")}>
+        <button
+          onClick={() => this.props.changeTypeHandler("html5")}
+          style={{ position: "absolute", left: "0px", top: "0px" }}
+        >
           ChangeType html5
         </button>
-        <button onClick={() => this.props.changeTypeHandler("fabricjs")}>
+        <button
+          onClick={() => this.props.changeTypeHandler("fabricjs")}
+          style={{ position: "absolute", left: "0px", top: "25px" }}
+        >
           ChangeType fabricjs
         </button>
       </React.Fragment>
