@@ -1,5 +1,6 @@
 const { fabric } = require("../../../../rewrites/fabric/fabric");
 const logger = require("../../../../utils/LoggerUtils");
+const { forEach, find, propEq } = require("ramda");
 const {
   staticCanvasTypes,
   staticCanvasDefaults
@@ -36,7 +37,17 @@ class StaticCanvas {
       if (this.propsToSkip[key]) {
         continue;
       }
-
+      if (key == "events" && oldProps[key].length) {
+        forEach(event => {
+          let isInCurrent = false;
+          if (
+            typeof find(propEq("id", event.id))(props.events) === "undefined"
+          ) {
+            instance.off(event.event_name, event.callback);
+          }
+        }, oldProps[key]);
+      }
+      /*
       const isOldEvent = key.slice(0, 5) === "event";
       const propChanged = oldProps[key] !== props[key];
       if (isOldEvent && propChanged) {
@@ -45,7 +56,7 @@ class StaticCanvas {
           .toLowerCase()
           .replace(/_/g, ":");
         instance.off(oldEventName, oldProps[key]);
-      }
+      }*/
       var toRemove = !props.hasOwnProperty(key);
       if (toRemove) {
         instance.set(key, undefined);
@@ -55,6 +66,15 @@ class StaticCanvas {
       if (this.propsToSkip[key]) {
         continue;
       }
+      if (key == "events" && props[key].length) {
+        const oldEvents = oldProps && oldProps.events ? oldProps.events : [];
+        forEach(event => {
+          if (typeof find(propEq("id", event.id))(oldEvents) === "undefined") {
+            instance.on(event.event_name, event.callback);
+          }
+        }, props[key]);
+      }
+      /*
       const isNewEvent = key.slice(0, 5) === "event";
       const toAdd = oldProps ? oldProps[key] !== props[key] : true;
       if (isNewEvent && toAdd) {
@@ -66,8 +86,9 @@ class StaticCanvas {
           instance.on(newEventName, props[key]);
         }
       }
+      */
       if (
-        (oldProps && !isNewEvent && props[key] !== oldProps[key]) ||
+        (oldProps && key != "events" && props[key] !== oldProps[key]) ||
         props[key] !== instance.get(key)
       ) {
         hasUpdates = true;

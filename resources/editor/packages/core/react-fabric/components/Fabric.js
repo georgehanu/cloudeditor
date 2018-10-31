@@ -42,4 +42,5 @@ class Fabric extends React.Component {
     );
   }
 }
+
 module.exports = Fabric;

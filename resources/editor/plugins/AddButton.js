@@ -13,6 +13,17 @@ const emptyImage = () =>
     left: Math.random() * 500,
     top: Math.random() * 500
   });
+const emptyText = () =>
+  ProjectUtils.getEmptyObject({
+    type: "textbox",
+    left: Math.random() * 500,
+    top: Math.random() * 500,
+    fontSize: 15,
+    width: 200,
+    height: 400,
+    text:
+      "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s"
+  });
 
 class AddButton extends React.Component {
   render() {
@@ -26,6 +37,11 @@ class AddButton extends React.Component {
           }
         >
           Add Image
+        </button>
+        <button
+          onClick={() => this.props.addObjectToPageHandler(emptyText(), pageId)}
+        >
+          Add Text
         </button>
       </div>
     );

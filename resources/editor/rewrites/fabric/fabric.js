@@ -39,7 +39,9 @@ fabric.util.object.extend(fabric.StaticCanvas.prototype, {
     });
   }
 });
-
+fabric.util.object.extend(fabric.Object.prototype, {
+  designerCallbacks: {}
+});
 fabric.util.object.extend(fabric.Image.prototype, {
   cropWidth: 0,
   cropHeight: 0,
@@ -494,6 +496,15 @@ fabric.Image.prototype.initialize = (function(initialize) {
     this.initBehavior();
   };
 })(fabric.Image.prototype.initialize);
+
+fabric.Image.prototype.getMainProps = function() {
+  return fabric.util.object.extend(this.callSuper("getMainProps"), {
+    cropX: this.cropX,
+    cropY: this.cropY,
+    cropWidth: this.cropWidth,
+    cropHeight: this.cropHeight
+  });
+};
 
 fabric.Image.prototype._renderFill = (function(_renderFill) {
   return function(ctx) {

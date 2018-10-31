@@ -13,7 +13,8 @@ const {
   REMOVE_SELECTION,
   UPDATE_SELECTION_OBJECTS_COORDS,
   UPDATE_OBJECT_PROPS,
-  UPDATE_ACTIVE_SELECTION_PROPS
+  UPDATE_ACTIVE_SELECTION_PROPS,
+  UPDATE_CROP_PARAMS
 } = require("../actionTypes/project");
 const ProjectUtils = require("../../utils/ProjectUtils");
 const { handleActions } = require("redux-actions");
@@ -129,6 +130,18 @@ module.exports = handleActions(
       return {
         ...state,
         activeSelection: action.payload
+      };
+    },
+    [UPDATE_CROP_PARAMS]: (state, action) => {
+      return {
+        ...state,
+        objects: {
+          ...state.objects,
+          [action.payload.id]: merge(
+            state.objects[action.payload.id],
+            action.payload.props
+          )
+        }
       };
     }
   },

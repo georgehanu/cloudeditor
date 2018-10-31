@@ -4,6 +4,7 @@ const Fabric = require("./components/Fabric");
 const Image = "Image";
 const Text = "Text";
 const IText = "IText";
+const Textbox = "Textbox";
 const Group = "Group";
 
-module.exports = { Image, Text, IText, Fabric, Group };
+module.exports = { Image, Text, IText, Fabric, Group, Textbox };

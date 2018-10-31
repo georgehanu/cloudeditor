@@ -183,15 +183,25 @@ const getEmptyObject = cfg => {
           top: cfg.top,
           src:
             cfg.src ||
-            "https://images.pexels.com/photos/67636/rose-blue-flower-rose-blooms-67636.jpeg"
+            "https://images.pexels.com/photos/67636/rose-blue-flower-rose-blooms-67636.jpeg",
+          cropX: 0,
+          cropY: 0,
+          cropWidth: 0,
+          cropHeight: 0
         };
-      case "activeSelection":
+      case "textbox":
         return {
           ...object,
-          type: cfg.type,
-          left: cfg.left,
-          top: cfg.top
+          type: "textbox",
+          width: cfg.width || 0,
+          height: cfg.height || 0,
+          left: cfg.width || 500,
+          top: cfg.top || 500,
+          fontSize: cfg.fontSize || 20,
+          text: cfg.text || "Lorem Ipsum"
         };
+      case "activeSelection":
+        return { ...object, type: cfg.type, left: cfg.left, top: cfg.top };
       case "group":
         return {
           ...object,
@@ -202,7 +212,6 @@ const getEmptyObject = cfg => {
           top: cfg.top || 500,
           _objectsIds: cfg._objectsIds || []
         };
-        break;
     }
   }
 };

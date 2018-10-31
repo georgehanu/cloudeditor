@@ -1,19 +1,18 @@
 {
   "plugins": {
-    "mobile": [
-      "SideBar"
-    ],
+    "mobile": ["SideBar"],
     "desktop": [
       {
         "name": "SideBar",
         "hide": "{request.test==123}",
         "cfg": {
-          "additionalConfig":  123
+          "additionalConfig": 123
         }
       },
       "AddButton",
       "TabBar",
-      "Renderer"
+      "Renderer",
+      "Snap"
     ]
   }
 }

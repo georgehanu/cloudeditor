@@ -17,10 +17,23 @@ class Image extends FabricObject {
       logger.info("tmpImage loaded");
       this._updatePicture();
       this._updatePlaceholder();
+
+      console.log("image loaded", this.instance);
     };
   }
   _updatePlaceholder() {
     this.instance._setViewBox({});
+    if (
+      this.instance.designerCallbacks &&
+      this.instance.designerCallbacks.updateCropParams
+    ) {
+      this.instance.designerCallbacks.updateCropParams(this.instance.id, {
+        cropX: this.instance.cropX,
+        cropY: this.instance.cropY,
+        cropWidth: this.instance.cropWidth,
+        cropHeight: this.instance.cropHeight
+      });
+    }
   }
 }
 

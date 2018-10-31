@@ -1,15 +1,19 @@
 const React = require("react");
 const { number } = require("prop-types");
 const { debounce } = require("underscore");
+const { connect } = require("react-redux");
+const uuidv4 = require("uuid/v4");
 const {
   Image,
   IText,
+  Textbox,
   Fabric,
   Group
 } = require("../../../packages/core/react-fabric");
 const { fabric } = require("../../../rewrites/fabric/fabric");
 const { map } = require("ramda");
 const ProjectUtils = require("../../../utils/ProjectUtils");
+const projectActions = require("../../../stores/actions/project");
 
 const updatePageOffset = (props, editorContainer) => {
   const { adjustment, activePage } = props;
@@ -61,7 +65,44 @@ class FabricjsRenderer extends React.Component {
       canvasOffsetY: 0,
       canvasWorkingWidth: 0,
       canvasWorkingHeight: 0,
-      scale: 1
+      scale: 1,
+      events: [
+        {
+          id: uuidv4(),
+          event_name: "before:overlay:render",
+          callback: this.onBeforeOverlayHandler
+        },
+        {
+          id: uuidv4(),
+          event_name: "selection:created",
+          callback: this.onSelectedCreatedHandler
+        },
+        {
+          id: uuidv4(),
+          event_name: "selection:updated",
+          callback: this.onSelectedCreatedHandler
+        },
+        {
+          id: uuidv4(),
+          event_name: "selection:cleared",
+          callback: this.onSelectedClearedHandler
+        },
+        {
+          id: uuidv4(),
+          event_name: "object:moved",
+          callback: this.onObjectPropChangedHandler
+        },
+        {
+          id: uuidv4(),
+          event_name: "object:scaled",
+          callback: this.onObjectPropChangedHandler
+        },
+        {
+          id: uuidv4(),
+          event_name: "object:rotated",
+          callback: this.onObjectPropChangedHandler
+        }
+      ]
     };
   }
 
@@ -204,9 +245,20 @@ class FabricjsRenderer extends React.Component {
 
       switch (object.type) {
         case "image":
-          return <Image key={object.id} {...object} />;
+          let designerCallbacks = {
+            updateCropParams: this.props.updateCropParams
+          };
+          return (
+            <Image
+              key={object.id}
+              {...object}
+              designerCallbacks={designerCallbacks}
+            />
+          );
         case "text":
           return <IText key={object.id} {...object} />;
+        case "textbox":
+          return <Textbox key={object.id} {...object} />;
         case "group":
           return (
             <Group key={object.id} {...object}>
@@ -227,7 +279,7 @@ class FabricjsRenderer extends React.Component {
     let elements = this.drawElements(objects, 1);
 
     let isReadyComponent = this.state.isReadyComponent;
-    console.log("--------------------------------------------------");
+
     return (
       <div className="fabric_container">
         <div
@@ -243,6 +295,8 @@ class FabricjsRenderer extends React.Component {
               canvasOffsetY={this.state.canvasOffsetY}
               canvasWorkingWidth={this.state.canvasWorkingWidth}
               canvasWorkingHeight={this.state.canvasWorkingHeight}
+              events={this.state.events}
+              /*
               event_before_overlay_render={this.onBeforeOverlayHandler}
               event_selection_created={this.onSelectedCreatedHandler}
               event_selection_updated={this.onSelectedCreatedHandler}
@@ -250,6 +304,8 @@ class FabricjsRenderer extends React.Component {
               event_object_moved={this.onObjectPropChangedHandler}
               event_object_scaled={this.onObjectPropChangedHandler}
               event_object_rotated={this.onObjectPropChangedHandler}
+              evet={[1, 2, 3]}
+              */
             >
               {elements}
             </Fabric>
@@ -268,4 +324,15 @@ FabricjsRenderer.defaultProps = {
   adjustment: 60
 };
 
-module.exports = FabricjsRenderer;
+const mapDispatchToProps = dispatch => {
+  return {
+    updateCropParams: (id, props) =>
+      dispatch(projectActions.updateCropParams({ id, props }))
+  };
+};
+
+module.exports = connect(
+  null,
+  mapDispatchToProps
+)(FabricjsRenderer);
+//module.exports = FabricjsRenderer;
