@@ -2,9 +2,8 @@ import React from "react";
 const assign = require("object-assign");
 const { connect } = require("react-redux");
 const {
-  selectedObjectSelector,
   selectedObjectToolbarSelector
-} = require("../stores/selectors/project");
+} = require("../stores/selectors/toolbar");
 
 import ToolbarArea from "../components/toolbar/ToolbarItems/ToolbarArea/ToolbarArea";
 import SettingsWnd from "../components/toolbar/ToolbarItems/SettingsWnd/SettingsWnd";

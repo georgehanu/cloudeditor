@@ -132,9 +132,9 @@ const getRandomProject = cfg => {
     left: 100,
     top: 100,
     text: "Enter text here",
-    fontSize: 20,
-    textBackgroundColor: "red",
-    fill: "blue"
+    bold: true,
+    italic: false,
+    underline: true
   });
 
   page1 = {
@@ -222,7 +222,10 @@ const getEmptyObject = cfg => {
           height: cfg.height,
           left: cfg.left,
           top: cfg.top,
-          text: cfg.text || "Default text"
+          text: cfg.text || "Default text",
+          bold: cfg.bold || false,
+          underline: cfg.underline || false,
+          italic: cfg.italic || false
         };
     }
   }

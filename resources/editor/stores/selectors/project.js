@@ -53,7 +53,7 @@ const activePageSelector = createSelector(
 const selectedObjectSelector = createSelector(
   [objectsSelector, selectedObjectsIdsSelector],
   (objects, selectedObjectsIds) => {
-    //selectedObjectsIds = [Object.keys(objects)[0]];
+    selectedObjectsIds = [Object.keys(objects)[0]];
 
     const activeObjects = {
       objects: pick(selectedObjectsIds, objects)
@@ -63,32 +63,11 @@ const selectedObjectSelector = createSelector(
   }
 );
 
-const selectedObjectToolbarSelector = createSelector(
-  [objectsSelector, selectedObjectsIdsSelector],
-  (objects, selectedObjectsIds) => {
-    if (selectedObjectsIds.length === 0) {
-      return null;
-    }
-
-    const selectedObj = pick(selectedObjectsIds, objects);
-    const selectedItem = selectedObj[Object.keys(selectedObj)[0]];
-
-    console.log(selectedItem);
-    //selectedObjectsIds = [Object.keys(objects)[0]];
-    //selectedObjectsIds = objects[selectedObjectsIds]];
-    /*
-                const activeObjects = {
-                    objects: pick(selectedObjectsIds, objects)
-                };
-        */
-    return selectedItem;
-  }
-);
-
 module.exports = {
   activePageSelector,
   activePageIdSelector,
   selectedObjectSelector,
   activeSelectionSelector,
-  selectedObjectToolbarSelector
+  objectsSelector,
+  selectedObjectsIdsSelector
 };
