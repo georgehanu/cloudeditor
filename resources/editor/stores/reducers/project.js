@@ -80,20 +80,10 @@ module.exports = handleActions(
       return { ...state, selectedObjectsIds: [action.payload] };
     },
     [REMOVE_SELECTION]: (state, action) => {
-      let objectsChanges = reduce(
-        (acc, value) => {
-          const key = value.id;
-          delete value.id;
-          acc[key] = value;
-          return acc;
-        },
-        {},
-        action.payload.objectProps
-      );
       return {
         ...state,
         activeSelection: null,
-        objects: mergeDeepLeft(objectsChanges, state.objects),
+
         selectedObjectsIds: []
       };
     },
