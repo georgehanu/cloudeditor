@@ -107,6 +107,11 @@ class FabricjsRenderer extends React.PureComponent {
           id: uuidv4(),
           event_name: "image:editing:exited",
           callback: this.onObjectPropChangedHandler
+        },
+        {
+          id: uuidv4(),
+          event_name: "text:editing:exited",
+          callback: this.onObjectPropChangedHandler
         }
       ]
     };
@@ -229,13 +234,6 @@ class FabricjsRenderer extends React.PureComponent {
           id: args.target.id,
           props: objProps
         });
-      }
-
-      switch (args.target.type) {
-        case "activeSelection":
-          break;
-        default:
-          break;
       }
     }
   };

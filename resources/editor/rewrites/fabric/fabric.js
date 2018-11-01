@@ -544,4 +544,12 @@ fabric.ActiveSelection.prototype.initialize = (function(_initialize) {
     this.id = uuidv4();
   };
 })(fabric.ActiveSelection.prototype.initialize);
+
+fabric.Textbox.prototype.getMainProps = function() {
+  return fabric.util.object.extend(this.callSuper("getMainProps"), {
+    fontSize: this.fontSize,
+    text: this.text
+  });
+};
+
 module.exports = { fabric };
