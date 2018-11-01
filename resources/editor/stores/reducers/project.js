@@ -1,10 +1,19 @@
-const { append } = require("ramda");
+const {
+  append,
+  mergeDeepLeft,
+  forEachObjIndexed,
+  reduce,
+  merge
+} = require("ramda");
 const {
   CHANGE_PROJECT_TITLE,
   ADD_OBJECT,
   ADD_OBJECT_TO_PAGE,
   CHANGE_OBJECT_POSITION,
-  CHANGE_OBJECT_DIMENSIONS
+  CHANGE_OBJECT_DIMENSIONS,
+  ADD_OBJECT_ID_TO_SELECTED,
+  REMOVE_SELECTION,
+  UPDATE_OBJECT_PROPS
 } = require("../actionTypes/project");
 const ProjectUtils = require("../../utils/ProjectUtils");
 const { handleActions } = require("redux-actions");
@@ -76,6 +85,25 @@ const changeObjectDimesions = (state, action) => {
     }
   };
 };
+const addObjectIdToSelected = (state, payload) => {
+  return { ...state, selectedObjectsIds: [payload] };
+};
+const updateObjectProps = (state, payload) => {
+  return {
+    ...state,
+    objects: {
+      ...state.objects,
+      [payload.id]: merge(state.objects[payload.id], payload.props)
+    }
+  };
+};
+const removeSelection = (state, payload) => {
+  return {
+    ...state,
+    activeSelection: null,
+    selectedObjectsIds: []
+  };
+};
 
 const emptyProject = ProjectUtils.getRandomProject();
 
@@ -99,6 +127,15 @@ module.exports = handleActions(
     },
     [CHANGE_OBJECT_DIMENSIONS]: (state, action) => {
       return changeObjectDimesions(state, action.payload);
+    },
+    [ADD_OBJECT_ID_TO_SELECTED]: (state, action) => {
+      return addObjectIdToSelected(state, action.payload);
+    },
+    [UPDATE_OBJECT_PROPS]: (state, action) => {
+      return updateObjectProps(state, action.payload);
+    },
+    [REMOVE_SELECTION]: (state, action) => {
+      return removeSelection(state, action.payload);
     }
   },
   initialState

@@ -6,7 +6,8 @@ const { connect } = require("react-redux");
 
 const {
   changeObjectPosition,
-  changeObjectDimensions
+  changeObjectDimensions,
+  updateObjectProps
 } = require("./../../stores/actions/project");
 
 const Objects = require("./Html5/Objects");
@@ -63,9 +64,7 @@ class Html5Renderer extends React.Component {
         >
           <Objects
             items={this.props.objects}
-            onDrag={this.onDragHandler}
-            onDragStop={this.props.onDragStopHandler}
-            onResizeStop={this.props.onResizeStopHandler}
+            onUpdateProps={this.props.onUpdatePropsHandler}
             scale={scale}
           />
           <div id="fitTextEscaper" />
@@ -100,8 +99,7 @@ Html5Renderer.defaultProps = {
 
 const mapDispatchToProps = dispatch => {
   return {
-    onDragStopHandler: payload => dispatch(changeObjectPosition(payload)),
-    onResizeStopHandler: payload => dispatch(changeObjectDimensions(payload))
+    onUpdatePropsHandler: payload => dispatch(updateObjectProps(payload))
   };
 };
 

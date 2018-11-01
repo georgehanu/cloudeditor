@@ -15,9 +15,7 @@ const objects = props => (
           left={left * scale}
           top={top * scale}
           {...otherProps}
-          onDrag={props.onDrag}
-          onDragStop={props.onDragStop}
-          onResizeStop={props.onResizeStop}
+          onUpdateProps={props.onUpdateProps}
         />
       );
     })}

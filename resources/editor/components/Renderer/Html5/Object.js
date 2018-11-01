@@ -4,6 +4,11 @@ const randomColor = require("randomcolor");
 const ImageBlock = require("./Image");
 const TextBlock = require("./Text");
 const { forEach } = require("ramda");
+const { connect } = require("react-redux");
+const {
+  addObjectIdToSelected,
+  removeSelection
+} = require("./../../../stores/actions/project");
 
 require("webpack-jquery-ui/draggable");
 require("webpack-jquery-ui/resizable");
@@ -35,10 +40,12 @@ class ObjectBlock extends React.PureComponent {
         $(element).draggable({
           snap: ".drag_alignLines",
           stop: (event, ui) => {
-            this.props.onDragStop({
+            this.props.onUpdateProps({
               id: this.props.id,
-              top: ui.position.top / this.props.scale,
-              left: ui.position.left / this.props.scale
+              props: {
+                top: ui.position.top / this.props.scale,
+                left: ui.position.left / this.props.scale
+              }
             });
           }
         });
@@ -46,10 +53,12 @@ class ObjectBlock extends React.PureComponent {
       if (resizable) {
         $(element).resizable({
           stop: (event, ui) => {
-            this.props.onResizeStop({
+            this.props.onUpdateProps({
               id: this.props.id,
-              width: ui.size.width / this.props.scale,
-              height: ui.size.height / this.props.scale
+              props: {
+                width: ui.size.width / this.props.scale,
+                height: ui.size.height / this.props.scale
+              }
             });
           }
         });
@@ -66,6 +75,7 @@ class ObjectBlock extends React.PureComponent {
     if (!editableActive) {
       if (movable) $(element).draggable("disable");
       this.setState({ editableActive: true });
+      this.props.onSetActiveBlockHandler(this.props.id);
     }
   }
 
@@ -83,6 +93,7 @@ class ObjectBlock extends React.PureComponent {
     });
     if (!isBlur) {
       this.setState({ editableActive: false });
+      this.props.onRemoveActiveBlockHandler(this.props.id);
     }
   }
   onClickHandlerOutside(event) {
@@ -148,7 +159,18 @@ class ObjectBlock extends React.PureComponent {
   }
 }
 
-module.exports = ObjectBlock;
+const mapDispatchToProps = dispatch => {
+  return {
+    onSetActiveBlockHandler: payload =>
+      dispatch(addObjectIdToSelected(payload)),
+    onRemoveActiveBlockHandler: payload => dispatch(removeSelection(payload))
+  };
+};
+
+module.exports = connect(
+  null,
+  mapDispatchToProps
+)(ObjectBlock);
 
 // const objectBlock = React.forwardRef((props, ref) => {
 //   console.log(ref, props);
