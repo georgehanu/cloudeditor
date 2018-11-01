@@ -140,6 +140,7 @@ const hostConfig = {
       oldProps,
       newProps
     );
+
     instance._applyProps(newProps, oldProps);
   }
 };

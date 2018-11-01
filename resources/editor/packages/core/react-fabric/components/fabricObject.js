@@ -62,6 +62,7 @@ class FabricObject {
       logger.info("hasUpdates", updatedProps);
       instance.set(updatedProps);
       this._updatePicture(instance);
+      instance.setCoords();
     }
   }
 

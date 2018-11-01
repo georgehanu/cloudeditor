@@ -1,57 +1,61 @@
 const React = require("react");
 const { number } = require("prop-types");
-const { Image, IText, Fabric } = require("../../../packages/core/react-fabric");
+const { debounce } = require("underscore");
+const { connect } = require("react-redux");
+const uuidv4 = require("uuid/v4");
+const {
+  Image,
+  IText,
+  Textbox,
+  Fabric,
+  Group
+} = require("../../../packages/core/react-fabric");
 const { fabric } = require("../../../rewrites/fabric/fabric");
+const { map } = require("ramda");
+const ProjectUtils = require("../../../utils/ProjectUtils");
+const projectActions = require("../../../stores/actions/project");
 
 const updatePageOffset = (props, editorContainer) => {
-  const { designerMaxWidth, designerMaxHeight, adjustment, activePage } = props;
+  const { adjustment, activePage } = props;
 
-  let newW = 0,
-    newH = 0,
-    offsetX = 0,
-    offsetY = 0;
+  let parentDimension = editorContainer.getBoundingClientRect();
+  parentDimension.width -= adjustment;
+  parentDimension.height -= adjustment;
 
-  const parentDimension = editorContainer.getBoundingClientRect();
-
-  parentDimension.height =
-    parentDimension.height > designerMaxHeight
-      ? designerMaxHeight
-      : parentDimension.height - adjustment;
-  parentDimension.width =
-    parentDimension.width > designerMaxWidth
-      ? designerMaxWidth
-      : parentDimension.width - adjustment;
-
-  let containerRatio = parentDimension.width / parentDimension.height,
-    productRatio = activePage.width / activePage.height;
-
-  if (containerRatio >= productRatio) {
-    newW = (parentDimension.height - adjustment) * productRatio;
-    newH = parentDimension.height - adjustment;
-  } else {
-    newW = parentDimension.width - adjustment;
-    newH = (parentDimension.width - adjustment) / productRatio;
-  }
-  offsetX = (parentDimension.width - newW) / 2;
-  offsetY = (parentDimension.height - newH) / 2;
+  let scale = Math.min(
+    parentDimension.height / activePage.height,
+    parentDimension.width / activePage.width
+  );
+  let pageWidth = activePage.width * scale,
+    pageHeight = activePage.height * scale;
 
   const result = {
     isReadyComponent: true,
     width: parentDimension.width,
     height: parentDimension.height,
-    canvasOffsetX: offsetX,
-    canvasOffsetY: offsetY,
-    canvasWorkingWidth: newW,
-    canvasWorkingHeight: newH,
-    canvasScale: newW / activePage.width
+    canvasOffsetX: (parentDimension.width - pageWidth) / 2,
+    canvasOffsetY: (parentDimension.height - pageHeight) / 2,
+    canvasWorkingWidth: pageWidth,
+    canvasWorkingHeight: pageHeight,
+    scale: scale
   };
   return result;
 };
 
 class FabricjsRenderer extends React.Component {
+  state = {
+    editorContainer: null,
+    isReadyComponent: false,
+    width: 0,
+    height: 0,
+    canvasOffsetX: 0,
+    canvasOffsetY: 0,
+    canvasWorkingWidth: 0,
+    canvasWorkingHeight: 0,
+    scale: 1
+  };
   constructor(props) {
     super(props);
-
     this.editorContainer = React.createRef();
     this.state = {
       isReadyComponent: false,
@@ -61,7 +65,44 @@ class FabricjsRenderer extends React.Component {
       canvasOffsetY: 0,
       canvasWorkingWidth: 0,
       canvasWorkingHeight: 0,
-      canvasScale: 1
+      scale: 1,
+      events: [
+        {
+          id: uuidv4(),
+          event_name: "before:overlay:render",
+          callback: this.onBeforeOverlayHandler
+        },
+        {
+          id: uuidv4(),
+          event_name: "selection:created",
+          callback: this.onSelectedCreatedHandler
+        },
+        {
+          id: uuidv4(),
+          event_name: "selection:updated",
+          callback: this.onSelectedCreatedHandler
+        },
+        {
+          id: uuidv4(),
+          event_name: "selection:cleared",
+          callback: this.onSelectedClearedHandler
+        },
+        {
+          id: uuidv4(),
+          event_name: "object:moved",
+          callback: this.onObjectPropChangedHandler
+        },
+        {
+          id: uuidv4(),
+          event_name: "object:scaled",
+          callback: this.onObjectPropChangedHandler
+        },
+        {
+          id: uuidv4(),
+          event_name: "object:rotated",
+          callback: this.onObjectPropChangedHandler
+        }
+      ]
     };
   }
 
@@ -72,7 +113,7 @@ class FabricjsRenderer extends React.Component {
 
   componentDidMount() {
     this.updatePageOffset();
-    window.addEventListener("resize", this.updatePageOffset);
+    window.addEventListener("resize", debounce(this.updatePageOffset));
   }
 
   /**
@@ -111,34 +152,132 @@ class FabricjsRenderer extends React.Component {
       params.ctx.closePath();
     }
   };
+  onSelectedCreatedHandler = args => {
+    if (args && args.target) {
+      switch (args.target.type) {
+        case "activeSelection":
+          let activeSelectionData = {
+            id: args.target.id,
+            props: {
+              left: args.target.left,
+              top: args.target.top,
+              width: args.target.width,
+              height: args.target.height
+            },
+            objectProps: map(obj => {
+              return {
+                id: obj.id,
+                left: (obj.left - this.state.canvasOffsetX) / this.state.scale,
+                top: (obj.top - this.state.canvasOffsetY) / this.state.scale
+              };
+            }, args.selected)
+          };
+          this.props.updateSelectionObjectsCoordsHandler(activeSelectionData);
+          break;
+        default:
+          this.props.addObjectToSelectedHandler(args.target.id);
+          break;
+      }
+    }
+  };
+  onSelectedClearedHandler = args => {
+    if (args && args.deselected) {
+      let selectionData = {
+        objectProps: map(obj => {
+          return {
+            id: obj.id,
+            left: (obj.left - this.state.canvasOffsetX) / this.state.scale,
+            top: (obj.top - this.state.canvasOffsetY) / this.state.scale,
+            angle: obj.angle
+          };
+        }, args.deselected)
+      };
+      this.props.removeSelection(selectionData);
+    }
+  };
 
-  render() {
-    const { activePage: page } = this.props;
-    const { objects } = page;
+  onObjectPropChangedHandler = args => {
+    if (args && args.target) {
+      let objProps = args.target.getMainProps();
+      switch (args.target.type) {
+        case "activeSelection":
+          let activeSelectionData = {
+            id: args.target.id,
+            props: objProps,
+            objectProps: []
+          };
+          this.props.updateSelectionObjectsCoordsHandler(activeSelectionData);
+          break;
+        default:
+          objProps.left =
+            (objProps.left - this.state.canvasOffsetX) / this.state.scale;
+          objProps.top =
+            (objProps.top - this.state.canvasOffsetY) / this.state.scale;
+          objProps.width =
+            (objProps.width / this.state.scale) * args.target.scaleX;
+          objProps.height =
+            (objProps.height / this.state.scale) * args.target.scaleY;
+          objProps.scaleX = 1;
+          objProps.scaleY = 1;
+          this.props.updateObjectProps({
+            id: args.target.id,
+            props: objProps
+          });
+          break;
+      }
+    }
+  };
+  drawElements(objects, needOffset) {
     let elements = Object.keys(objects).map(obKey => {
-      const object = objects[obKey];
+      const object = { ...objects[obKey] };
+
+      if (object.parentId) {
+        return null;
+      }
+      object.width *= this.state.scale;
+      object.height *= this.state.scale;
+      object.left = object.left * this.state.scale;
+      object.top = object.top * this.state.scale;
+      if (needOffset) {
+        object.left += this.state.canvasOffsetX;
+        object.top += this.state.canvasOffsetY;
+      }
+
       switch (object.type) {
         case "image":
+          let designerCallbacks = {
+            updateCropParams: this.props.updateCropParams
+          };
           return (
             <Image
               key={object.id}
               {...object}
-              onMoving={this.onMovingHandler}
+              designerCallbacks={designerCallbacks}
             />
           );
         case "text":
+          return <IText key={object.id} {...object} />;
+        case "textbox":
+          return <Textbox key={object.id} {...object} />;
+        case "group":
           return (
-            <IText
-              key={object.id}
-              {...object}
-              onMoving={this.onMovingHandler}
-            />
+            <Group key={object.id} {...object}>
+              {this.drawElements(object._elements, false)}
+            </Group>
           );
         default:
           break;
       }
       return null;
     });
+    return elements;
+  }
+  render() {
+    const { activePage: page } = this.props;
+    const { objects } = page;
+
+    let elements = this.drawElements(objects, 1);
+
     let isReadyComponent = this.state.isReadyComponent;
 
     return (
@@ -156,8 +295,17 @@ class FabricjsRenderer extends React.Component {
               canvasOffsetY={this.state.canvasOffsetY}
               canvasWorkingWidth={this.state.canvasWorkingWidth}
               canvasWorkingHeight={this.state.canvasWorkingHeight}
+              events={this.state.events}
+              /*
               event_before_overlay_render={this.onBeforeOverlayHandler}
-              canvasScale={this.state.canvasScale}
+              event_selection_created={this.onSelectedCreatedHandler}
+              event_selection_updated={this.onSelectedCreatedHandler}
+              event_selection_cleared={this.onSelectedClearedHandler}
+              event_object_moved={this.onObjectPropChangedHandler}
+              event_object_scaled={this.onObjectPropChangedHandler}
+              event_object_rotated={this.onObjectPropChangedHandler}
+              evet={[1, 2, 3] }
+              */
             >
               {elements}
             </Fabric>
@@ -169,15 +317,22 @@ class FabricjsRenderer extends React.Component {
 }
 
 FabricjsRenderer.propTypes = {
-  designerMaxWidth: number,
-  designerMaxHeight: number,
   adjustment: number
 };
 
 FabricjsRenderer.defaultProps = {
-  designerMaxWidth: 1400,
-  designerMaxHeight: 800,
   adjustment: 60
 };
 
-module.exports = FabricjsRenderer;
+const mapDispatchToProps = dispatch => {
+  return {
+    updateCropParams: (id, props) =>
+      dispatch(projectActions.updateCropParams({ id, props }))
+  };
+};
+
+module.exports = connect(
+  null,
+  mapDispatchToProps
+)(FabricjsRenderer);
+//module.exports = FabricjsRenderer;

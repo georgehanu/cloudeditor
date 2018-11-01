@@ -7,7 +7,8 @@ const getProjectTemplate = cfg => {
     pagesOrder: [],
     activePage: null,
     objects: {},
-    selectedObjectsIds: []
+    selectedObjectsIds: [],
+    activeSelection: null
   };
   return project;
 };
@@ -77,6 +78,31 @@ const getRandomProject = cfg => {
     orientation: "north",
     src: defaultImages[parseInt(Math.random() * defaultImages.length)]
   });
+  let img6 = getEmptyObject({
+    type: "image",
+    width: 100,
+    height: 100,
+    left: -250,
+    top: -250,
+    src: defaultImages[parseInt(Math.random() * defaultImages.length)]
+  });
+  let img7 = getEmptyObject({
+    type: "image",
+    width: 100,
+    height: 100,
+    left: 100,
+    top: 100,
+    src: defaultImages[parseInt(Math.random() * defaultImages.length)]
+  });
+  let group = getEmptyObject({
+    type: "group",
+    width: 500,
+    height: 500,
+    left: 400,
+    top: 400,
+    _objectsIds: [img6.id, img7.id]
+  });
+
   let img3 = getEmptyObject({
     type: "image",
     width: Math.random() * 500,
@@ -116,12 +142,12 @@ const getRandomProject = cfg => {
 
   page1 = {
     ...page1,
-    objectsIds: [img1.id, img2.id, img3.id]
+    objectsIds: [img1.id, img2.id, img3.id, group.id]
   };
 
   page2 = {
     ...page2,
-    objectsIds: [img4.id, img5.id]
+    objectsIds: []
   };
   return {
     ...project,
@@ -134,8 +160,9 @@ const getRandomProject = cfg => {
       [img1.id]: img1,
       [img2.id]: img2,
       [img3.id]: img3,
-      [img4.id]: img4,
-      [img5.id]: img5
+      [img6.id]: img6,
+      [img7.id]: img7,
+      [group.id]: group
     },
     pagesOrder: [page1.id, page2.id],
     activePage: page1.id
@@ -164,7 +191,8 @@ const getEmptyObject = cfg => {
     resizable: cfg.resizable || 1,
     rotatable: cfg.rotatable || 1,
     movable: cfg.movable || 1,
-    orientation: cfg.orientation || "north"
+    orientation: cfg.orientation || "north",
+    angle: 0
   };
 
   if (cfg && cfg.type) {
@@ -174,7 +202,34 @@ const getEmptyObject = cfg => {
           ...object,
           src:
             cfg.src ||
-            "https://images.pexels.com/photos/67636/rose-blue-flower-rose-blooms-67636.jpeg"
+            "https://images.pexels.com/photos/67636/rose-blue-flower-rose-blooms-67636.jpeg",
+          cropX: 0,
+          cropY: 0,
+          cropWidth: 0,
+          cropHeight: 0
+        };
+      case "textbox":
+        return {
+          ...object,
+          type: "textbox",
+          width: cfg.width || 0,
+          height: cfg.height || 0,
+          left: cfg.width || 500,
+          top: cfg.top || 500,
+          fontSize: cfg.fontSize || 20,
+          text: cfg.text || "Lorem Ipsum"
+        };
+      case "activeSelection":
+        return { ...object, type: cfg.type, left: cfg.left, top: cfg.top };
+      case "group":
+        return {
+          ...object,
+          type: cfg.type,
+          width: cfg.width || 500,
+          height: cfg.height || 500,
+          left: cfg.left || 500,
+          top: cfg.top || 500,
+          _objectsIds: cfg._objectsIds || []
         };
         break;
       case "text":

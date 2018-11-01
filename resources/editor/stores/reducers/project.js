@@ -9,11 +9,12 @@ const {
   CHANGE_PROJECT_TITLE,
   ADD_OBJECT,
   ADD_OBJECT_TO_PAGE,
-  CHANGE_OBJECT_POSITION,
-  CHANGE_OBJECT_DIMENSIONS,
   ADD_OBJECT_ID_TO_SELECTED,
   REMOVE_SELECTION,
-  UPDATE_OBJECT_PROPS
+  UPDATE_SELECTION_OBJECTS_COORDS,
+  UPDATE_OBJECT_PROPS,
+  UPDATE_ACTIVE_SELECTION_PROPS,
+  UPDATE_CROP_PARAMS
 } = require("../actionTypes/project");
 const ProjectUtils = require("../../utils/ProjectUtils");
 const { handleActions } = require("redux-actions");
@@ -122,12 +123,6 @@ module.exports = handleActions(
     [ADD_OBJECT_TO_PAGE]: (state, action) => {
       return addObjectToPage(state, action.payload);
     },
-    [CHANGE_OBJECT_POSITION]: (state, action) => {
-      return changeObjectPosition(state, action.payload);
-    },
-    [CHANGE_OBJECT_DIMENSIONS]: (state, action) => {
-      return changeObjectDimesions(state, action.payload);
-    },
     [ADD_OBJECT_ID_TO_SELECTED]: (state, action) => {
       return addObjectIdToSelected(state, action.payload);
     },
@@ -136,6 +131,41 @@ module.exports = handleActions(
     },
     [REMOVE_SELECTION]: (state, action) => {
       return removeSelection(state, action.payload);
+    },
+    [UPDATE_SELECTION_OBJECTS_COORDS]: (state, action) => {
+      let objectsChanges = reduce(
+        (acc, value) => {
+          const key = value.id;
+          delete value.id;
+          acc[key] = value;
+          return acc;
+        },
+        {},
+        action.payload.objectProps
+      );
+      return {
+        ...state,
+        activeSelection: action.payload.props,
+        objects: mergeDeepLeft(objectsChanges, state.objects)
+      };
+    },
+    [UPDATE_ACTIVE_SELECTION_PROPS]: (state, action) => {
+      return {
+        ...state,
+        activeSelection: action.payload
+      };
+    },
+    [UPDATE_CROP_PARAMS]: (state, action) => {
+      return {
+        ...state,
+        objects: {
+          ...state.objects,
+          [action.payload.id]: merge(
+            state.objects[action.payload.id],
+            action.payload.props
+          )
+        }
+      };
     }
   },
   initialState
