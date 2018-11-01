@@ -17,7 +17,7 @@ require("../workspaces/" + EDITOR_WORKSPACE + "/theme.js");
 
 ConfigUtils.loadConfiguration({ workspace: EDITOR_WORKSPACE });
 
-const store = StandardStore(ProjectUtils.getEmptyProject(), {}, plugins);
+const store = StandardStore(ProjectUtils.getEmptyProject(), {}, {}, plugins);
 
 const { withNamespaces } = require("react-i18next");
 

@@ -45,8 +45,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     addObjectToPageHandler: (object, pageId) =>
-      dispatch(addObjectToPage({ object, pageId })),
-    changeThemeHandler: theme => dispatch(changeTheme(theme))
+      dispatch(addObjectToPage({ object, pageId }))
   };
 };
 
@@ -64,5 +63,6 @@ module.exports = {
       priority: 1
     }
   }),
-  reducers: { addButton: require("../stores/reducers/addButton") }
+  reducers: { addButton: require("../stores/reducers/addButton") },
+  epics: require("../stores/epics/addButton")
 };

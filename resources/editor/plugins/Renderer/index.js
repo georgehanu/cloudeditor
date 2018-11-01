@@ -26,7 +26,7 @@ module.exports = renderType => {
   const renderTypeSelector = createSelector(
     [rendererTypeSelector],
     rendererType => {
-      rendererType;
+      return { rendererType };
     }
   );
 

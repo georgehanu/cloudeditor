@@ -1,0 +1,30 @@
+.canvas-container {
+  background-color: gray;
+  width: 90%;
+  height: 90%;
+}
+
+.page-container {
+  position: absolute;
+  display: block;
+  left: 50%;
+  top: 50%;
+  -webkit-transform: translate(-50%, -50%);
+  -moz-transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  -o-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+  background-color: rebeccapurple;
+}
+
+.page-block {
+  position: absolute;
+  background: none repeat scroll 0 0 rgba(0, 0, 0, 0);
+  -moz-opacity: 1;
+  opacity: 1;
+  filter: alpha(opacity=100);
+  display: block;
+  z-index: 2;
+  cursor: default;
+  border: 1px dashed #ccc;
+}

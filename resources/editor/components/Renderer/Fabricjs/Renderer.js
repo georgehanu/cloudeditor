@@ -229,7 +229,7 @@ class FabricjsRenderer extends React.Component {
     let isReadyComponent = this.state.isReadyComponent;
     console.log("--------------------------------------------------");
     return (
-      <div className="fabric_container">
+      <div className="render-container">
         <div
           style={{ background: "#F3F4F6", height: "100%" }}
           className="canvasContainer"

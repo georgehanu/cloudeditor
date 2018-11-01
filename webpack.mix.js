@@ -85,6 +85,10 @@ mix.webpackConfig({
   devtool: "source-map"
 });
 
+mix.autoload({
+  jquery: ["$", "window.jQuery", "jQuery"]
+});
+
 mix.copy("resources/editor/assets", "public/" + editorPublicPath + "assets");
 mix.copy("resources/editor/locales", "public/" + editorPublicPath + "locales");
 mix.disableNotifications();
