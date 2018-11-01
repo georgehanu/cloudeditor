@@ -1,9 +1,15 @@
-const { combineReducers } = require("../utils/PluginsUtils");
+const { combineReducers, combineEpics } = require("../utils/PluginsUtils");
 const { createDebugStore } = require("../utils/DebugUtils");
+const projectEpics = require("../stores/epics/project");
+
+const standardEpics = {
+  ...projectEpics
+};
 
 module.exports = (
   initialState = { defaultState: {}, mobile: {} },
   appReducers = {},
+  appEpics = {},
   plugins = {}
 ) => {
   const rootReducer = combineReducers(plugins, {
@@ -11,8 +17,10 @@ module.exports = (
     project: require("../stores/reducers/project")
   });
 
+  const rootEpic = combineEpics(plugins, { ...appEpics, ...standardEpics });
+
   const defaultState = initialState.defaultState;
 
-  const store = createDebugStore(rootReducer, defaultState);
+  const store = createDebugStore(rootReducer, rootEpic, defaultState);
   return store;
 };

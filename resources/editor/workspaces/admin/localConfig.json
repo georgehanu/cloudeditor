@@ -12,7 +12,12 @@
       "AddButton",
       "TabBar",
       "Renderer",
-      "Snap"
+      "Snap",
+      "Toolbar",
+      {
+        "name": "Html5Renderer",
+        "hide": "{true}"
+      }
     ]
   }
 }

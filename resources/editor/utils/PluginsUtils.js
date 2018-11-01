@@ -2,6 +2,8 @@ const { combineReducers } = require("redux");
 const { omit, is, head } = require("ramda");
 const assign = require("object-assign");
 const queryString = require("query-string");
+const { combineEpics } = require("redux-observable");
+const { catchError } = require("rxjs/operators");
 
 const getPluginItems = (store, plugins, pluginsConfig, name, id, isDefault) => {
   return Object.keys(plugins)
@@ -55,6 +57,11 @@ const getPluginItems = (store, plugins, pluginsConfig, name, id, isDefault) => {
 const getReducers = plugins =>
   Object.keys(plugins)
     .map(name => plugins[name].reducers)
+    .reduce((previous, current) => assign({}, previous, current), {});
+
+const getEpics = plugins =>
+  Object.keys(plugins)
+    .map(name => plugins[name].epics)
     .reduce((previous, current) => assign({}, previous, current), {});
 
 const isPluginConfigured = (pluginsConfig, pluginName) => {
@@ -165,6 +172,26 @@ const getMorePrioritizedContainer = (pluginImpl, plugins, priority) => {
     { plugin: null, priority: priority }
   );
 };
+
+/**
+ * default wrapper for the epics.
+ * @memberof utils.PluginsUtils
+ * @param {epic} epic the epic to wrap
+ * @return {epic} epic wrapped with error catch and re-subscribe functionalities.S
+ *
+ * https://github.com/redux-observable/redux-observable/issues/94
+ */
+const defaultEpicWrapper = epic => (...args) =>
+  epic(...args).pipe(
+    catchError((error, source) => {
+      console.info(`${epic}: caught an error.`, error, source);
+      setTimeout(() => {
+        throw error;
+      }, 0);
+      return source;
+    })
+  );
+
 const PluginsUtils = {
   /**
    * Produces the reducers from the plugins, combined with other plugins
@@ -175,6 +202,15 @@ const PluginsUtils = {
   combineReducers: (plugins, reducers) => {
     const pluginsReducers = getReducers(plugins);
     return combineReducers(assign({}, reducers, pluginsReducers));
+  },
+
+  combineEpics: (plugins, epics = {}, epicWrapper = defaultEpicWrapper) => {
+    const pluginEpics = assign({}, getEpics(plugins), epics);
+    return combineEpics(
+      ...Object.keys(pluginEpics)
+        .map(k => pluginEpics[k])
+        .map(epicWrapper)
+    );
   },
 
   mapPluginsPosition: (pluginsConfig = []) => {
@@ -229,7 +265,8 @@ const PluginsUtils = {
 
   handleExpression,
   filterDisabledPlugins,
-  getMorePrioritizedContainer
+  getMorePrioritizedContainer,
+  defaultEpicWrapper
 };
 
 module.exports = PluginsUtils;

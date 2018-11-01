@@ -125,10 +125,21 @@ const getRandomProject = cfg => {
     top: Math.random() * 500,
     src: defaultImages[parseInt(Math.random() * defaultImages.length)]
   });
+  let text1 = getEmptyObject({
+    type: "text",
+    width: 100,
+    height: 100,
+    left: 100,
+    top: 100,
+    text: "Enter text here",
+    bold: true,
+    italic: false,
+    underline: true
+  });
 
   page1 = {
     ...page1,
-    objectsIds: [img1.id, img2.id, img3.id, group.id]
+    objectsIds: [img1.id, img2.id, img3.id, group.id, text1.id]
   };
 
   page2 = {
@@ -148,7 +159,8 @@ const getRandomProject = cfg => {
       [img3.id]: img3,
       [img6.id]: img6,
       [img7.id]: img7,
-      [group.id]: group
+      [group.id]: group,
+      [text1.id]: text1
     },
     pagesOrder: [page1.id, page2.id],
     activePage: page1.id
@@ -211,6 +223,23 @@ const getEmptyObject = cfg => {
           left: cfg.left || 500,
           top: cfg.top || 500,
           _objectsIds: cfg._objectsIds || []
+        };
+      case "text":
+        return {
+          ...object,
+          type: cfg.type,
+          width: cfg.width,
+          height: cfg.height,
+          left: cfg.left,
+          top: cfg.top,
+          text: cfg.text || "Default text",
+          bold: cfg.bold || false,
+          underline: cfg.underline || false,
+          italic: cfg.italic || false,
+          fill: cfg.fill || "black",
+          charSpacing: cfg.charSpacing || 1,
+          fontSize: cfg.fontSize || 60,
+          fontFamily: cfg.fontFamily || "Times New Roman"
         };
     }
   }

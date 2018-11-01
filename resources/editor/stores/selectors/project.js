@@ -62,9 +62,12 @@ const selectedObjectSelector = createSelector(
     return activeObjects;
   }
 );
+
 module.exports = {
   activePageSelector,
   activePageIdSelector,
   selectedObjectSelector,
-  activeSelectionSelector
+  activeSelectionSelector,
+  objectsSelector,
+  selectedObjectsIdsSelector
 };
