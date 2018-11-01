@@ -14,7 +14,8 @@ class FabricObject {
     ref: true,
     key: true,
     style: true,
-    image: true
+    image: true,
+    designerCallbacks: true
   };
 
   _applyProps(props, oldProps) {
@@ -37,7 +38,7 @@ class FabricObject {
         instance.set(key, undefined);
       }
     }
-    for (let key in props) {
+    for (var key in props) {
       if (this.propsToSkip[key]) {
         continue;
       }

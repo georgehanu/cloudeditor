@@ -33,9 +33,7 @@ module.exports = renderType => {
   const mapStateToProps = state => {
     return {
       type: renderTypeSelector(state),
-      activePage: activePageSelector(state),
-      activeObjects: selectedObjectSelector(state),
-      activeSelection: activeSelectionSelector(state)
+      activePage: activePageSelector(state)
     };
   };
 

@@ -2,6 +2,7 @@ const { fabric } = require("fabric");
 const logger = require("../../utils/LoggerUtils");
 const uuidv4 = require("uuid/v4");
 fabric.util.object.extend(fabric.StaticCanvas.prototype, {
+  snap: 10,
   canvasContainer: "",
   canvasOffsetX: 0,
   canvasOffsetY: 0,
@@ -40,7 +41,8 @@ fabric.util.object.extend(fabric.StaticCanvas.prototype, {
   }
 });
 fabric.util.object.extend(fabric.Object.prototype, {
-  designerCallbacks: {}
+  designerCallbacks: {},
+  ignoreSnap: false
 });
 fabric.util.object.extend(fabric.Image.prototype, {
   cropWidth: 0,
@@ -175,14 +177,17 @@ fabric.util.object.extend(fabric.Image.prototype, {
         });
       }
     }.bind(this);
-    canvas.on("selection:cleared", canvas._canvasImageSelectionClearedHandlder);
+    canvas.on(
+      "before:selection:cleared",
+      canvas._canvasImageSelectionClearedHandlder
+    );
     canvas.on("selection:updated", canvas._canvasImageSelectionClearedHandlder);
     canvas.on("object:selected", canvas._canvasImageSelectionClearedHandlder);
     canvas.on("mouse:up", canvas._mouseUpImageHandler);
   },
   _removeCanvasHandlers: function(canvas) {
     canvas.off(
-      "selection:cleared",
+      "before:selection:cleared",
       canvas._canvasImageSelectionClearedHandlder
     );
     canvas.off(

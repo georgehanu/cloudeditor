@@ -32,7 +32,8 @@ const staticCanvasTypes = shape({
   canvasWorkingWidth: number,
   canvasWorkingHeight: number,
   translucentOverlayOutside: string,
-  canvasContainer: string
+  canvasContainer: string,
+  snap: number
 });
 
 const staticCanvasDefaults = {
@@ -59,7 +60,8 @@ const staticCanvasDefaults = {
   canvasWorkingWidth: 400,
   canvasWorkingHeight: 500,
   canvasContainer: "",
-  translucentOverlayOutside: "rgba(243,244,246,0.6)"
+  translucentOverlayOutside: "rgba(243,244,246,0.6)",
+  snap: 10
 };
 
 module.exports = { staticCanvasTypes, staticCanvasDefaults };
