@@ -16,7 +16,7 @@ const SpecialEffectsItem = props => {
             className="SpecialEffectsOK pic select icon printqicon-ok"
             onClick={() =>
               props.ToolbarHandler({
-                mainHandler: props.handler,
+                mainHandler: true,
                 payloadMainHandler: props.className
               })
             }

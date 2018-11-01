@@ -116,6 +116,10 @@ const enhance = compose(
           val = props.defaultValue;
         }
         props.setValue(val);
+        props.ToolbarHandler({
+          mainHandler: true,
+          payloadMainHandler: { type: props.type, value: val }
+        });
       }
     },
     handleIncrement: props => opType => {
@@ -131,6 +135,11 @@ const enhance = compose(
         val = increment(val, opType);
       }
       props.setValue(val);
+
+      props.ToolbarHandler({
+        mainHandler: true,
+        payloadMainHandler: { type: props.type, value: val }
+      });
     }
   })
 );

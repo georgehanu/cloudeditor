@@ -6,8 +6,7 @@ export const Bold = {
 };
 
 export const Italic = {
-  type: Types.BUTTON_LETTER_ITALIC,
-  selected: true
+  type: Types.BUTTON_LETTER_ITALIC
 };
 
 export const Underline = {
@@ -18,8 +17,7 @@ export const LeftAligned = {
   type: Types.BUTTON_LEFT_ALIGNED
 };
 export const RightAligned = {
-  type: Types.BUTTON_RIGHT_ALIGNED,
-  selected: true
+  type: Types.BUTTON_RIGHT_ALIGNED
 };
 export const CenterAligned = {
   type: Types.BUTTON_CENTER_ALIGNED
@@ -46,19 +44,15 @@ export const LayerPoptext = {
 };
 
 export const FontPoptext = {
-  type: Types.POPTEXT_FONT,
-  value: "PT Sans",
-  position: 3
+  type: Types.POPTEXT_FONT
 };
 
 export const TextSpaceingSlider = {
-  type: Types.SLIDER_TEXT_SPACEING,
-  defaultValue: 30
+  type: Types.SLIDER_TEXT_SPACEING
 };
 
 export const FontSizeIncremental = {
-  type: Types.INCREMENTAL_FONT_SIZE,
-  defaultValue: "30.00"
+  type: Types.INCREMENTAL_FONT_SIZE
 };
 
 export const ColorSelector = {

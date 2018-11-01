@@ -9,8 +9,8 @@ const ColorTab = props => {
         className="ColorSquare"
         onClick={() =>
           props.selectColor({
-            mainHandler: props.handler,
-            payloadMainHandler: { [props.type]: el }
+            mainHandler: true,
+            payloadMainHandler: { type: props.type, value: el }
           })
         }
       >

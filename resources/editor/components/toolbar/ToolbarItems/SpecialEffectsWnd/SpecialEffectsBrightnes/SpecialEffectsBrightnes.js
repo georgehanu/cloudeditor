@@ -63,7 +63,7 @@ const enhance = compose(
       }
       props.setEffect(newValue);
       props.ToolbarHandler({
-        mainHandler: props.handler,
+        mainHandler: true,
         payloadMainHandler: { [text]: value },
         keepDetailsWnd: true
       });

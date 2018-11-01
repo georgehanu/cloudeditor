@@ -225,7 +225,11 @@ const getEmptyObject = cfg => {
           text: cfg.text || "Default text",
           bold: cfg.bold || false,
           underline: cfg.underline || false,
-          italic: cfg.italic || false
+          italic: cfg.italic || false,
+          fill: cfg.fill || "black",
+          charSpacing: cfg.charSpacing || 1,
+          fontSize: cfg.fontSize || 60,
+          fontFamily: cfg.fontFamily || "Times New Roman"
         };
     }
   }

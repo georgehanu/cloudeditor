@@ -1,5 +1,5 @@
 import React from "react";
-import { withState, withHandlers, compose } from "recompose";
+import { withState, withHandlers, compose, pure } from "recompose";
 import Button from "../Button/Button";
 
 import * as Utils from "../../ToolbarConfig/utils";
@@ -44,7 +44,7 @@ const Poptext = props => {
               : el.settingsHandler === undefined
                 ? props.handleClick(el.value)
                 : props.handleSettingsClick({
-                    mainHandler: props.handler,
+                    mainHandler: true,
                     detailsWndComponent: el.settingsHandler,
                     payloadDetailsComponent: el.settingsPayload
                   })
@@ -112,7 +112,11 @@ const enhance = compose(
   withHandlers({
     handleClick: props => event => {
       props.setExpanded(!props.expanded);
-      props.handler(event);
+      //props.handler(event);
+      props.ToolbarHandler({
+        mainHandler: true,
+        payloadMainHandler: { type: props.type, value: event }
+      });
     },
     handleMouseLeave: props => event => {
       props.setExpanded(false);
@@ -125,6 +129,7 @@ const enhance = compose(
       props.setExpanded(false);
       props.ToolbarHandler(payload);
     }
-  })
+  }),
+  pure
 );
 export default enhance(Poptext);

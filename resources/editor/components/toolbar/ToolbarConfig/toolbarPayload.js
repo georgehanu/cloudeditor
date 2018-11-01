@@ -1,5 +1,5 @@
 export default (ToolbarPayload = {
-  mainHandler: null,
+  mainHandler: false,
   payloadMainHandler: null,
   detailsWndComponent: null,
   payloadDetailsComponent: null,

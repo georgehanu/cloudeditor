@@ -1,4 +1,5 @@
 import React from "react";
+const { debounce } = require("underscore");
 import Button from "../../Button/Button";
 import * as Utils from "../../../ToolbarConfig/utils";
 
@@ -14,6 +15,9 @@ const SliderWnd = props => {
     startValue = props.defaultValue;
   }
 
+  console.log("Slider");
+  console.log(props);
+
   return (
     <div className={parentClassName}>
       <div className="SliderPopup">
@@ -26,11 +30,16 @@ const SliderWnd = props => {
           max="100"
           step="1"
           onChange={event =>
-            props.ToolbarHandler({
-              mainHandler: props.handler,
-              payloadMainHandler: event.target.value,
-              keepDetailsWnd: true
-            })
+            debounce(
+              props.ToolbarHandler({
+                mainHandler: true,
+                payloadMainHandler: {
+                  type: props.settingsHandler,
+                  value: event.target.value
+                },
+                keepDetailsWnd: true
+              })
+            )
           }
         />
       </div>

@@ -8,7 +8,7 @@ import ColorBorderWidth from "./ColorBorderWidth";
 import * as Utils from "../../../ToolbarConfig/utils";
 import * as Types from "../../../ToolbarConfig/types";
 
-class ColorSelector extends React.Component {
+class ColorSelectorWnd extends React.Component {
   state = {
     activeTab: null
   };
@@ -97,4 +97,4 @@ class ColorSelector extends React.Component {
   }
 }
 
-export default ColorSelector;
+export default ColorSelectorWnd;

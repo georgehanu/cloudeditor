@@ -15,7 +15,7 @@ const Slider = props => {
       <Button
         clicked={() =>
           props.ToolbarHandler({
-            mainHandler: props.handler,
+            mainHandler: true,
             detailsWndComponent: props.settingsHandler,
             payloadDetailsComponent: props
           })
@@ -26,4 +26,4 @@ const Slider = props => {
     </div>
   );
 };
-export default Slider;
+export default React.memo(Slider);

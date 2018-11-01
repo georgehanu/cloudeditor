@@ -16,7 +16,7 @@ const ColorBorderWidth = props => {
           step="1"
           onChange={event =>
             props.selectWidth({
-              mainHandler: props.handler,
+              mainHandler: true,
               payloadMainHandler: { [props.type]: event.target.value },
               keepDetailsWnd: true
             })

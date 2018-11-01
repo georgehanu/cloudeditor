@@ -5,6 +5,9 @@ const {
   selectedObjectToolbarSelector
 } = require("../stores/selectors/toolbar");
 
+const { updateObjectProps } = require("../stores/actions/project");
+const randomColor = require("randomcolor");
+
 import ToolbarArea from "../components/toolbar/ToolbarItems/ToolbarArea/ToolbarArea";
 import SettingsWnd from "../components/toolbar/ToolbarItems/SettingsWnd/SettingsWnd";
 
@@ -22,18 +25,20 @@ import TextToolbar from "../components/toolbar/ToolbarTypes/text";
 class Toolbar extends React.Component {
   state = {
     showDetailsWnd: false,
-    mainHandler: null,
+    mainHandler: false,
     detailsWndComponent: null,
     payloadDetailsComponent: null,
     activeToolbar: null
   };
 
-  CallMainHandler = (mainHandler, payload) => {
-    if (mainHandler !== undefined) {
+  CallMainHandler = (mainHandler, payload, props) => {
+    if (mainHandler !== undefined && mainHandler) {
       if (payload !== undefined) {
-        mainHandler(payload);
+        props.updateFromToolbarHandler(
+          Utils.CreatePayload(this.state.activeToolbar, payload)
+        );
       } else {
-        mainHandler();
+        props.updateFromToolbarHandler();
       }
     }
   };
@@ -54,7 +59,8 @@ class Toolbar extends React.Component {
       } else {
         this.CallMainHandler(
           ToolbarPayload.mainHandler,
-          ToolbarPayload.payloadMainHandler
+          ToolbarPayload.payloadMainHandler,
+          this.props
         );
       }
     } else {
@@ -65,7 +71,8 @@ class Toolbar extends React.Component {
         // case for slider
         this.CallMainHandler(
           ToolbarPayload.mainHandler,
-          ToolbarPayload.payloadMainHandler
+          ToolbarPayload.payloadMainHandler,
+          this.props
         );
       } else {
         if (
@@ -75,12 +82,13 @@ class Toolbar extends React.Component {
           this.setState({
             showDetailsWnd: false,
             detailsWndComponent: null,
-            mainHandler: null,
+            mainHandler: false,
             payloadDetailsComponent: null
           });
           this.CallMainHandler(
             ToolbarPayload.mainHandler,
-            ToolbarPayload.payloadMainHandler
+            ToolbarPayload.payloadMainHandler,
+            this.props
           );
         } else {
           if (
@@ -91,13 +99,14 @@ class Toolbar extends React.Component {
               // case for slider
               this.CallMainHandler(
                 ToolbarPayload.mainHandler,
-                ToolbarPayload.payloadMainHandler
+                ToolbarPayload.payloadMainHandler,
+                this.props
               );
             } else {
               this.setState({
                 showDetailsWnd: false,
                 detailsWndComponent: null,
-                mainHandler: null,
+                mainHandler: false,
                 payloadDetailsComponent: null
               });
             }
@@ -115,7 +124,7 @@ class Toolbar extends React.Component {
   };
 
   static getDerivedStateFromProps(nextProps, prevState) {
-    if (nextProps.activeToolbar !== prevState.activeToolbar) {
+    if (nextProps.activeToolbar === null || prevState.activeToolbar === null) {
       return {
         showDetailsWnd: false,
         mainHandler: null,
@@ -124,7 +133,23 @@ class Toolbar extends React.Component {
         activeToolbar: nextProps.activeToolbar
       };
     }
-    return prevState;
+    if (nextProps.activeToolbar.id === prevState.activeToolbar.id) {
+      return {
+        showDetailsWnd: prevState.showDetailsWnd,
+        mainHandler: prevState.mainHandler,
+        detailsWndComponent: prevState.detailsWndComponent,
+        payloadDetailsComponent: prevState.payloadDetailsComponent,
+        activeToolbar: nextProps.activeToolbar
+      };
+    } else {
+      return {
+        showDetailsWnd: false,
+        mainHandler: null,
+        detailsWndComponent: null,
+        payloadDetailsComponent: null,
+        activeToolbar: nextProps.activeToolbar
+      };
+    }
   }
 
   render() {
@@ -142,8 +167,8 @@ class Toolbar extends React.Component {
       toolbarData = ImageToolbar;
       attributes = Utils.LoadImageSettings(activeItem);
     } else if (activeItem.type === "text") {
-      toolbarData = TextToolbar;
-      attributes = Utils.LoadTextSettings(activeItem);
+      toolbarData = Utils.LoadTextSettings(TextToolbar, activeItem);
+      attributes = Utils.LoadTextAdditionalInfo(activeItem);
     }
     if (toolbarData === null) return null;
 
@@ -172,9 +197,13 @@ class Toolbar extends React.Component {
       }
     }
 
+    const randomStyle = {
+      backgroundColor: randomColor()
+    };
+
     return (
       <div className="ToolbarContainer" style={containerStyle}>
-        <div className="Toolbar" style={toolbarData.style}>
+        <div className="Toolbar" style={randomStyle /*toolbarData.style*/}>
           <div className="ToolbarTop ">
             {topAreaGroups.length > 0 && (
               <ToolbarArea
@@ -221,12 +250,17 @@ const mapStateToProps = state => {
   };
 };
 
+const mapDispatchToProps = dispatch => {
+  return {
+    updateFromToolbarHandler: payload => dispatch(updateObjectProps(payload))
+  };
+};
+
 const ToolbarPlugin = connect(
   mapStateToProps,
-  null
+  mapDispatchToProps
 )(Toolbar);
 
-//export default Toolbar;
 module.exports = {
   Toolbar: assign(ToolbarPlugin),
   reducers: {}

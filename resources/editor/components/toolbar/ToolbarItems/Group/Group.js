@@ -29,11 +29,11 @@ const Group = props => {
           clicked={() =>
             item.settingsHandler === undefined
               ? props.ToolbarHandler({
-                  mainHandler: item.handler,
-                  payloadMainHandler: item.type
+                  mainHandler: true,
+                  payloadMainHandler: { type: item.type }
                 })
               : props.ToolbarHandler({
-                  mainHandler: item.handler,
+                  mainHandler: true,
                   detailsWndComponent: item.settingsHandler,
                   payloadDetailsComponent: item.settingsPayload
                 })
@@ -54,7 +54,13 @@ const Group = props => {
         <Slider {...item} key={idx} ToolbarHandler={props.ToolbarHandler} />
       );
     else if (item.baseType === Types.INCREMENTAL)
-      return <Incremental {...item} key={idx} />;
+      return (
+        <Incremental
+          {...item}
+          key={idx}
+          ToolbarHandler={props.ToolbarHandler}
+        />
+      );
     else if (item.baseType === Types.COLOR)
       return (
         <ColorSelector

@@ -57,7 +57,41 @@ export const LoadImageSettings = activeItem => {
   };
 };
 
-export const LoadTextSettings = activeItem => {
+export const LoadTextSettings = (toolbar, activeItem) => {
+  for (let groupIndex in toolbar.groups) {
+    let group = toolbar.groups[groupIndex];
+    for (let itemIndex in group.items) {
+      let item = group.items[itemIndex];
+
+      if (item.type === Types.BUTTON_LETTER_BOLD) {
+        item.selected = activeItem.bold;
+      } else if (item.type === Types.BUTTON_LETTER_ITALIC) {
+        item.selected = activeItem.italic;
+      }
+      if (item.type === Types.BUTTON_LETTER_UNDERLINE) {
+        item.selected = activeItem.underline;
+      }
+
+      if (item.type === Types.COLOR_SELECTOR) {
+        item.color = activeItem.fill;
+      }
+
+      if (item.type === Types.SLIDER_TEXT_SPACEING) {
+        item.defaultValue = parseInt(activeItem.charSpacing);
+      }
+      if (item.type === Types.INCREMENTAL_FONT_SIZE) {
+        item.defaultValue = activeItem.fontSize + ".00";
+      }
+
+      if (item.type === Types.POPTEXT_FONT) {
+        item.value = activeItem.fontFamily;
+      }
+    }
+  }
+  return toolbar;
+};
+
+export const LoadTextAdditionalInfo = activeItem => {
   return {
     [Types.COLOR_SELECTOR_WND]: {
       selected: {
@@ -68,4 +102,38 @@ export const LoadTextSettings = activeItem => {
       }
     }
   };
+};
+
+export const CreatePayload = (activeitem, itemPayload) => {
+  let attrs = {};
+  switch (itemPayload.type) {
+    case Types.BUTTON_LETTER_BOLD:
+      attrs = { bold: !activeitem.bold };
+      break;
+
+    case Types.BUTTON_LETTER_ITALIC:
+      attrs = { italic: !activeitem.italic };
+      break;
+
+    case Types.BUTTON_LETTER_UNDERLINE:
+      attrs = { underline: !activeitem.underline };
+      break;
+
+    case Types.COLOR_TAB_FG:
+      attrs = { fill: itemPayload.value };
+      break;
+
+    case Types.SLIDER_FONT_WND:
+      attrs = { charSpacing: itemPayload.value };
+      break;
+
+    case Types.INCREMENTAL_FONT_SIZE:
+      attrs = { fontSize: parseFloat(itemPayload.value) };
+      break;
+
+    case Types.POPTEXT_FONT:
+      attrs = { fontFamily: itemPayload.value };
+      break;
+  }
+  return { id: activeitem.id, props: attrs };
 };

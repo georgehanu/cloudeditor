@@ -10,10 +10,6 @@ import SpecialEffectsWnd from "../SpecialEffectsWnd/SpecialEffectsWnd";
 import ChangeShapeWnd from "../ChangeShapeWnd/ChangeShapeWnd";
 
 const SettingsWnd = props => {
-  /* merge it with group */
-  const className = Utils.MergeClassName("SettingsWnd", "");
-  console.log("SettingsWnd");
-  console.log(props);
   /* Merge the props with the data from Config */
   const item = { ...props.payload, ...Config[props.item] }; // second should be config
   let itemData = null;
