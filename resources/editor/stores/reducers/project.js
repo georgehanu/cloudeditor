@@ -2,7 +2,9 @@ const { append } = require("ramda");
 const {
   CHANGE_PROJECT_TITLE,
   ADD_OBJECT,
-  ADD_OBJECT_TO_PAGE
+  ADD_OBJECT_TO_PAGE,
+  CHANGE_OBJECT_POSITION,
+  CHANGE_OBJECT_DIMENSIONS
 } = require("../actionTypes/project");
 const ProjectUtils = require("../../utils/ProjectUtils");
 const { handleActions } = require("redux-actions");
@@ -46,6 +48,34 @@ const addObjectToPage = (state, action) => {
     }
   };
 };
+const changeObjectPosition = (state, action) => {
+  const { id, top, left } = action;
+  return {
+    ...state,
+    objects: {
+      ...state.objects,
+      [id]: {
+        ...state.objects[id],
+        top: top,
+        left: left
+      }
+    }
+  };
+};
+const changeObjectDimesions = (state, action) => {
+  const { id, width, height } = action;
+  return {
+    ...state,
+    objects: {
+      ...state.objects,
+      [id]: {
+        ...state.objects[id],
+        width: width,
+        height: height
+      }
+    }
+  };
+};
 
 const emptyProject = ProjectUtils.getRandomProject();
 
@@ -63,6 +93,12 @@ module.exports = handleActions(
     },
     [ADD_OBJECT_TO_PAGE]: (state, action) => {
       return addObjectToPage(state, action.payload);
+    },
+    [CHANGE_OBJECT_POSITION]: (state, action) => {
+      return changeObjectPosition(state, action.payload);
+    },
+    [CHANGE_OBJECT_DIMENSIONS]: (state, action) => {
+      return changeObjectDimesions(state, action.payload);
     }
   },
   initialState

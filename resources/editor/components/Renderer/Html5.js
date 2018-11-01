@@ -2,6 +2,12 @@ const React = require("react");
 const PropTypes = require("prop-types");
 const { debounce } = require("underscore");
 const uuidv4 = require("uuid/v4");
+const { connect } = require("react-redux");
+
+const {
+  changeObjectPosition,
+  changeObjectDimensions
+} = require("./../../stores/actions/project");
 
 const Objects = require("./Html5/Objects");
 
@@ -41,11 +47,6 @@ class Html5Renderer extends React.Component {
     this.updatePageOffset();
     window.addEventListener("resize", debounce(this.updatePageOffset));
   }
-
-  onDragHandler = () => {
-    console.log("onDragHandler");
-  };
-
   render() {
     let page = null;
     let elements = null;
@@ -63,6 +64,8 @@ class Html5Renderer extends React.Component {
           <Objects
             items={this.props.objects}
             onDrag={this.onDragHandler}
+            onDragStop={this.props.onDragStopHandler}
+            onResizeStop={this.props.onResizeStopHandler}
             scale={scale}
           />
         </div>
@@ -94,4 +97,14 @@ Html5Renderer.defaultProps = {
   }
 };
 
-module.exports = Html5Renderer;
+const mapDispatchToProps = dispatch => {
+  return {
+    onDragStopHandler: payload => dispatch(changeObjectPosition(payload)),
+    onResizeStopHandler: payload => dispatch(changeObjectDimensions(payload))
+  };
+};
+
+module.exports = connect(
+  null,
+  mapDispatchToProps
+)(Html5Renderer);

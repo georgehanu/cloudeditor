@@ -9,12 +9,15 @@ const objects = props => (
       return (
         <ObjectBlock
           key={obKey}
+          scale={scale}
           width={width * scale}
           height={height * scale}
           left={left * scale}
           top={top * scale}
           {...otherProps}
           onDrag={props.onDrag}
+          onDragStop={props.onDragStop}
+          onResizeStop={props.onResizeStop}
         />
       );
     })}

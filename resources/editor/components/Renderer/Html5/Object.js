@@ -3,10 +3,14 @@ const randomColor = require("randomcolor");
 require("webpack-jquery-ui/draggable");
 require("webpack-jquery-ui/resizable");
 
-class ObjectBlock extends React.PureComponent {
+class ObjectBlock extends React.Component {
   constructor(props) {
     super(props);
     this.el = React.createRef();
+  }
+
+  shouldComponentUpdate() {
+    return false;
   }
 
   componentDidMount() {
@@ -14,8 +18,24 @@ class ObjectBlock extends React.PureComponent {
     if (element) {
       console.log(element);
       $(element)
-        .draggable()
-        .resizable();
+        .draggable({
+          stop: (event, ui) => {
+            this.props.onDragStop({
+              id: this.props.id,
+              top: ui.position.top / this.props.scale,
+              left: ui.position.left / this.props.scale
+            });
+          }
+        })
+        .resizable({
+          stop: (event, ui) => {
+            this.props.onResizeStop({
+              id: this.props.id,
+              width: ui.size.width / this.props.scale,
+              height: ui.size.height / this.props.scale
+            });
+          }
+        });
     }
   }
 
@@ -26,6 +46,7 @@ class ObjectBlock extends React.PureComponent {
       height: height,
       left: left,
       top: top,
+      position: "absolute",
       backgroundColor: randomColor()
     };
     return (
