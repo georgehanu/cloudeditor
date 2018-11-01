@@ -11,7 +11,11 @@ class ImageBlock extends React.PureComponent {
       top: top,
       backgroundColor: randomColor()
     };
-    return <div className="page-block" style={style} />;
+    return (
+      <div className={this.props.type} style={style}>
+        image block
+      </div>
+    );
   }
 }
 

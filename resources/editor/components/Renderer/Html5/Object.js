@@ -1,24 +1,39 @@
 const React = require("react");
+
 const randomColor = require("randomcolor");
+const ImageBlock = require("./Image");
+const TextBlock = require("./Text");
+const { forEach } = require("ramda");
+
 require("webpack-jquery-ui/draggable");
 require("webpack-jquery-ui/resizable");
 
-class ObjectBlock extends React.Component {
+class ObjectBlock extends React.PureComponent {
   constructor(props) {
     super(props);
     this.el = React.createRef();
+    this.state = {
+      editableActive: false
+    };
+    this.blurSelectors = ["test", "index"];
   }
-
-  shouldComponentUpdate() {
-    return false;
+  bindEvents() {
+    const element = this.el.current;
+    element.addEventListener("click", this.onClickHandler.bind(this), false);
+    document.addEventListener(
+      "click",
+      this.onClickHandlerOutside.bind(this),
+      false
+    );
   }
 
   componentDidMount() {
     const element = this.el.current;
+    const { movable, resizable, rotatable } = this.props;
     if (element) {
-      console.log(element);
-      $(element)
-        .draggable({
+      if (movable) {
+        $(element).draggable({
+          snap: ".drag_alignLines",
           stop: (event, ui) => {
             this.props.onDragStop({
               id: this.props.id,
@@ -26,8 +41,10 @@ class ObjectBlock extends React.Component {
               left: ui.position.left / this.props.scale
             });
           }
-        })
-        .resizable({
+        });
+      }
+      if (resizable) {
+        $(element).resizable({
           stop: (event, ui) => {
             this.props.onResizeStop({
               id: this.props.id,
@@ -36,11 +53,51 @@ class ObjectBlock extends React.Component {
             });
           }
         });
+      }
+    }
+    // here we bind the event
+    this.bindEvents();
+  }
+
+  onClickHandler() {
+    const element = this.el.current;
+    const { editableActive } = this.state;
+    const { movable } = this.props;
+    if (!editableActive) {
+      if (movable) $(element).draggable("disable");
+      this.setState({ editableActive: true });
     }
   }
 
+  blurComponent(target) {
+    const blurSelectors = [...this.blurSelectors];
+    let isBlur = true;
+    blurSelectors.forEach(element => {
+      const trigger = $(element);
+      const cursorTarget = $(target);
+      if (trigger[0] === cursorTarget[0]) {
+        isBlur = false;
+      }
+      const target = $(blurSelectors).find(target);
+      if (target.length > 0) isBlur = false;
+    });
+    if (!isBlur) {
+      this.setState({ editableActive: false });
+    }
+  }
+  onClickHandlerOutside(event) {
+    const element = this.el.current;
+    const { movable } = this.props;
+    const { editableActive } = this.state;
+    if (editableActive) {
+      if (!element.contains(event.target)) {
+        if (movable) $(element).draggable("enable");
+        this.blurComponent();
+      }
+    }
+  }
   render() {
-    const { width, height, top, left, ...otherProps } = this.props;
+    const { width, height, top, left, type, ...otherProps } = this.props;
     const style = {
       width: width,
       height: height,
@@ -49,9 +106,43 @@ class ObjectBlock extends React.Component {
       position: "absolute",
       backgroundColor: randomColor()
     };
+    let element = null;
+
+    switch (type) {
+      case "image":
+        element = (
+          <ImageBlock
+            editableActive={this.state.editableActive}
+            {...this.props}
+          />
+        );
+        break;
+      case "text":
+      case "textflow":
+        element = (
+          <TextBlock
+            editableActive={this.state.editableActive}
+            {...this.props}
+          />
+        );
+        break;
+      default:
+        break;
+    }
     return (
-      <div className="page-block" style={style} ref={this.el}>
-        <div className="rotatable-handle">R</div>
+      <div
+        className={[
+          "page-block",
+          type,
+          this.state.editableActive ? "edit" : "",
+          this.props.editable ? "editable" : ""
+        ].join(" ")}
+        style={style}
+        ref={this.el}
+      >
+        <div className={this.props.orientation}>{element}</div>
+        <div className="blockOrder" />
+        <u />
       </div>
     );
   }

@@ -64,6 +64,7 @@ const getRandomProject = cfg => {
     width: Math.random() * 500,
     height: Math.random() * 500,
     left: Math.random() * 500,
+    orientation: "north",
     top: Math.random() * 500,
     src: defaultImages[parseInt(Math.random() * defaultImages.length)]
   });
@@ -73,6 +74,7 @@ const getRandomProject = cfg => {
     height: Math.random() * 500,
     left: Math.random() * 500,
     top: Math.random() * 500,
+    orientation: "north",
     src: defaultImages[parseInt(Math.random() * defaultImages.length)]
   });
   let img3 = getEmptyObject({
@@ -81,6 +83,7 @@ const getRandomProject = cfg => {
     height: Math.random() * 500,
     left: Math.random() * 500,
     top: Math.random() * 500,
+    orientation: "north",
     src: defaultImages[parseInt(Math.random() * defaultImages.length)]
   });
   let img4 = getEmptyObject({
@@ -89,6 +92,7 @@ const getRandomProject = cfg => {
     height: Math.random() * 500,
     left: Math.random() * 500,
     top: Math.random() * 500,
+    orientation: "north",
     src: defaultImages[parseInt(Math.random() * defaultImages.length)]
   });
   let img5 = getEmptyObject({
@@ -96,8 +100,18 @@ const getRandomProject = cfg => {
     width: Math.random() * 500,
     height: Math.random() * 500,
     left: Math.random() * 500,
+    orientation: "north",
     top: Math.random() * 500,
     src: defaultImages[parseInt(Math.random() * defaultImages.length)]
+  });
+  let text6 = getEmptyObject({
+    type: "image",
+    width: Math.random() * 500,
+    height: Math.random() * 500,
+    left: Math.random() * 500,
+    orientation: "north",
+    top: Math.random() * 500,
+    value: "this is a default value for text"
   });
 
   page1 = {
@@ -140,7 +154,17 @@ const getEmptyPage = cfg => {
 const getEmptyObject = cfg => {
   let object = {
     id: uuidv4(),
-    type: false
+    type: cfg.type || false,
+    width: cfg.width || 500,
+    height: cfg.height || 500,
+    left: cfg.left || 500,
+    top: cfg.top || 500,
+    editable: cfg.editable || 1,
+    value: cfg.value || "default value",
+    resizable: cfg.resizable || 1,
+    rotatable: cfg.rotatable || 1,
+    movable: cfg.movable || 1,
+    orientation: cfg.orientation || "north"
   };
 
   if (cfg && cfg.type) {
@@ -148,15 +172,26 @@ const getEmptyObject = cfg => {
       case "image":
         return {
           ...object,
-          type: cfg.type,
-          width: cfg.width || 500,
-          height: cfg.height || 500,
-          left: cfg.left || 500,
-          top: cfg.top || 500,
           src:
             cfg.src ||
             "https://images.pexels.com/photos/67636/rose-blue-flower-rose-blooms-67636.jpeg"
         };
+        break;
+      case "text":
+      case "textflow":
+        return {
+          ...object,
+          font: cfg.font || "Arial",
+          alignment: cfg.alignment || "left",
+          valignment: cfg.valignment || "top",
+          font_size: cfg.font_size || "top"
+        };
+        break;
+      default:
+        return {
+          ...object
+        };
+        break;
     }
   }
 };

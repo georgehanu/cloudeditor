@@ -13,6 +13,14 @@ const emptyImage = () =>
     left: Math.random() * 500,
     top: Math.random() * 500
   });
+const emptyText = () =>
+  ProjectUtils.getEmptyObject({
+    type: "text",
+    width: Math.random() * 500,
+    height: Math.random() * 500,
+    left: Math.random() * 500,
+    top: Math.random() * 500
+  });
 
 class AddButton extends React.Component {
   render() {
@@ -26,6 +34,11 @@ class AddButton extends React.Component {
           }
         >
           Add Image
+        </button>
+        <button
+          onClick={() => this.props.addObjectToPageHandler(emptyText(), pageId)}
+        >
+          Add Text
         </button>
       </div>
     );

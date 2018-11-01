@@ -68,6 +68,7 @@ class Html5Renderer extends React.Component {
             onResizeStop={this.props.onResizeStopHandler}
             scale={scale}
           />
+          <div id="fitTextEscaper" />
         </div>
       );
     }
