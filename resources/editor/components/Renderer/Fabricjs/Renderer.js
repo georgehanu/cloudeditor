@@ -304,7 +304,7 @@ class FabricjsRenderer extends React.Component {
               event_object_moved={this.onObjectPropChangedHandler}
               event_object_scaled={this.onObjectPropChangedHandler}
               event_object_rotated={this.onObjectPropChangedHandler}
-              evet={[1, 2, 3]}
+              evet={[1, 2, 3] }
               */
             >
               {elements}
