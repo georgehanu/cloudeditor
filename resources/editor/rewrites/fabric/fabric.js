@@ -3,6 +3,7 @@ const logger = require("../../utils/LoggerUtils");
 const uuidv4 = require("uuid/v4");
 fabric.util.object.extend(fabric.StaticCanvas.prototype, {
   snap: 10,
+  canvasScale: 1,
   canvasContainer: "",
   canvasOffsetX: 0,
   canvasOffsetY: 0,
@@ -11,6 +12,12 @@ fabric.util.object.extend(fabric.StaticCanvas.prototype, {
   translucentOverlayOutside: "rgba(243,244,246,0.6)",
   setCanvasOffsetX: function(offsetX) {
     this.canvasOffsetX = offsetX;
+  },
+  setCanvasScale: function(canvasScale) {
+    this.canvasScale = canvasScale;
+  },
+  getCanvasScale: function() {
+    return this.canvasScale;
   },
   getCanvasOffsetX: function() {
     return this.canvasOffsetX;

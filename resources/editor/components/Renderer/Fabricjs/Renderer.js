@@ -305,6 +305,7 @@ class FabricjsRenderer extends React.PureComponent {
               height={this.state.height}
               canvasOffsetX={this.state.canvasOffsetX}
               canvasOffsetY={this.state.canvasOffsetY}
+              canvasScale={this.state.scale}
               canvasWorkingWidth={this.state.canvasWorkingWidth}
               canvasWorkingHeight={this.state.canvasWorkingHeight}
               events={this.state.events}
