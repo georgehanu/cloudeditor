@@ -7,7 +7,10 @@ const getProjectTemplate = cfg => {
     pagesOrder: [],
     activePage: null,
     objects: {},
-    selectedObjectsIds: []
+    selectedObjectsIds: [],
+    defaults: {
+      image: {}
+    }
   };
   return project;
 };
