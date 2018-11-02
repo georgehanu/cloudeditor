@@ -14,6 +14,7 @@ const { fabric } = require("../../../rewrites/fabric/fabric");
 const { map } = require("ramda");
 const ProjectUtils = require("../../../utils/ProjectUtils");
 const projectActions = require("../../../stores/actions/project");
+const rendererActions = require("../../../stores/actions/renderer");
 
 const updatePageOffset = (props, editorContainer) => {
   const { adjustment, activePage } = props;
@@ -42,7 +43,7 @@ const updatePageOffset = (props, editorContainer) => {
   return result;
 };
 
-class FabricjsRenderer extends React.Component {
+class FabricjsRenderer extends React.PureComponent {
   state = {
     editorContainer: null,
     isReadyComponent: false,
@@ -101,6 +102,16 @@ class FabricjsRenderer extends React.Component {
           id: uuidv4(),
           event_name: "object:rotated",
           callback: this.onObjectPropChangedHandler
+        },
+        {
+          id: uuidv4(),
+          event_name: "image:editing:exited",
+          callback: this.onObjectPropChangedHandler
+        },
+        {
+          id: uuidv4(),
+          event_name: "text:editing:exited",
+          callback: this.onObjectPropChangedHandler
         }
       ]
     };
@@ -122,7 +133,9 @@ class FabricjsRenderer extends React.Component {
   componentWillUnmount() {
     window.removeEventListener("resize", this.updatePageOffset);
   }
-
+  // shouldComponentUpdate(nextProps, nextState) {
+  //   return false;
+  // }
   onBeforeOverlayHandler = params => {
     if (params.canvas.interactive) {
       var lowPoint = fabric.util.transformPoint(
@@ -198,34 +211,36 @@ class FabricjsRenderer extends React.Component {
 
   onObjectPropChangedHandler = args => {
     if (args && args.target) {
-      let objProps = args.target.getMainProps();
-      switch (args.target.type) {
-        case "activeSelection":
-          let activeSelectionData = {
-            id: args.target.id,
-            props: objProps,
-            objectProps: []
-          };
-          this.props.updateSelectionObjectsCoordsHandler(activeSelectionData);
-          break;
-        default:
-          objProps.left =
-            (objProps.left - this.state.canvasOffsetX) / this.state.scale;
-          objProps.top =
-            (objProps.top - this.state.canvasOffsetY) / this.state.scale;
-          objProps.width =
-            (objProps.width / this.state.scale) * args.target.scaleX;
-          objProps.height =
-            (objProps.height / this.state.scale) * args.target.scaleY;
-          objProps.scaleX = 1;
-          objProps.scaleY = 1;
-          this.props.updateObjectProps({
-            id: args.target.id,
-            props: objProps
-          });
-          break;
+      if (args.target.type == "activeSelection") {
+        let activeSelectionData = {
+          id: args.target.id,
+          props: args.target.getMainProps(),
+          objectProps: []
+        };
+        this.props.updateSelectionObjectsCoordsHandler(activeSelectionData);
+      } else {
+        let objProps = args.target.getMainProps();
+        objProps.left =
+          (objProps.left - this.state.canvasOffsetX) / this.state.scale;
+        objProps.top =
+          (objProps.top - this.state.canvasOffsetY) / this.state.scale;
+        objProps.width =
+          (objProps.width / this.state.scale) * args.target.scaleX;
+        objProps.height =
+          (objProps.height / this.state.scale) * args.target.scaleY;
+        objProps.scaleX = 1;
+        objProps.scaleY = 1;
+        this.props.updateObjectProps({
+          id: args.target.id,
+          props: objProps
+        });
       }
     }
+  };
+  designerCallbacks = () => {
+    return {
+      updateCropParams: this.props.updateCropParams
+    };
   };
   drawElements(objects, needOffset) {
     let elements = Object.keys(objects).map(obKey => {
@@ -245,14 +260,11 @@ class FabricjsRenderer extends React.Component {
 
       switch (object.type) {
         case "image":
-          let designerCallbacks = {
-            updateCropParams: this.props.updateCropParams
-          };
           return (
             <Image
               key={object.id}
               {...object}
-              designerCallbacks={designerCallbacks}
+              designerCallbacks={this.designerCallbacks}
             />
           );
         case "text":
@@ -293,19 +305,11 @@ class FabricjsRenderer extends React.Component {
               height={this.state.height}
               canvasOffsetX={this.state.canvasOffsetX}
               canvasOffsetY={this.state.canvasOffsetY}
+              canvasScale={this.state.scale}
               canvasWorkingWidth={this.state.canvasWorkingWidth}
               canvasWorkingHeight={this.state.canvasWorkingHeight}
               events={this.state.events}
-              /*
-              event_before_overlay_render={this.onBeforeOverlayHandler}
-              event_selection_created={this.onSelectedCreatedHandler}
-              event_selection_updated={this.onSelectedCreatedHandler}
-              event_selection_cleared={this.onSelectedClearedHandler}
-              event_object_moved={this.onObjectPropChangedHandler}
-              event_object_scaled={this.onObjectPropChangedHandler}
-              event_object_rotated={this.onObjectPropChangedHandler}
-              evet={[1, 2, 3] }
-              */
+              canvasReadyHandler={this.props.canvasReadyHandler}
             >
               {elements}
             </Fabric>
@@ -327,7 +331,9 @@ FabricjsRenderer.defaultProps = {
 const mapDispatchToProps = dispatch => {
   return {
     updateCropParams: (id, props) =>
-      dispatch(projectActions.updateCropParams({ id, props }))
+      dispatch(projectActions.updateCropParams({ id, props })),
+    canvasReadyHandler: isReady =>
+      dispatch(rendererActions.updateCanvasReady(isReady))
   };
 };
 

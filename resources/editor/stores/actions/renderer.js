@@ -1,6 +1,3 @@
-const actionTypes = require("../actionTypes/renderer");
-const { createAction } = require("redux-actions");
-
 // const changeRendererType = rendererType => {
 //   return {
 //     type: actionTypes.CHANGE_RENDERER_TYPE,
@@ -8,10 +5,17 @@ const { createAction } = require("redux-actions");
 //   };
 // };
 
-const changeRendererType = createAction(
-  actionTypes.CHANGE_RENDERER_TYPE
+const {
+  CHANGE_RENDERER_TYPE,
+  UPDATE_CANVAS_READY
+} = require("../actionTypes/renderer");
+const { createActions } = require("redux-actions");
+const { changeRendererType, updateCanvasReady } = createActions(
+  CHANGE_RENDERER_TYPE,
+  UPDATE_CANVAS_READY
 );
 
 module.exports = {
-  changeRendererType
+  changeRendererType,
+  updateCanvasReady
 };

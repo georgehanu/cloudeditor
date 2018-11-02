@@ -1,5 +1,6 @@
 const React = require("react");
 const FabricRenderer = require("../reconciler/index");
+import { setCanvas } from "../../../../globals";
 const { createElement } = require("../utils/createElement");
 const logger = require("../../../../utils/LoggerUtils");
 
@@ -12,10 +13,9 @@ class Fabric extends React.Component {
   componentDidMount() {
     this._stage = createElement("Canvas", this.props, this.canvasRef.current);
 
-    //this._stage = new fabric.Canvas(this.canvasRef.current);
+    setCanvas(this._stage.instance);
+    this.props.canvasReadyHandler(true);
     window.canvas = this._stage.instance;
-    // this._stage._applyProps(this.props, {});
-
     this._mountNode = FabricRenderer.createContainer(this._stage);
 
     FabricRenderer.updateContainer(this.props.children, this._mountNode, this);

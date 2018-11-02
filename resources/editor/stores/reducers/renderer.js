@@ -1,8 +1,12 @@
-const { CHANGE_RENDERER_TYPE } = require("../actionTypes/renderer");
+const {
+  CHANGE_RENDERER_TYPE,
+  UPDATE_CANVAS_READY
+} = require("../actionTypes/renderer");
 const { handleActions } = require("redux-actions");
 
 const initialState = {
-  type: "fabricjs"
+  type: "fabricjs",
+  canvasReady: false
 };
 
 module.exports = handleActions(
@@ -12,6 +16,9 @@ module.exports = handleActions(
         ...state,
         type: action.payload
       };
+    },
+    [UPDATE_CANVAS_READY]: (state, action) => {
+      return { ...state, canvasReady: action.payload };
     }
   },
   initialState

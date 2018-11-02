@@ -139,10 +139,21 @@ const getRandomProject = cfg => {
     top: Math.random() * 500,
     value: "this is a default value for text"
   });
+  let text1 = getEmptyObject({
+    type: "text",
+    width: 100,
+    height: 100,
+    left: 100,
+    top: 100,
+    text: "Enter text here",
+    bold: true,
+    italic: false,
+    underline: true
+  });
 
   page1 = {
     ...page1,
-    objectsIds: [img1.id, img2.id, img3.id, group.id]
+    objectsIds: [img1.id, img2.id, img3.id, group.id, text1.id]
   };
 
   page2 = {
@@ -162,7 +173,8 @@ const getRandomProject = cfg => {
       [img3.id]: img3,
       [img6.id]: img6,
       [img7.id]: img7,
-      [group.id]: group
+      [group.id]: group,
+      [text1.id]: text1
     },
     pagesOrder: [page1.id, page2.id],
     activePage: page1.id
@@ -239,7 +251,10 @@ const getEmptyObject = cfg => {
           font: cfg.font || "Arial",
           alignment: cfg.alignment || "left",
           valignment: cfg.valignment || "top",
-          font_size: cfg.font_size || "top"
+          font_size: cfg.font_size || "top",
+          bold: cfg.bold || false,
+          underline: cfg.underline || false,
+          italic: cfg.italic || false
         };
         break;
       default:
