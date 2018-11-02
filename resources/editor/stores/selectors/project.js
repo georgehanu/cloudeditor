@@ -2,7 +2,17 @@ const {
   createSelectorWithDependencies: createSelector
 } = require("reselect-tools");
 
-const { pick, merge, forEachObjIndexed } = require("ramda");
+const {
+  pick,
+  merge,
+  forEachObjIndexed,
+  pipe,
+  assocPath,
+  assoc,
+  values,
+  head,
+  keys
+} = require("ramda");
 
 const pagesSelector = state =>
   (state && state.project && state.project.pages) || {};
@@ -40,8 +50,16 @@ const activePageSelector = createSelector(
     let pageObjects = {};
     //getAlsoGroupObjects
 
-    const activeObject = pick(selectedObejectsIds, objects);
-    console.log("activeObject", activeObject);
+    let activeObject = pick(selectedObejectsIds, objects);
+    const activeObjectKey = pipe(
+      keys,
+      head
+    )(activeObject);
+    activeObject = assocPath([activeObjectKey, "active"], true, activeObject);
+
+    objects = merge(objects, activeObject);
+
+    console.log("activeObject", activeObjectKey, objects[activeObjectKey]);
 
     pageObjects = merge(
       pageObjects,
