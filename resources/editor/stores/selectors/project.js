@@ -18,8 +18,13 @@ const activeSelectionSelector = state =>
   (state && state.project && state.project.activeSelection) || null;
 
 const activePageSelector = createSelector(
-  [pagesSelector, objectsSelector, activePageIdSelector],
-  (pages, objects, pageId) => {
+  [
+    pagesSelector,
+    objectsSelector,
+    activePageIdSelector,
+    selectedObjectsIdsSelector
+  ],
+  (pages, objects, pageId, selectedObejectsIds) => {
     let getObjectsInGroup = (pageObjectsIds, allObjects) => {
       let result = {};
       result = pick(pageObjectsIds, allObjects);
@@ -34,6 +39,9 @@ const activePageSelector = createSelector(
     const page = pages[pageId];
     let pageObjects = {};
     //getAlsoGroupObjects
+
+    const activeObject = pick(selectedObejectsIds, objects);
+    console.log("activeObject", activeObject);
 
     pageObjects = merge(
       pageObjects,

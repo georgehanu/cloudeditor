@@ -18,94 +18,79 @@ class ObjectBlock extends React.PureComponent {
     super(props);
     this.el = React.createRef();
     this.state = {
-      editableActive: false
+      editableActive: false,
+      blockEditor: 0
     };
     this.blurSelectors = ["test", "index"];
   }
+
   bindEvents() {
     const element = this.el.current;
     element.addEventListener("click", this.onClickHandler.bind(this), false);
-    document.addEventListener(
-      "click",
-      this.onClickHandlerOutside.bind(this),
-      false
-    );
   }
 
   componentDidMount() {
     const element = this.el.current;
     const { movable, resizable, rotatable } = this.props;
-    if (element) {
-      if (movable) {
-        $(element).draggable({
-          snap: ".drag_alignLines",
-          stop: (event, ui) => {
-            this.props.onUpdateProps({
-              id: this.props.id,
-              props: {
-                top: ui.position.top / this.props.scale,
-                left: ui.position.left / this.props.scale
-              }
-            });
-          }
-        });
-      }
-      if (resizable) {
-        $(element).resizable({
-          stop: (event, ui) => {
-            this.props.onUpdateProps({
-              id: this.props.id,
-              props: {
-                width: ui.size.width / this.props.scale,
-                height: ui.size.height / this.props.scale
-              }
-            });
-          }
-        });
-      }
-    }
     // here we bind the event
     this.bindEvents();
+    // if (element) {
+    //   if (movable) {
+    //     $(element).draggable({
+    //       snap: ".drag_alignLines",
+    //       start: () => {
+    //         this.setState({ blockEditor: 0 });
+    //       },
+    //       stop: (event, ui) => {
+    //         this.setState({ blockEditor: 0 });
+    //         this.props.onUpdateProps({
+    //           id: this.props.id,
+    //           props: {
+    //             top: ui.position.top / this.props.scale,
+    //             left: ui.position.left / this.props.scale
+    //           }
+    //         });
+    //       }
+    //     });
+    //   }
+    //   if (resizable) {
+    //     $(element).resizable({
+    //       stop: (event, ui) => {
+    //         this.props.onUpdateProps({
+    //           id: this.props.id,
+    //           props: {
+    //             width: ui.size.width / this.props.scale,
+    //             height: ui.size.height / this.props.scale
+    //           }
+    //         });
+    //       }
+    //     });
+    //   }
+    // }
   }
 
-  onClickHandler() {
-    const element = this.el.current;
-    const { editableActive } = this.state;
+  updateDraggable(status) {
+    let el = $(this.el.current);
     const { movable } = this.props;
-    if (!editableActive) {
-      if (movable) $(element).draggable("disable");
-      this.setState({ editableActive: true });
-      this.props.onSetActiveBlockHandler(this.props.id);
-    }
-  }
-
-  blurComponent(target) {
-    const blurSelectors = [...this.blurSelectors];
-    let isBlur = true;
-    blurSelectors.forEach(element => {
-      const trigger = $(element);
-      const cursorTarget = $(target);
-      if (trigger[0] === cursorTarget[0]) {
-        isBlur = false;
-      }
-      const target = $(blurSelectors).find(target);
-      if (target.length > 0) isBlur = false;
-    });
-    if (!isBlur) {
-      this.setState({ editableActive: false });
-      this.props.onRemoveActiveBlockHandler(this.props.id);
-    }
-  }
-  onClickHandlerOutside(event) {
-    const element = this.el.current;
-    const { movable } = this.props;
-    const { editableActive } = this.state;
-    if (editableActive) {
-      if (!element.contains(event.target)) {
-        if (movable) $(element).draggable("enable");
-        this.blurComponent();
+    if (el.length && movable) {
+      if (!status) {
+        this.disableDraggable(el);
+      } else {
+        this.enableDraggable(el);
       }
     }
+  }
+  disableDraggable(el) {
+    el.draggable("disable");
+  }
+  enableDraggable(el) {
+    el.draggable("enable");
+  }
+  onClickHandler(event) {
+    const element = this.el.current;
+    const { movable, editable } = this.props;
+    const { editableActive, blockEditor } = this.state;
+    this.props.onSetActiveBlockHandler(this.props.id);
   }
   render() {
     const { width, height, top, left, type, ...otherProps } = this.props;
