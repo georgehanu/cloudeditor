@@ -1,9 +1,10 @@
 const React = require("react");
 const PropTypes = require("prop-types");
 const { debounce } = require("underscore");
+const { SnapLines } = require("./Html5/SnapLines");
 const uuidv4 = require("uuid/v4");
 const { connect } = require("react-redux");
-
+const { snapLinesSelector } = require("../../stores/selectors/Html5/SnapLines");
 const {
   changeObjectPosition,
   changeObjectDimensions,
@@ -67,6 +68,7 @@ class Html5Renderer extends React.Component {
             onUpdateProps={this.props.onUpdatePropsHandler}
             scale={scale}
           />
+          <SnapLines lines={this.props.lines} />
           <div id="fitTextEscaper" />
         </div>
       );
@@ -96,14 +98,17 @@ Html5Renderer.defaultProps = {
     type: "none"
   }
 };
-
+const mapStateToProps = state => {
+  return {
+    snapLines: snapLinesSelector(state)
+  };
+};
 const mapDispatchToProps = dispatch => {
   return {
     onUpdatePropsHandler: payload => dispatch(updateObjectProps(payload))
   };
 };
-
 module.exports = connect(
-  null,
+  mapStateToProps,
   mapDispatchToProps
 )(Html5Renderer);
