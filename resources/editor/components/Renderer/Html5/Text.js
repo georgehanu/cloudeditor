@@ -9,7 +9,7 @@ class TextBlock extends React.PureComponent {
     this.el = React.createRef();
   }
   componentDidUpdate() {
-    if (this.props.editableActive) this.focusEditArea();
+    if (this.props.active) this.focusEditArea();
   }
   componentDidMount() {
     const element = this.el.current;
@@ -36,7 +36,7 @@ class TextBlock extends React.PureComponent {
         ref={this.el}
         className={this.props.type}
         style={style}
-        contentEditable={this.props.editableActive}
+        contentEditable={this.props.active}
       >
         {this.props.value ? this.props.value : null}
       </div>

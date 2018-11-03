@@ -1,11 +1,16 @@
 const React = require("react");
 
-const lines = props => (
-  <React.Fragment>
-    {Object.keys(props.lines).map(obKey => {
-      const { width, height, left, top } = props.lines[obKey];
-      const scale = props.scale;
-      return <div style={style} className="drag_alignLines" />;
-    })}
-  </React.Fragment>
-);
+class SnapLines extends React.PureComponent {
+  render() {
+    const { width, height, top, left } = this.props;
+    const style = {
+      width: width,
+      height: height,
+      top: top,
+      left: left
+    };
+    return <div className="test" style={style} />;
+  }
+}
+
+module.exports = SnapLines;
