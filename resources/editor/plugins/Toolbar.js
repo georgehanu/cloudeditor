@@ -204,14 +204,14 @@ class Toolbar extends React.Component {
         itemData = { ...attributes[this.state.detailsWndComponent] };
       }
     }
-
+    /*
     const randomStyle = {
       backgroundColor: randomColor()
-    };
+    };*/
 
     return (
       <div className="ToolbarContainer" style={containerStyle}>
-        <div className="Toolbar" style={randomStyle /*toolbarData.style*/}>
+        <div className="Toolbar" style={toolbarData.style}>
           <div className="ToolbarTop ">
             {topAreaGroups.length > 0 && (
               <ToolbarArea

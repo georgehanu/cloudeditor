@@ -3,12 +3,12 @@ const { mapTo, map } = require("rxjs/operators");
 const { ofType } = require("redux-observable");
 const {
   UPDATE_LAYER_PROP,
-  SET_OBJECT_FROM_TOOLBAR,
   DUPLICATE_OBJ,
-  DELETE_OBJ
+  DELETE_OBJ,
+  UPDATE_OBJECT_PROPS
 } = require("../actionTypes/project");
 
-const { UPDATE_OBJECT_PROPS } = require("../actionTypes/project");
+const { SET_OBJECT_FROM_TOOLBAR } = require("../actionTypes/toolbar");
 
 function dispachEvent(action) {
   if (action.payload.action === undefined) {

@@ -195,6 +195,7 @@ module.exports = handleActions(
       };
     },
     [DUPLICATE_OBJ]: (state, action) => {
+      console.log("duplicate");
       const originalObj = state.objects[action.payload.id];
       const duplicateObj = {
         ...originalObj,
