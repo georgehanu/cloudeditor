@@ -2,10 +2,12 @@ import React from "react";
 const assign = require("object-assign");
 const { connect } = require("react-redux");
 const {
-  selectedObjectToolbarSelector
+  selectedObjectToolbarSelector,
+  selectedObjectLayerSelector
 } = require("../stores/selectors/toolbar");
 
-const { updateObjectProps } = require("../stores/actions/project");
+const { setObjectFromToolbar } = require("../stores/actions/toolbar");
+
 const randomColor = require("randomcolor");
 
 import ToolbarArea from "../components/toolbar/ToolbarItems/ToolbarArea/ToolbarArea";
@@ -33,13 +35,11 @@ class Toolbar extends React.Component {
 
   CallMainHandler = (mainHandler, payload, props) => {
     if (mainHandler !== undefined && mainHandler) {
-      if (payload !== undefined) {
-        props.updateFromToolbarHandler(
-          Utils.CreatePayload(this.state.activeToolbar, payload)
-        );
-      } else {
-        props.updateFromToolbarHandler();
-      }
+      const mainPayload = Utils.CreatePayload(
+        this.state.activeToolbar,
+        payload
+      );
+      if (mainPayload !== null) props.setObjectFromToolbar(mainPayload);
     }
   };
 
@@ -154,7 +154,7 @@ class Toolbar extends React.Component {
 
   render() {
     console.log("Toolbar");
-    console.log(this.props.activeToolbar);
+    console.log(this.props);
     console.log("Toolbar End");
     let toolbarData = null;
     if (this.props.activeToolbar === null) {
@@ -164,10 +164,18 @@ class Toolbar extends React.Component {
     const activeItem = this.props.activeToolbar;
     let attributes = {};
     if (activeItem.type === "image") {
-      toolbarData = ImageToolbar;
-      attributes = Utils.LoadImageSettings(activeItem);
+      toolbarData = Utils.LoadImageSettings(
+        ImageToolbar,
+        activeItem,
+        this.props.activeLayer
+      );
+      attributes = Utils.LoadImageAdditionalInfo(activeItem);
     } else if (activeItem.type === "text") {
-      toolbarData = Utils.LoadTextSettings(TextToolbar, activeItem);
+      toolbarData = Utils.LoadTextSettings(
+        TextToolbar,
+        activeItem,
+        this.props.activeLayer
+      );
       attributes = Utils.LoadTextAdditionalInfo(activeItem);
     }
     if (toolbarData === null) return null;
@@ -246,13 +254,14 @@ class Toolbar extends React.Component {
 
 const mapStateToProps = state => {
   return {
-    activeToolbar: selectedObjectToolbarSelector(state)
+    activeToolbar: selectedObjectToolbarSelector(state),
+    activeLayer: selectedObjectLayerSelector(state)
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
-    updateFromToolbarHandler: payload => dispatch(updateObjectProps(payload))
+    setObjectFromToolbar: payload => dispatch(setObjectFromToolbar(payload))
   };
 };
 
@@ -263,5 +272,5 @@ const ToolbarPlugin = connect(
 
 module.exports = {
   Toolbar: assign(ToolbarPlugin),
-  reducers: {}
+  epics: require("../stores/epics/toolbar")
 };

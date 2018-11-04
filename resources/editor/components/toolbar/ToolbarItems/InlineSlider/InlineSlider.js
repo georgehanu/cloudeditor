@@ -19,10 +19,12 @@ const InlineSlider = props => {
         type="range"
         defaultValue={startValue}
         onChange={event =>
-          props.ToolbarHandler({
-            mainHandler: true,
-            payloadMainHandler: event.target.value
-          })
+          debounce(
+            props.ToolbarHandler({
+              mainHandler: true,
+              payloadMainHandler: event.target.value
+            })
+          )
         }
         min="0"
         max="100"

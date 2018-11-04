@@ -1,5 +1,4 @@
 import * as Types from "../ToolbarConfig/types";
-import * as Operation from "../ToolbarConfig/operation";
 
 export const Bold = {
   type: Types.BUTTON_LETTER_BOLD
@@ -38,9 +37,7 @@ export const VAlignPoptext = {
 };
 
 export const LayerPoptext = {
-  type: Types.POPTEXT_LAYER,
-  operation: Operation.MERGE_DATA,
-  newData: [{ value: "sendbackward", disabled: true }]
+  type: Types.POPTEXT_LAYER
 };
 
 export const FontPoptext = {
