@@ -9,6 +9,16 @@ const logger = require("../../../../utils/LoggerUtils");
 const UPDATE_SIGNAL = {};
 
 const hostConfig = {
+  // cancelDeferredCallback: ReactScheduler.cancelDeferredCallback,
+  now: ReactDOMFrameScheduling.now,
+
+  // The Konva renderer is secondary to the React DOM renderer.
+  isPrimaryRenderer: false,
+
+  supportsMutation: true,
+
+  scheduleDeferredCallback: ReactDOMFrameScheduling.rIC,
+
   appendInitialChild(canvas, child) {
     logger.info("appendInitialChild", canvas, child);
     canvas.instance.add(child.instance);
@@ -75,22 +85,10 @@ const hostConfig = {
     return emptyObject;
   },
 
-  scheduleDeferredCallback: ReactDOMFrameScheduling.rIC,
-
   shouldSetTextContent(type, props) {
     logger.info("shouldSetTextContent", type, props);
     return false;
   },
-
-  // cancelDeferredCallback: ReactScheduler.cancelDeferredCallback,
-  now: ReactDOMFrameScheduling.now,
-
-  // The Konva renderer is secondary to the React DOM renderer.
-  isPrimaryRenderer: false,
-
-  supportsMutation: true,
-
-  // useSyncScheduling: true,
 
   appendChild(parentInstance, child) {
     logger.info("appendChild", parentInstance, child);
@@ -146,15 +144,5 @@ const hostConfig = {
 };
 
 const FabricRenderer = Reconciler(hostConfig);
-
-const foundDevTools = FabricRenderer.injectIntoDevTools({
-  findFiberByHostInstance: ReactDOMComponentTree.getClosestInstanceFromNode,
-  bundleType: process.env.NODE_ENV !== "production" ? 1 : 0,
-  version: React.version || 16,
-  rendererPackageName: "react-konva",
-  getInspectorDataForViewTag: (...args) => {
-    console.log(args);
-  }
-});
 
 module.exports = FabricRenderer;

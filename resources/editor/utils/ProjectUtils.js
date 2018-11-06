@@ -151,9 +151,18 @@ const getRandomProject = cfg => {
     underline: true
   });
 
+  let graphics = getEmptyObject({
+    type: "graphics",
+    width: Math.random() * 500,
+    height: Math.random() * 500,
+    left: Math.random() * 500,
+    top: Math.random() * 500,
+    src: "http://localhost:8080/2.svg"
+  });
+
   page1 = {
     ...page1,
-    objectsIds: [img1.id, img2.id, img3.id, group.id, text1.id]
+    objectsIds: [/*img1.id, img2.id, img3.id, */ graphics.id]
   };
 
   page2 = {
@@ -174,7 +183,8 @@ const getRandomProject = cfg => {
       [img6.id]: img6,
       [img7.id]: img7,
       [group.id]: group,
-      [text1.id]: text1
+      [text1.id]: text1,
+      [graphics.id]: graphics
     },
     pagesOrder: [page1.id, page2.id],
     activePage: page1.id
@@ -220,6 +230,13 @@ const getEmptyObject = cfg => {
           cropWidth: 0,
           cropHeight: 0
         };
+      case "graphics":
+        return {
+          ...object,
+          src:
+            cfg.src ||
+            "https://images.pexels.com/photos/67636/rose-blue-flower-rose-blooms-67636.jpeg"
+        };
       case "textbox":
         return {
           ...object,
@@ -258,9 +275,7 @@ const getEmptyObject = cfg => {
         };
         break;
       default:
-        return {
-          ...object
-        };
+        return { ...object };
         break;
     }
   }

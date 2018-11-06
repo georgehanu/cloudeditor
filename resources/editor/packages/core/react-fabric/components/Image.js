@@ -11,10 +11,12 @@ class Image extends FabricObject {
     tmpImage.src = props.src;
 
     this.instance = new fabric.Image(tmpImage, props);
+
     this._applyProps(props);
 
     tmpImage.onload = () => {
       logger.info("tmpImage loaded");
+      this.instance.isLoaded = true;
       this._updatePicture();
       this._updatePlaceholder();
 

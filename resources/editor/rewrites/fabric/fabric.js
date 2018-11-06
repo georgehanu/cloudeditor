@@ -49,7 +49,8 @@ fabric.util.object.extend(fabric.StaticCanvas.prototype, {
 });
 fabric.util.object.extend(fabric.Object.prototype, {
   designerCallbacks: {},
-  ignoreSnap: false
+  ignoreSnap: false,
+  isLoaded: false
 });
 fabric.util.object.extend(fabric.Image.prototype, {
   cropWidth: 0,
@@ -558,5 +559,12 @@ fabric.Textbox.prototype.getMainProps = function() {
     text: this.text
   });
 };
-
+fabric.Object.prototype.render = (function(_render) {
+  return function(ctx) {
+    if (!this.isLoaded) {
+      return;
+    }
+    _render.call(this, ctx);
+  };
+})(fabric.Object.prototype.render);
 module.exports = { fabric };
