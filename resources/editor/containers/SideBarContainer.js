@@ -1,7 +1,14 @@
+import SidebarButton from "../components/sidebar/SidebarButton";
+import PaneContainer from "../components/sidebar/PaneContainer";
+
 const React = require("react");
 const PropTypes = require("prop-types");
 
 class SideBarContainer extends React.Component {
+  state = {
+    showPane: false,
+    pluginIndex: null
+  };
   getToolConfig = tool => {
     if (tool.tool) {
       return {};
@@ -13,19 +20,42 @@ class SideBarContainer extends React.Component {
     return tool.plugin;
   };
 
+  showPlugin = pluginIndex => {
+    if (this.state.showPane && this.state.pluginIndex === pluginIndex) {
+      this.setState({ showPane: false, pluginIndex: null });
+    } else {
+      this.setState({ showPane: true, pluginIndex });
+    }
+  };
+
   renderTools = () => {
     return this.props.tools.map((tool, i) => {
       const Tool = this.getTool(tool);
       const toolCfg = this.getToolConfig(tool);
+
+      const iconStyle = "icon " + (tool.icon ? tool.icon : "");
       return (
-        <Tool
-          key={tool.name || "tool" + i}
-          {...toolCfg}
-          items={tool.items || []}
-        />
+        <li key={i}>
+          <SidebarButton
+            clicked={() => this.showPlugin(i)}
+            selected={i === this.state.pluginIndex ? true : false}
+            tooltip={tool.tooltip}
+            id={"sidebar" + i}
+          >
+            <div className={iconStyle} />
+            <div className="IconTitle">{tool.text}</div>
+            {tool.showMore && (
+              <span className="icon More printqicon-lefttriangle" />
+            )}
+          </SidebarButton>
+          <PaneContainer visible={i === this.state.pluginIndex ? true : false}>
+            <Tool {...toolCfg} items={tool.items || []} />;
+          </PaneContainer>
+        </li>
       );
     });
   };
+
   render() {
     const Container = this.props.container;
 
@@ -36,7 +66,7 @@ class SideBarContainer extends React.Component {
         className={this.props.className}
       >
         <div id={this.props.id + "-container"} style={this.props.style}>
-          {this.renderTools()}
+          <ul>{this.renderTools()}</ul>
         </div>
       </div>
     );

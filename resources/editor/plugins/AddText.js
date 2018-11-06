@@ -2,30 +2,26 @@ const React = require("react");
 const { connect } = require("react-redux");
 const assign = require("object-assign");
 const { addObjectToPage } = require("../stores/actions/project");
-const { changeTheme } = require("../stores/actions/theme");
 const ProjectUtils = require("../utils/ProjectUtils");
 
-const emptyImage = () =>
+const emptyText = () =>
   ProjectUtils.getEmptyObject({
-    type: "image",
+    type: "text",
     width: Math.random() * 500,
     height: Math.random() * 500,
     left: Math.random() * 500,
     top: Math.random() * 500
   });
 
-class AddButton extends React.Component {
+class AddText extends React.Component {
   render() {
     const { activePage: pageId } = this.props;
     return (
       <div>
-        <div>Current Theme = {this.props.theme}</div>
         <button
-          onClick={() =>
-            this.props.addObjectToPageHandler(emptyImage(), pageId)
-          }
+          onClick={() => this.props.addObjectToPageHandler(emptyText(), pageId)}
         >
-          Add Image
+          Add Text
         </button>
       </div>
     );
@@ -49,23 +45,22 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-const AddButtonPlugin = connect(
+const AddTextPlugin = connect(
   mapStateToProps,
   mapDispatchToProps
-)(AddButton);
+)(AddText);
 
 module.exports = {
-  AddButton: assign(AddButtonPlugin, {
+  AddText: assign(AddTextPlugin, {
     disablePluginIf:
       "{store().getState().project.title==='Empty Project!!@!!@!@'}",
     SideBar: {
-      position: 2,
+      position: 3,
       priority: 1,
-      text: "Add Image",
-      icon: "printqicon-newimage",
-      showMore: true
+      text: "Add Text",
+      icon: "printqicon-newtext",
+      showMore: true,
+      tooltip: "Tooltip"
     }
-  }),
-  reducers: { addButton: require("../stores/reducers/addButton") },
-  epics: require("../stores/epics/addButton")
+  })
 };

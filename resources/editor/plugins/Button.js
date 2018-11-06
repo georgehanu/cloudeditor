@@ -1,5 +1,6 @@
 const React = require("react");
 const designerActions = require("../stores/actions/designer");
+const { connect } = require("react-redux");
 
 class Button extends React.Component {
   handleClick = () => {

@@ -16,7 +16,8 @@
       {
         "name": "Html5Renderer",
         "hide": "{true}"
-      }
+      },
+      "AddText"
     ]
   }
 }
