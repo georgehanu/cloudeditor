@@ -13,6 +13,7 @@ const Slider = props => {
   return (
     <div className={parentClassName}>
       <Button
+        tooltip={props.tooltip}
         clicked={() =>
           props.ToolbarHandler({
             mainHandler: true,
@@ -26,4 +27,4 @@ const Slider = props => {
     </div>
   );
 };
-export default React.memo(Slider);
+export default Slider;

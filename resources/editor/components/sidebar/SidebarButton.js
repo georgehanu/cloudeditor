@@ -1,4 +1,5 @@
 import React from "react";
+import withTooltip from "../../hoc/withTooltip";
 
 const SidebarButton = props => {
   let defaultClasses = ["SidebarButton"];
@@ -7,14 +8,16 @@ const SidebarButton = props => {
   }
 
   const className = defaultClasses.join(" ");
-
-  let simpleButton = (
-    <button type="button" onClick={props.clicked} className={className}>
+  return (
+    <button
+      type="button"
+      onClick={props.clicked}
+      className={className}
+      {...props.tooltipData}
+    >
       {props.children}
     </button>
   );
-
-  return <React.Fragment>{simpleButton}</React.Fragment>;
 };
 
-export default SidebarButton;
+export default withTooltip(SidebarButton);

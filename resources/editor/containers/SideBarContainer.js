@@ -40,7 +40,6 @@ class SideBarContainer extends React.Component {
             clicked={() => this.showPlugin(i)}
             selected={i === this.state.pluginIndex ? true : false}
             tooltip={tool.tooltip}
-            id={"sidebar" + i}
           >
             <div className={iconStyle} />
             <div className="IconTitle">{tool.text}</div>
