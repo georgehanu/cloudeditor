@@ -7,11 +7,10 @@ class Graphics extends FabricObject {
   constructor(props) {
     super(props);
     this.setPropsToSkip({
-      type: true,
       _objects: true,
       loadedInstance: true
     });
-    this.instance = props.loadedInstance;
+    this.instance = new fabric.Graphics([props.loadedInstance]);
 
     this.props.isLoaded = 1;
     this._applyProps(this.props);

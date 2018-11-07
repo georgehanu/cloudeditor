@@ -6,22 +6,15 @@ const FabricObject = require("./fabricObject");
 class Image extends FabricObject {
   constructor(props) {
     super(props);
+    this.setPropsToSkip({ loadedInstance: true });
     logger.info("new props", props);
-    const tmpImage = new window.Image();
-    tmpImage.src = props.src;
 
-    this.instance = new fabric.Image(tmpImage, props);
-
+    this.instance = new fabric.Image(props.loadedInstance, props);
+    this.instance.isLoaded = true;
     this._applyProps(props);
 
-    tmpImage.onload = () => {
-      logger.info("tmpImage loaded");
-      this.instance.isLoaded = true;
-      this._updatePicture();
-      this._updatePlaceholder();
-
-      console.log("image loaded", this.instance);
-    };
+    this._updatePicture();
+    this._updatePlaceholder();
   }
   _updatePlaceholder() {
     this.instance._setViewBox({});

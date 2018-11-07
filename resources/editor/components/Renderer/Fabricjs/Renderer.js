@@ -11,8 +11,8 @@ const {
   Group,
   Graphics
 } = require("../../../packages/core/react-fabric");
-const Img = require("../../../packages/core/react-fabric/components/Img");
-const GraphicsLoad = require("../../../packages/core/react-fabric/components/GraphicsLoad");
+const ImageLoad = require("../../../packages/core/react-fabric/components/Helpers/ImageLoad");
+const GraphicsLoad = require("../../../packages/core/react-fabric/components/Helpers/GraphicsLoad");
 const { fabric } = require("../../../rewrites/fabric/fabric");
 const { map } = require("ramda");
 const ProjectUtils = require("../../../utils/ProjectUtils");
@@ -264,7 +264,7 @@ class FabricjsRenderer extends React.PureComponent {
       switch (object.type) {
         case "image":
           return (
-            <Img
+            <ImageLoad
               key={object.id}
               {...object}
               designerCallbacks={this.designerCallbacks}

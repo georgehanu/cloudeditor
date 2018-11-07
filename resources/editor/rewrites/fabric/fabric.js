@@ -1,6 +1,7 @@
 const { fabric } = require("fabric");
 const logger = require("../../utils/LoggerUtils");
 const uuidv4 = require("uuid/v4");
+const { forEach } = require("ramda");
 fabric.util.object.extend(fabric.StaticCanvas.prototype, {
   snap: 10,
   canvasScale: 1,
@@ -40,6 +41,7 @@ fabric.util.object.extend(fabric.StaticCanvas.prototype, {
   setCanvasWorkingHeight: function(workingHeight) {
     this.canvasWorkingHeight = workingHeight;
   },
+
   _renderOverlay: function(ctx) {
     this.fire("before:overlay:render", {
       ctx: ctx,
@@ -567,4 +569,34 @@ fabric.Object.prototype.render = (function(_render) {
     _render.call(this, ctx);
   };
 })(fabric.Object.prototype.render);
+
+fabric.Graphics = fabric.util.createClass(fabric.Group, {
+  type: "graphics",
+  initialize: function(objects, options, isAlreadyGrouped) {
+    this.callSuper("initialize", objects, options, isAlreadyGrouped);
+  }
+});
+
+fabric.util.object.extend(fabric.util, {
+  groupGraphicsSVGElements: function(elements, options, path) {
+    var object;
+
+    if (options) {
+      if (options.width && options.height) {
+        options.centerPoint = {
+          x: options.width / 2,
+          y: options.height / 2
+        };
+      } else {
+        delete options.width;
+        delete options.height;
+      }
+    }
+    object = new fabric.Graphics(elements, options);
+    if (typeof path !== "undefined") {
+      object.sourcePath = path;
+    }
+    return object;
+  }
+});
 module.exports = { fabric };

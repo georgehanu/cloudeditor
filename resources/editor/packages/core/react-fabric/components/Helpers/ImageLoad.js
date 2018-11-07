@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 
-const { Image } = require("../../react-fabric");
+const { Image } = require("../../../react-fabric");
 var imgCache = {
   brokenImage: document.createElement("img")
 };
@@ -12,7 +12,7 @@ brokenImage.onload = function() {
   this.brokenImage = true;
 };
 
-class Img extends Component {
+class ImageLoad extends Component {
   constructor(...args) {
     super(...args);
     this.state = {
@@ -61,7 +61,7 @@ class Img extends Component {
       img.loadFns.push(() => {
         img.loaded = true;
         this.setState({ loaded: true, image: img });
-        console.log("marius was here");
+        //console.log("test  ");
         console.log("Image loaded", src);
       });
 
@@ -84,15 +84,16 @@ class Img extends Component {
     }
   }
 
-  componentWillMount = () => {
+  componentDidMount = () => {
     this.loadImg(this.props.src);
   };
 
   render() {
     let render = null;
     if (this.state.loaded)
-      render = <Image test={this.state.image} {...this.props} />;
+      render = <Image loadedInstance={this.state.image} {...this.props} />;
+
     return render;
   }
 }
-module.exports = Img;
+module.exports = ImageLoad;

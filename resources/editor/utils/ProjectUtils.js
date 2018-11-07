@@ -47,9 +47,9 @@ const getRandomProject = cfg => {
   const defaultImages = [
     "http://www.flexibleproduction.com/wp-content/uploads/2017/06/test-intelligenza-sociale.jpg",
     "https://images.pexels.com/photos/414171/pexels-photo-414171.jpeg?auto=compress&cs=tinysrgb&h=350",
-    "http://www.flexibleproduction.com/wp-content/uploads/2017/06/test-intelligenza-sociale.jpg",
+    //"http://www.flexibleproduction.com/wp-content/uploads/2017/06/test-intelligenza-sociale.jpg",
     "https://images.pexels.com/photos/67636/rose-blue-flower-rose-blooms-67636.jpeg",
-    "https://images.pexels.com/photos/371633/pexels-photo-371633.jpeg?auto=compress&cs=tinysrgb&h=350",
+    //"https://images.pexels.com/photos/371633/pexels-photo-371633.jpeg?auto=compress&cs=tinysrgb&h=350",
     "https://cdn.fstoppers.com/styles/large-16-9/s3/lead/2018/04/jonathan-martin-brunate-lead-image_0.jpg",
     "https://www.evoke-landscape-design.co.uk/wp-content/uploads/home-tree.jpg",
     "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSnln4X6Wha8vlaJMTkL3KEK2_v3Hxov3RqLJ5EZgJc3LbS47IG",
@@ -67,7 +67,7 @@ const getRandomProject = cfg => {
     left: Math.random() * 500,
     orientation: "north",
     top: Math.random() * 500,
-    src: defaultImages[parseInt(Math.random() * defaultImages.length)]
+    src: defaultImages[1]
   });
   let img2 = getEmptyObject({
     type: "image",
@@ -76,7 +76,7 @@ const getRandomProject = cfg => {
     left: Math.random() * 500,
     top: Math.random() * 500,
     orientation: "north",
-    src: defaultImages[parseInt(Math.random() * defaultImages.length)]
+    src: defaultImages[2]
   });
   let img6 = getEmptyObject({
     type: "image",
@@ -92,7 +92,7 @@ const getRandomProject = cfg => {
     height: 100,
     left: 100,
     top: 100,
-    src: defaultImages[parseInt(Math.random() * defaultImages.length)]
+    src: defaultImages[3]
   });
   let group = getEmptyObject({
     type: "group",
@@ -110,7 +110,7 @@ const getRandomProject = cfg => {
     left: Math.random() * 500,
     top: Math.random() * 500,
     orientation: "north",
-    src: defaultImages[parseInt(Math.random() * defaultImages.length)]
+    src: defaultImages[0]
   });
   let img4 = getEmptyObject({
     type: "image",
@@ -128,7 +128,7 @@ const getRandomProject = cfg => {
     left: Math.random() * 500,
     orientation: "north",
     top: Math.random() * 500,
-    src: defaultImages[parseInt(Math.random() * defaultImages.length)]
+    src: defaultImages[4]
   });
   let text6 = getEmptyObject({
     type: "image",
@@ -154,15 +154,15 @@ const getRandomProject = cfg => {
   let graphics = getEmptyObject({
     type: "graphics",
     width: Math.random() * 500,
-    height: Math.random() * 500,
-    left: Math.random() * 500,
-    top: Math.random() * 500,
-    src: "http://localhost:8080/2.svg"
+    height: 400,
+    left: 150,
+    top: 200,
+    src: "http://localhost:8080/alfa006_top.svg"
   });
 
   page1 = {
     ...page1,
-    objectsIds: [/*img1.id, img2.id, img3.id, */ graphics.id]
+    objectsIds: [img3.id, graphics.id, img1.id, img2.id, img7.id, img5.id]
   };
 
   page2 = {
@@ -171,16 +171,13 @@ const getRandomProject = cfg => {
   };
   return {
     ...project,
-    pages: {
-      [page1.id]: page1,
-      [page2.id]: page2,
-      [page3.id]: page3
-    },
+    pages: { [page1.id]: page1, [page2.id]: page2, [page3.id]: page3 },
     objects: {
       [img1.id]: img1,
       [img2.id]: img2,
       [img3.id]: img3,
       [img6.id]: img6,
+      [img5.id]: img5,
       [img7.id]: img7,
       [group.id]: group,
       [text1.id]: text1,

@@ -97,8 +97,10 @@ const hostConfig = {
   },
 
   appendChildToContainer(parentInstance, child) {
+    console.log("marius was here");
     logger.info("appendChildToContainer", parentInstance, child);
     parentInstance.instance.add(child.instance);
+
     child._updatePicture();
   },
 
@@ -108,6 +110,15 @@ const hostConfig = {
 
   insertInContainerBefore(parentInstance, child, beforeChild) {
     logger.info("insertInContainerBefore", parentInstance, child, beforeChild);
+
+    logger.info("appendChildToContainer", parentInstance, child);
+    let index = parentInstance.instance._objects.length - 1;
+    if (beforeChild.instance) {
+      index = parentInstance.instance._objects.indexOf(beforeChild.instance);
+    }
+    parentInstance.instance.insertAt(child.instance, index);
+
+    child._updatePicture();
   },
 
   removeChild(parentInstance, child) {

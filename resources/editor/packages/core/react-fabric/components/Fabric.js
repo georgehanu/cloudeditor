@@ -23,9 +23,9 @@ class Fabric extends React.Component {
 
   componentDidUpdate(prevProps, prevState) {
     logger.info("componentDidUpdate");
-    this._stage._applyProps(this.props, prevProps);
+    //this._stage._applyProps(this.props, prevProps);
 
-    FabricRenderer.updateContainer(this.props.children, this._mountNode, this);
+    // FabricRenderer.updateContainer(this.props.children, this._mountNode, this);
   }
   componentWillUnmount() {
     FabricRenderer.updateContainer(null, this._mountNode, this);
