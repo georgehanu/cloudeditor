@@ -140,15 +140,13 @@ const getRandomProject = cfg => {
     value: "this is a default value for text"
   });
   let text1 = getEmptyObject({
-    type: "text",
+    type: "textbox",
     width: 100,
     height: 100,
     left: 100,
     top: 100,
     text: "Enter text here",
-    bold: true,
-    italic: false,
-    underline: true
+    fill: "red"
   });
 
   let graphics = getEmptyObject({
@@ -162,7 +160,15 @@ const getRandomProject = cfg => {
 
   page1 = {
     ...page1,
-    objectsIds: [img3.id, graphics.id, img1.id, img2.id, img7.id, img5.id]
+    objectsIds: [
+      img3.id,
+      graphics.id,
+      img1.id,
+      img2.id,
+      img7.id,
+      img5.id,
+      text1.id
+    ]
   };
 
   page2 = {

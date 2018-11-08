@@ -162,11 +162,12 @@ class Toolbar extends React.Component {
     }
 
     const activeItem = this.props.activeToolbar;
+
     let attributes = {};
     if (activeItem.type === "image") {
       toolbarData = ImageToolbar;
       attributes = Utils.LoadImageSettings(activeItem);
-    } else if (activeItem.type === "text") {
+    } else if (activeItem.type === "text" || activeItem.type === "textbox") {
       toolbarData = Utils.LoadTextSettings(TextToolbar, activeItem);
       attributes = Utils.LoadTextAdditionalInfo(activeItem);
     }

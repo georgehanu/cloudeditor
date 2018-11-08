@@ -7,6 +7,7 @@ const Text = require("./Text");
 class Textbox extends Text {
   _initInstance() {
     this.instance = new fabric.Textbox(this.props.text, this.props);
+    this.instance.isLoaded = 1;
     this._applyProps(this.props);
   }
 }
