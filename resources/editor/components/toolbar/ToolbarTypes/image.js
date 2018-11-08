@@ -20,7 +20,6 @@ const image = {
       items: [
         {
           baseType: Types.SLIDER_INLINE,
-          /*handler: Handler,*/
           defaultValue: 40
         }
       ]

@@ -4,7 +4,12 @@ const {
 
 const { pick } = require("ramda");
 
-const { objectsSelector, selectedObjectsIdsSelector } = require("./project");
+const {
+  objectsSelector,
+  selectedObjectsIdsSelector,
+  pagesSelector,
+  activePageIdSelector
+} = require("./project");
 
 const selectedObjectToolbarSelector = createSelector(
   [objectsSelector, selectedObjectsIdsSelector],
@@ -16,18 +21,34 @@ const selectedObjectToolbarSelector = createSelector(
     const selectedObj = pick(selectedObjectsIds, objects);
     const selectedItem = selectedObj[Object.keys(selectedObj)[0]];
 
-    console.log(selectedItem);
-    //selectedObjectsIds = [Object.keys(objects)[0]];
-    //selectedObjectsIds = objects[selectedObjectsIds]];
-    /*
-                    const activeObjects = {
-                        objects: pick(selectedObjectsIds, objects)
-                    };
-            */
     return selectedItem;
   }
 );
 
+const selectedObjectLayerSelector = createSelector(
+  [pagesSelector, activePageIdSelector, selectedObjectsIdsSelector],
+  (pages, pageId, selectedObj) => {
+    if (selectedObj.length === 0) {
+      return {};
+    }
+
+    const page = pages[pageId];
+    const objIndex = page.objectsIds.findIndex(el => {
+      return el === selectedObj[Object.keys(selectedObj)[0]];
+    });
+    let availableLayer = {};
+    if (objIndex === 0) {
+      availableLayer["back"] = false;
+    }
+    if (objIndex === page.objectsIds.length - 1) {
+      availableLayer["front"] = false;
+    }
+
+    return availableLayer;
+  }
+);
+
 module.exports = {
-  selectedObjectToolbarSelector
+  selectedObjectToolbarSelector,
+  selectedObjectLayerSelector
 };
