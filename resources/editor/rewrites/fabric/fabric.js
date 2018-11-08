@@ -74,6 +74,8 @@ fabric.util.object.extend(fabric.Image.prototype, {
   canvasY: 0,
   canvasW: 0,
   canvasH: 0,
+  brightness: 0,
+  contrast: 0,
   _dimensionAffectingProps: {
     width: 1,
     height: 1,
@@ -517,7 +519,10 @@ fabric.Image.prototype.getMainProps = function() {
     cropX: this.cropX,
     cropY: this.cropY,
     cropWidth: this.cropWidth,
-    cropHeight: this.cropHeight
+    cropHeight: this.cropHeight,
+    leftSlider: this.leftSlider,
+    brightness: 0,
+    contrast: 0
   });
 };
 
@@ -528,6 +533,17 @@ fabric.Image.prototype._renderFill = (function(_renderFill) {
       sW = w * this._filterScalingX,
       sH = h * this._filterScalingY,
       elementToDraw = this._element;
+    let cotrast_brightness = null;
+    if (this.brightness != 0) {
+      cotrast_brightness = "brightness(" + (100 + this.brightness) + "%) ";
+    }
+    if (this.contrast != 0) {
+      cotrast_brightness += "contrast(" + (100 + this.contrast) + "%)";
+    }
+    if (cotrast_brightness) {
+      ctx.filter = cotrast_brightness;
+    }
+
     elementToDraw &&
       ctx.drawImage(
         elementToDraw,

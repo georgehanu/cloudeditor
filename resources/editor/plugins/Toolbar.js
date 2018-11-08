@@ -3,7 +3,9 @@ const assign = require("object-assign");
 const { connect } = require("react-redux");
 const {
   selectedObjectToolbarSelector,
-  selectedObjectLayerSelector
+  selectedObjectLayerSelector,
+  selectedPageWidthSelector,
+  selectedPageHeightSelector
 } = require("../stores/selectors/toolbar");
 
 const { setObjectFromToolbar } = require("../stores/actions/toolbar");
@@ -168,10 +170,14 @@ class Toolbar extends React.Component {
       toolbarData = Utils.LoadImageSettings(
         ImageToolbar,
         activeItem,
-        this.props.activeLayer
+        this.props.activeLayer,
+        {
+          pageWidth: this.props.pageWidth,
+          pageHeight: this.props.pageHeight
+        }
       );
       attributes = Utils.LoadImageAdditionalInfo(activeItem);
-    } else if (activeItem.type === "text") {
+    } else if (activeItem.type === "text" || activeItem.type === "textbox") {
       toolbarData = Utils.LoadTextSettings(
         TextToolbar,
         activeItem,
@@ -256,7 +262,9 @@ class Toolbar extends React.Component {
 const mapStateToProps = state => {
   return {
     activeToolbar: selectedObjectToolbarSelector(state),
-    activeLayer: selectedObjectLayerSelector(state)
+    activeLayer: selectedObjectLayerSelector(state),
+    pageWidth: selectedPageWidthSelector(state),
+    pageHeight: selectedPageHeightSelector(state)
   };
 };
 

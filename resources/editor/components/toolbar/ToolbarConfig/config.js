@@ -191,6 +191,15 @@ export const Config = {
       { value: 300, className: "printqicon-badsmiley IconSmileyBad" }
     ]
   },
+  [Types.SIMPLE_ICON_QUALITY]: {
+    baseType: Types.SIMPLE_ICON,
+    threshold: 50,
+    range: [
+      { value: 100, className: "printqicon-goodsmiley IconSmileyOk" },
+      { value: 200, className: "printqicon-normalsmiley IconSmileyNormal" },
+      { value: 300, className: "printqicon-badsmiley IconSmileyBad" }
+    ]
+  },
   [Types.COLOR_SELECTOR]: {
     baseType: Types.COLOR,
     className: "icon printqicon-spacing",

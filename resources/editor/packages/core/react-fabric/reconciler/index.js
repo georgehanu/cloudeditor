@@ -98,6 +98,10 @@ const hostConfig = {
 
   appendChildToContainer(parentInstance, child) {
     console.log("marius was here");
+    //we need to check if the element is already in canvas/ (for bring to front/sent to back)
+    if (parentInstance.instance._objects.indexOf(child.instance) > -1) {
+      parentInstance.instance.remove(child.instance);
+    }
     logger.info("appendChildToContainer", parentInstance, child);
     parentInstance.instance.add(child.instance);
 
@@ -110,6 +114,11 @@ const hostConfig = {
 
   insertInContainerBefore(parentInstance, child, beforeChild) {
     logger.info("insertInContainerBefore", parentInstance, child, beforeChild);
+
+    //we need to check if the element is already in canvas/ (for bring to front/sent to back)
+    if (parentInstance.instance._objects.indexOf(child.instance) > -1) {
+      parentInstance.instance.remove(child.instance);
+    }
 
     logger.info("appendChildToContainer", parentInstance, child);
     let index = parentInstance.instance._objects.length - 1;

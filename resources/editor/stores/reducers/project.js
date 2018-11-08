@@ -105,10 +105,24 @@ const updateObjectProps = (state, payload) => {
   };
 };
 const removeSelection = (state, payload) => {
+  let objectsChanges = [];
+  if (payload.objectProps) {
+    objectsChanges = reduce(
+      (acc, value) => {
+        const key = value.id;
+        delete value.id;
+        acc[key] = value;
+        return acc;
+      },
+      {},
+      payload.objectProps
+    );
+  }
   return {
     ...state,
     activeSelection: null,
-    selectedObjectsIds: []
+    selectedObjectsIds: [],
+    objects: mergeDeepLeft(objectsChanges, state.objects)
   };
 };
 

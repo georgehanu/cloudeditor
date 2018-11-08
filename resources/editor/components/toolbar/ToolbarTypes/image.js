@@ -2,7 +2,9 @@ import {
   LayerPoptext,
   ImageMenuChangeBackground,
   ImageMenuChangeShape,
-  ImageMenuPoptext
+  ImageMenuPoptext,
+  SliderInlineImage,
+  SimpleIconQuality
 } from "./toolbarItems";
 import * as Types from "../ToolbarConfig/types";
 
@@ -17,22 +19,13 @@ const image = {
       location: Types.Position.TOP,
       position: 2,
       className: "GroupWithBorder",
-      items: [
-        {
-          baseType: Types.SLIDER_INLINE,
-          defaultValue: 40
-        }
-      ]
+      items: [SliderInlineImage]
     },
     {
       location: Types.Position.TOP,
       position: 3,
       items: [
-        {
-          type: Types.SIMPLE_ICON,
-          handler: null,
-          threshold: 50
-        },
+        SimpleIconQuality,
         ImageMenuChangeBackground,
         ImageMenuChangeShape,
         ImageMenuPoptext
@@ -57,7 +50,7 @@ const image = {
   ],
   style: {
     backgroundColor: "green",
-    marginTop: "100px"
+    marginTop: "0px"
   }
 };
 

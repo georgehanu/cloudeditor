@@ -47,8 +47,21 @@ const selectedObjectLayerSelector = createSelector(
     return availableLayer;
   }
 );
-
+const selectedPageWidthSelector = createSelector(
+  [pagesSelector, activePageIdSelector],
+  (pages, pageId) => {
+    return pages[pageId].width;
+  }
+);
+const selectedPageHeightSelector = createSelector(
+  [pagesSelector, activePageIdSelector],
+  (pages, pageId) => {
+    return pages[pageId].height;
+  }
+);
 module.exports = {
   selectedObjectToolbarSelector,
-  selectedObjectLayerSelector
+  selectedObjectLayerSelector,
+  selectedPageWidthSelector,
+  selectedPageHeightSelector
 };

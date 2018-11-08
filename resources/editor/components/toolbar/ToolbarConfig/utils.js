@@ -42,7 +42,12 @@ export const filterBasedOnLocation = (items, position) => {
     .sort((a, b) => comparePosition(a, b));
 };
 
-export const LoadImageSettings = (toolbar, activeItem, activeLayer) => {
+export const LoadImageSettings = (
+  toolbar,
+  activeItem,
+  activeLayer,
+  options
+) => {
   for (let groupIndex in toolbar.groups) {
     let group = toolbar.groups[groupIndex];
     for (let itemIndex in group.items) {
@@ -64,6 +69,12 @@ export const LoadImageSettings = (toolbar, activeItem, activeLayer) => {
             { value: "sendtoback", disabled: true }
           ];
         }
+      }
+      if (item.type === Types.SLIDER_INLINE_IMAGE) {
+        item.defaultValue = parseInt(activeItem.leftSlider);
+      }
+      if (item.type === Types.SIMPLE_ICON_QUALITY) {
+        item.threshold = 400;
       }
     }
   }
@@ -191,6 +202,32 @@ export const CreatePayload = (activeitem, itemPayload) => {
       } else {
         return null;
       }
+    case Types.SLIDER_INLINE_IMAGE:
+      attrs = { leftSlider: itemPayload.value };
+      break;
   }
   return { id: activeitem.id, props: attrs };
+};
+
+const imageQuality = (activeItem, pageWidth, pageHeight) => {
+  //@to do
+  let cropWidth =
+      activeItem.cropWidth * activeItem.workingPercent -
+      2 * activeItem.leftSlider * activeItem.unitResizeX,
+    cropHeight =
+      activeItem.cropHeight * activeItem.workingPercent -
+      2 * activeItem.leftSlider * activeItem.unitResizeX,
+    width_i =
+      activeItem.width *
+      (pageWidth / 0.75 / canvas.getCanvasWorkingWidth()) *
+      0.01041667;
+  height_i =
+    activeItem.height *
+    (pageHeight / 0.75 / canvas.getCanvasWorkingHeight()) *
+    0.01041667;
+
+  return (
+    Math.sqrt(Math.pow(cropWidth, 2) + Math.pow(cropHeight, 2)) /
+    Math.sqrt(Math.pow(width_i, 2) + Math.pow(height_i, 2))
+  );
 };
