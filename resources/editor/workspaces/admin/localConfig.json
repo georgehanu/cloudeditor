@@ -16,8 +16,7 @@
         "name": "Renderer",
         "hide": "{true}"
       },
-      "Snap",
-      "Toolbar"
+      "Snap"
     ]
   }
 }

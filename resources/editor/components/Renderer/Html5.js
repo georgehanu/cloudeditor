@@ -12,7 +12,7 @@ const {
 } = require("./../../stores/actions/project");
 
 const Objects = require("./Html5/Objects");
-const { SnapLines } = require("./Html5/SnapLines");
+const Lines = require("./Html5/SnapLines");
 
 class Html5Renderer extends React.Component {
   state = {
@@ -58,10 +58,9 @@ class Html5Renderer extends React.Component {
       const scale = this.state.scale;
       width *= scale;
       height *= scale;
-
       page = (
         <div
-          className="page-container"
+          className="page-container page"
           style={{ width: width, height: height }}
         >
           <Objects
@@ -69,7 +68,7 @@ class Html5Renderer extends React.Component {
             onUpdateProps={this.props.onUpdatePropsHandler}
             scale={scale}
           />
-
+          <Lines lines={this.props.snapLines} scale={scale} />
           <div id="fitTextEscaper" />
         </div>
       );

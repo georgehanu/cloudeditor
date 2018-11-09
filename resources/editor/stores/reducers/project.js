@@ -11,7 +11,9 @@ const {
   ADD_OBJECT,
   ADD_OBJECT_TO_PAGE,
   ADD_OBJECT_ID_TO_SELECTED,
+  ADD_OBJECT_ID_ACTION_SELECTED,
   REMOVE_SELECTION,
+  REMOVE_ACTION_SELECTION,
   UPDATE_SELECTION_OBJECTS_COORDS,
   UPDATE_OBJECT_PROPS,
   UPDATE_ACTIVE_SELECTION_PROPS,
@@ -59,36 +61,12 @@ const addObjectToPage = (state, action) => {
     }
   };
 };
-const changeObjectPosition = (state, action) => {
-  const { id, top, left } = action;
-  return {
-    ...state,
-    objects: {
-      ...state.objects,
-      [id]: {
-        ...state.objects[id],
-        top: top,
-        left: left
-      }
-    }
-  };
-};
-const changeObjectDimesions = (state, action) => {
-  const { id, width, height } = action;
-  return {
-    ...state,
-    objects: {
-      ...state.objects,
-      [id]: {
-        ...state.objects[id],
-        width: width,
-        height: height
-      }
-    }
-  };
-};
+
 const addObjectIdToSelected = (state, payload) => {
   return { ...state, selectedObjectsIds: [payload] };
+};
+const addObjectIdActionSelected = (state, payload) => {
+  return { ...state, selectedActionObjectsIds: [payload] };
 };
 const updateObjectProps = (state, payload) => {
   return {
@@ -104,6 +82,12 @@ const removeSelection = (state, payload) => {
     ...state,
     activeSelection: null,
     selectedObjectsIds: []
+  };
+};
+const removeActionSelection = (state, payload) => {
+  return {
+    ...state,
+    selectedActionObjectsIds: []
   };
 };
 
@@ -127,11 +111,17 @@ module.exports = handleActions(
     [ADD_OBJECT_ID_TO_SELECTED]: (state, action) => {
       return addObjectIdToSelected(state, action.payload);
     },
+    [ADD_OBJECT_ID_ACTION_SELECTED]: (state, action) => {
+      return addObjectIdActionSelected(state, action.payload);
+    },
     [UPDATE_OBJECT_PROPS]: (state, action) => {
       return updateObjectProps(state, action.payload);
     },
     [REMOVE_SELECTION]: (state, action) => {
       return removeSelection(state, action.payload);
+    },
+    [REMOVE_ACTION_SELECTION]: (state, action) => {
+      return removeActionSelection(state, action.payload);
     },
     [UPDATE_SELECTION_OBJECTS_COORDS]: (state, action) => {
       let objectsChanges = reduce(

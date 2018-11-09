@@ -62,83 +62,15 @@ const getRandomProject = cfg => {
 
   let img1 = getEmptyObject({
     type: "image",
-    width: Math.random() * 500,
-    height: Math.random() * 500,
+    width: 343.16999999999996,
+    height: 921.4480733944953,
     left: Math.random() * 500,
     orientation: "north",
     top: Math.random() * 500,
-    src: defaultImages[parseInt(Math.random() * defaultImages.length)]
-  });
-  let img2 = getEmptyObject({
-    type: "image",
-    width: Math.random() * 500,
-    height: Math.random() * 500,
-    left: Math.random() * 500,
-    top: Math.random() * 500,
-    orientation: "north",
-    src: defaultImages[parseInt(Math.random() * defaultImages.length)]
-  });
-  let img6 = getEmptyObject({
-    type: "image",
-    width: 100,
-    height: 100,
-    left: -250,
-    top: -250,
-    src: defaultImages[parseInt(Math.random() * defaultImages.length)]
-  });
-  let img7 = getEmptyObject({
-    type: "image",
-    width: 100,
-    height: 100,
-    left: 100,
-    top: 100,
-    src: defaultImages[parseInt(Math.random() * defaultImages.length)]
-  });
-  let group = getEmptyObject({
-    type: "group",
-    width: 500,
-    height: 500,
-    left: 400,
-    top: 400,
-    _objectsIds: [img6.id, img7.id]
+    src:
+      "https://images.pexels.com/photos/414171/pexels-photo-414171.jpeg?auto=compress&cs=tinysrgb&h=350"
   });
 
-  let img3 = getEmptyObject({
-    type: "image",
-    width: Math.random() * 500,
-    height: Math.random() * 500,
-    left: Math.random() * 500,
-    top: Math.random() * 500,
-    orientation: "north",
-    src: defaultImages[parseInt(Math.random() * defaultImages.length)]
-  });
-  let img4 = getEmptyObject({
-    type: "image",
-    width: Math.random() * 500,
-    height: Math.random() * 500,
-    left: Math.random() * 500,
-    top: Math.random() * 500,
-    orientation: "north",
-    src: defaultImages[parseInt(Math.random() * defaultImages.length)]
-  });
-  let img5 = getEmptyObject({
-    type: "image",
-    width: Math.random() * 500,
-    height: Math.random() * 500,
-    left: Math.random() * 500,
-    orientation: "north",
-    top: Math.random() * 500,
-    src: defaultImages[parseInt(Math.random() * defaultImages.length)]
-  });
-  let text6 = getEmptyObject({
-    type: "image",
-    width: Math.random() * 500,
-    height: Math.random() * 500,
-    left: Math.random() * 500,
-    orientation: "north",
-    top: Math.random() * 500,
-    value: "this is a default value for text"
-  });
   let text1 = getEmptyObject({
     type: "text",
     width: 100,
@@ -153,7 +85,7 @@ const getRandomProject = cfg => {
 
   page1 = {
     ...page1,
-    objectsIds: [img1.id, img2.id, img3.id, group.id, text1.id]
+    objectsIds: [img1.id, text1.id]
   };
 
   page2 = {
@@ -169,11 +101,6 @@ const getRandomProject = cfg => {
     },
     objects: {
       [img1.id]: img1,
-      [img2.id]: img2,
-      [img3.id]: img3,
-      [img6.id]: img6,
-      [img7.id]: img7,
-      [group.id]: group,
       [text1.id]: text1
     },
     pagesOrder: [page1.id, page2.id],
@@ -203,7 +130,10 @@ const getEmptyObject = cfg => {
     resizable: cfg.resizable || 1,
     rotatable: cfg.rotatable || 1,
     movable: cfg.movable || 1,
+    rotateAngle: cfg.rotateAngle || 0,
+    ispSnap: cfg.ispSnap || 1,
     orientation: cfg.orientation || "north",
+    rotate: cfg.rotate || 0,
     angle: 0
   };
 
@@ -212,13 +142,13 @@ const getEmptyObject = cfg => {
       case "image":
         return {
           ...object,
-          src:
-            cfg.src ||
-            "https://images.pexels.com/photos/67636/rose-blue-flower-rose-blooms-67636.jpeg",
+          cropH: 0,
+          cropW: 0,
           cropX: 0,
           cropY: 0,
-          cropWidth: 0,
-          cropHeight: 0
+          alternateZoom: 0,
+          src:
+            "https://images.pexels.com/photos/414171/pexels-photo-414171.jpeg?auto=compress&cs=tinysrgb&h=350"
         };
       case "textbox":
         return {

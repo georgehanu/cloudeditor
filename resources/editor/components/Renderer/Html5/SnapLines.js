@@ -1,16 +1,22 @@
 const React = require("react");
-
-class SnapLines extends React.PureComponent {
-  render() {
-    const { width, height, top, left } = this.props;
+require("./SnapLines.css");
+const SnapLines = props => {
+  let lines = null;
+  const scale = props.scale;
+  lines = props.lines.map((line, index) => {
     const style = {
-      width: width,
-      height: height,
-      top: top,
-      left: left
+      width: line.width == 1 ? line.width : line.width * scale,
+      height: line.height == 1 ? line.height : line.height * scale,
+      top: line.y * scale,
+      left: line.x * scale,
+      position: "absolute",
+      backgroundColor: "red"
     };
-    return <div className="test" style={style} />;
-  }
-}
+    const uniqueKey = line.key;
+    return <div key={uniqueKey} style={style} className="drag_alignLines" />;
+  });
+
+  return <React.Fragment>{lines}</React.Fragment>;
+};
 
 module.exports = SnapLines;

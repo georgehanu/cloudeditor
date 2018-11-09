@@ -1857,7 +1857,6 @@ aside.sidebar ul.mainMenu li.mainItem.disabled a.mainTrigger div.icon.active {
   background-color: rgb(153, 209, 34);
   position: absolute !important;
   z-index: 99 !important;
-  display: none !important;
   cursor: pointer !important;
   opacity: 1 !important;
 }

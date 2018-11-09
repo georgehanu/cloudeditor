@@ -36,7 +36,7 @@ class TextBlock extends React.PureComponent {
         ref={this.el}
         className={this.props.type}
         style={style}
-        contentEditable={this.props.active}
+        contentEditable={this.props.active || false}
       >
         {this.props.value ? this.props.value : null}
       </div>

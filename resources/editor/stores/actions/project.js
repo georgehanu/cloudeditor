@@ -3,7 +3,9 @@ const {
   ADD_OBJECT,
   ADD_OBJECT_TO_PAGE,
   ADD_OBJECT_ID_TO_SELECTED,
+  ADD_OBJECT_ID_ACTION_SELECTED,
   REMOVE_SELECTION,
+  REMOVE_ACTION_SELECTION,
   UPDATE_SELECTION_OBJECTS_COORDS,
   UPDATE_OBJECT_PROPS,
   UPDATE_CROP_PARAMS
@@ -15,7 +17,9 @@ const {
   addObject,
   addObjectToPage,
   addObjectIdToSelected,
+  addObjectIdActionSelected,
   removeSelection,
+  removeActionSelection,
   updateSelectionObjectsCoords,
   updateObjectProps,
   updateCropParams
@@ -24,7 +28,9 @@ const {
   ADD_OBJECT,
   ADD_OBJECT_TO_PAGE,
   ADD_OBJECT_ID_TO_SELECTED,
+  ADD_OBJECT_ID_ACTION_SELECTED,
   REMOVE_SELECTION,
+  REMOVE_ACTION_SELECTION,
   UPDATE_SELECTION_OBJECTS_COORDS,
   UPDATE_OBJECT_PROPS,
   UPDATE_CROP_PARAMS
@@ -35,7 +41,9 @@ module.exports = {
   addObject,
   addObjectToPage,
   addObjectIdToSelected,
+  addObjectIdActionSelected,
   removeSelection,
+  removeActionSelection,
   updateSelectionObjectsCoords,
   updateObjectProps,
   updateCropParams

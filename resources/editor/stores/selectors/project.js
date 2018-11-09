@@ -2,7 +2,17 @@ const {
   createSelectorWithDependencies: createSelector
 } = require("reselect-tools");
 
-const { pick, merge, forEachObjIndexed } = require("ramda");
+const {
+  pick,
+  merge,
+  forEachObjIndexed,
+  pipe,
+  assocPath,
+  assoc,
+  values,
+  head,
+  keys
+} = require("ramda");
 
 const pagesSelector = state =>
   (state && state.project && state.project.pages) || {};
@@ -14,6 +24,9 @@ const activePageIdSelector = state =>
 const selectedObjectsIdsSelector = state =>
   (state && state.project && state.project.selectedObjectsIds) || [];
 
+const selectedActionsIdsSelector = state =>
+  (state && state.project && state.project.selectedActionObjectsIds) || [];
+
 const activeSelectionSelector = state =>
   (state && state.project && state.project.activeSelection) || null;
 
@@ -22,9 +35,10 @@ const activePageSelector = createSelector(
     pagesSelector,
     objectsSelector,
     activePageIdSelector,
-    selectedObjectsIdsSelector
+    selectedObjectsIdsSelector,
+    selectedActionsIdsSelector
   ],
-  (pages, objects, pageId, selectedObejectsIds) => {
+  (pages, objects, pageId, selectedObejectsIds, selectedObjectsAction) => {
     let getObjectsInGroup = (pageObjectsIds, allObjects) => {
       let result = {};
       result = pick(pageObjectsIds, allObjects);
@@ -40,8 +54,25 @@ const activePageSelector = createSelector(
     let pageObjects = {};
     //getAlsoGroupObjects
 
-    const activeObject = pick(selectedObejectsIds, objects);
-    console.log("activeObject", activeObject);
+    let activeObject = pick(selectedObejectsIds, objects);
+    const activeObjectKey = pipe(
+      keys,
+      head
+    )(activeObject);
+    activeObject = assocPath([activeObjectKey, "active"], true, activeObject);
+    objects = merge(objects, activeObject);
+    let selecteObject = pick(selectedObjectsAction, objects);
+    const selectedObjectKey = pipe(
+      keys,
+      head
+    )(selecteObject);
+    selecteObject = assocPath(
+      [selectedObjectKey, "selected"],
+      true,
+      selecteObject
+    );
+
+    objects = merge(objects, selecteObject);
 
     pageObjects = merge(
       pageObjects,
@@ -77,5 +108,6 @@ module.exports = {
   selectedObjectSelector,
   activeSelectionSelector,
   objectsSelector,
+  selectedActionsIdsSelector,
   selectedObjectsIdsSelector
 };
