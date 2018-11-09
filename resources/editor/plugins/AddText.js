@@ -60,7 +60,7 @@ module.exports = {
       text: "Add Text",
       icon: "printqicon-newtext",
       showMore: true,
-      tooltip: { title: "Title", description: "Description" }
+      tooltip: { title: "Add Text", description: "Description" }
     }
   })
 };

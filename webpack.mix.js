@@ -91,6 +91,11 @@ mix.autoload({
 
 mix.copy("resources/editor/assets", "public/" + editorPublicPath + "assets");
 mix.copy("resources/editor/locales", "public/" + editorPublicPath + "locales");
+// for design
+mix.copy(
+  "resources/editor/themes/default/designAndGo/assets/",
+  "public/" + editorPublicPath + "assets"
+);
 mix.disableNotifications();
 
 mix.react(

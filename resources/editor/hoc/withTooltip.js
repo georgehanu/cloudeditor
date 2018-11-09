@@ -1,8 +1,10 @@
 import React from "react";
 import ReactTooltip from "react-tooltip";
+const { NamespacesConsumer } = require("react-i18next");
+
 const uuidv4 = require("uuid/v4");
 
-const withTooltip = WrappedComponent => props => {
+const withTooltip = (WrappedComponent, nameSpace) => props => {
   let tooltipData = {};
   let elementId = null;
 
@@ -25,81 +27,33 @@ const withTooltip = WrappedComponent => props => {
   }
 
   return (
-    <React.Fragment>
-      <WrappedComponent {...props} tooltipData={tooltipData} />
-      {props.tooltip &&
-        props.tooltip !== undefined && (
-          <ReactTooltip id={elementId} place="bottom">
-            <div className="Tooltip">
-              {props.tooltip.title ? (
-                <React.Fragment>
-                  <p className="TooltipTitle">{props.tooltip.title}</p>
-                  <p className="TooltipDesc">{props.tooltip.description}</p>
-                </React.Fragment>
-              ) : (
-                <React.Fragment>
-                  <p className="TooltipTitle">{props.tooltip}</p>
-                </React.Fragment>
-              )}
-            </div>
-          </ReactTooltip>
-        )}
-    </React.Fragment>
+    <NamespacesConsumer ns={[nameSpace || "tooltip"]}>
+      {(t, { i18n, ready }) => (
+        <React.Fragment>
+          <WrappedComponent {...props} tooltipData={tooltipData} />
+          {props.tooltip &&
+            props.tooltip !== undefined && (
+              <ReactTooltip id={elementId} place="bottom">
+                <div className="Tooltip">
+                  {props.tooltip.title ? (
+                    <React.Fragment>
+                      <p className="TooltipTitle">{t(props.tooltip.title)}</p>
+                      <p className="TooltipDesc">
+                        {t(props.tooltip.description)}
+                      </p>
+                    </React.Fragment>
+                  ) : (
+                    <React.Fragment>
+                      <p className="TooltipTitle">{t(props.tooltip)}</p>
+                    </React.Fragment>
+                  )}
+                </div>
+              </ReactTooltip>
+            )}
+        </React.Fragment>
+      )}
+    </NamespacesConsumer>
   );
 };
 
 export default withTooltip;
-
-/*
-
- return (props) => (
-        <React.Fragment>
-            <WrappedComponent {...props} />
-            {(props.tooltip && props.tooltip !== undefined) && (
-                props.tooltip.title ?
-                    <ReactTooltip id={props.id} place="bottom">
-                        <div className="Tooltip">
-                            <p className="TooltipTitle">{props.tooltip.title}</p>
-                            <p className="TooltipDesc">{props.tooltip.description}</p>
-                        </div>
-                    </ReactTooltip>
-                    :
-                    <ReactTooltip id={props.id} place="bottom">
-                        <div className="Tooltip">
-                            <p className="TooltipTitle">{props.tooltip}</p>
-                        </div>
-                    </ReactTooltip>
-            )}
-        </React.Fragment>
-    )
-    
-
-
-
-
-
-
-
-
-
-    <React.Fragment>
-            <WrappedComponent {...props} />
-            {(props.tooltip && props.tooltip !== undefined) && (
-                <ReactTooltip id={props.id} place="bottom">
-                    <div className="Tooltip">
-                        {props.tooltip.title &&
-                            <React.Fragment>
-                                <p className="TooltipTitle">{props.tooltip.title}</p>
-                                <p className="TooltipDesc">{props.tooltip.description}</p>
-                            </React.Fragment>
-                        }
-                        {props.tooltip.title === undefined &&
-                            <React.Fragment>
-                                <p className="TooltipTitle">{props.tooltip}</p>
-                            </React.Fragment>
-                        }
-                    </div>
-                </ReactTooltip>
-            )}
-        </React.Fragment>
-    */

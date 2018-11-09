@@ -21,4 +21,4 @@ const Button = props => {
   );
 };
 
-export default withTooltip(Button);
+export default withTooltip(Button, "toolbar");

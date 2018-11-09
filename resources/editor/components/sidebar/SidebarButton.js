@@ -20,4 +20,4 @@ const SidebarButton = props => {
   );
 };
 
-export default withTooltip(SidebarButton);
+export default withTooltip(SidebarButton, "sidebar");
