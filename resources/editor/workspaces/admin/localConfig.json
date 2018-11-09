@@ -16,5 +16,23 @@
       "Snap",
       "Toolbar"
     ]
+  },
+  "project": {
+    "title": "Default Project",
+    "defaults": {
+      "objects": {
+        "general": {
+          "rotatable": 0
+        },
+        "image": {},
+        "qr": {},
+        "text": {},
+        "test": {}
+      },
+      "pages": {
+        "width": 1200,
+        "height": 1200
+      }
+    }
   }
 }

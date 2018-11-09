@@ -17,6 +17,7 @@ const { fabric } = require("../../../rewrites/fabric/fabric");
 const { map } = require("ramda");
 const ProjectUtils = require("../../../utils/ProjectUtils");
 const projectActions = require("../../../stores/actions/project");
+const uiActions = require("../../../stores/actions/ui");
 const rendererActions = require("../../../stores/actions/renderer");
 
 const updatePageOffset = (props, editorContainer) => {
@@ -43,6 +44,7 @@ const updatePageOffset = (props, editorContainer) => {
     canvasWorkingHeight: pageHeight,
     scale: scale
   };
+
   return result;
 };
 
@@ -122,6 +124,10 @@ class FabricjsRenderer extends React.PureComponent {
 
   updatePageOffset = () => {
     const result = updatePageOffset(this.props, this.editorContainer.current);
+    this.props.uiUpdateWorkAreaOffsetPageOfsset(
+      { x: result.canvasOffsetX, y: result.canvasOffsetY },
+      result.scale
+    );
     this.setState(result);
   };
 
@@ -337,7 +343,9 @@ const mapDispatchToProps = dispatch => {
     updateCropParams: (id, props) =>
       dispatch(projectActions.updateCropParams({ id, props })),
     canvasReadyHandler: isReady =>
-      dispatch(rendererActions.updateCanvasReady(isReady))
+      dispatch(rendererActions.updateCanvasReady(isReady)),
+    uiUpdateWorkAreaOffsetPageOfsset: (workArea, scale) =>
+      dispatch(uiActions.uiUpdateWorkAreaOffsetPageOfsset((workArea, scale)))
   };
 };
 
