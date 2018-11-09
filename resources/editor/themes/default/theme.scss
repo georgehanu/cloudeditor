@@ -99,3 +99,38 @@ body {
     margin-right: 0;
   }
 }
+
+.Tooltip {
+  background-color: #213246;
+  position: relative !important;
+  color: #ffffff;
+  max-width: 240px !important;
+}
+
+.TooltipTitle {
+  margin: 0;
+  margin: 10px;
+  font-size: 16px;
+}
+
+.TooltipDesc {
+  margin: 0;
+  padding: 0px 10px 10px 10px;
+  font-size: 14px;
+  color: #6cbfe8;
+  width: 100%;
+}
+
+.__react_component_tooltip {
+  padding: 0px !important;
+}
+.__react_component_tooltip.place-top {
+  margin-top: 0px !important;
+}
+
+.__react_component_tooltip.type-dark {
+  background-color: #213246 !important;
+}
+.__react_component_tooltip::after {
+  border-top-color: #213246 !important;
+}

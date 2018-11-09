@@ -1,6 +1,7 @@
 import React from "react";
 
 import * as Utils from "../../ToolbarConfig/utils";
+import withTooltip from "../../../../hoc/withTooltip";
 
 const Button = props => {
   let defaultClasses = ["ButtonIcon"];
@@ -9,10 +10,15 @@ const Button = props => {
   }
   const className = Utils.MergeClassName(defaultClasses, props.className);
   return (
-    <button type="button" className={className} onClick={props.clicked}>
+    <button
+      type="button"
+      className={className}
+      onClick={props.clicked}
+      {...props.tooltipData}
+    >
       {props.children}
     </button>
   );
 };
 
-export default Button;
+export default withTooltip(Button, "toolbar");

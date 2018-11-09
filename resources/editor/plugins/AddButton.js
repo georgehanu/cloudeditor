@@ -63,7 +63,8 @@ module.exports = {
       priority: 1,
       text: "Add Image",
       icon: "printqicon-newimage",
-      showMore: true
+      showMore: true,
+      tooltip: { title: "Add Image", description: "Description Image" }
     }
   }),
   reducers: { addButton: require("../stores/reducers/addButton") },
