@@ -59,9 +59,14 @@ const selectedPageHeightSelector = createSelector(
     return pages[pageId].height;
   }
 );
+const uiSelector = state => (state && state.ui) || {};
+const uiPageOffsetSelector = createSelector([uiSelector], ui => {
+  return ui.workArea;
+});
 module.exports = {
   selectedObjectToolbarSelector,
   selectedObjectLayerSelector,
   selectedPageWidthSelector,
-  selectedPageHeightSelector
+  selectedPageHeightSelector,
+  uiPageOffsetSelector
 };

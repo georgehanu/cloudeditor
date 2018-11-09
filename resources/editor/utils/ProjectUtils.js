@@ -526,6 +526,10 @@ const getEmptyUI = cfg => {
       pageOffset: {
         x: 0,
         y: 0
+      },
+      offsetCanvasContainer: {
+        x: 0,
+        y: 0
       }
     }
   };

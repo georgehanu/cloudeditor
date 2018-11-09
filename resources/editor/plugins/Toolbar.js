@@ -5,7 +5,8 @@ const {
   selectedObjectToolbarSelector,
   selectedObjectLayerSelector,
   selectedPageWidthSelector,
-  selectedPageHeightSelector
+  selectedPageHeightSelector,
+  uiPageOffsetSelector
 } = require("../stores/selectors/toolbar");
 
 const { setObjectFromToolbar } = require("../stores/actions/toolbar");
@@ -164,6 +165,7 @@ class Toolbar extends React.Component {
     }
 
     const activeItem = this.props.activeToolbar;
+    const uiPageOffset = this.props.uiPageOffset;
 
     let attributes = {};
     if (activeItem.type === "image") {
@@ -187,7 +189,10 @@ class Toolbar extends React.Component {
     }
     if (toolbarData === null) return null;
 
-    let containerStyle = { top: activeItem.top, left: activeItem.left };
+    let containerStyle = Utils.calculateToolBarPosition(
+      activeItem,
+      uiPageOffset
+    );
     const topAreaGroups = Utils.filterBasedOnLocation(
       toolbarData.groups,
       Types.Position.TOP
@@ -264,7 +269,8 @@ const mapStateToProps = state => {
     activeToolbar: selectedObjectToolbarSelector(state),
     activeLayer: selectedObjectLayerSelector(state),
     pageWidth: selectedPageWidthSelector(state),
-    pageHeight: selectedPageHeightSelector(state)
+    pageHeight: selectedPageHeightSelector(state),
+    uiPageOffset: uiPageOffsetSelector(state)
   };
 };
 

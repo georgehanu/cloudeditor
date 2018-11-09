@@ -1,10 +1,18 @@
-const { UI_UPDATE_WORK_AREA_OFFSET_PAGE_OFSSET } = require("../actionTypes/ui");
+const {
+  UI_UPDATE_WORK_AREA_OFFSET_PAGE_OFSSET,
+  UI_UPDATE_CONTAINER_CANVAS_OFFSET
+} = require("../actionTypes/ui");
 const { createActions } = require("redux-actions");
 
-const { uiUpdateWorkAreaOffsetPageOfsset } = createActions(
-  UI_UPDATE_WORK_AREA_OFFSET_PAGE_OFSSET
+const {
+  uiUpdateWorkAreaOffsetPageOfsset,
+  uiUpdateContainerCanvasOffset
+} = createActions(
+  UI_UPDATE_WORK_AREA_OFFSET_PAGE_OFSSET,
+  UI_UPDATE_CONTAINER_CANVAS_OFFSET
 );
 
 module.exports = {
-  uiUpdateWorkAreaOffsetPageOfsset
+  uiUpdateWorkAreaOffsetPageOfsset,
+  uiUpdateContainerCanvasOffset
 };

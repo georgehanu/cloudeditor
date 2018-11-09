@@ -209,6 +209,19 @@ export const CreatePayload = (activeitem, itemPayload) => {
   return { id: activeitem.id, props: attrs };
 };
 
+export const calculateToolBarPosition = (activeItem, workArea) => {
+  return {
+    top:
+      activeItem.top * workArea.scale +
+      workArea.pageOffset.y +
+      workArea.offsetCanvasContainer.y,
+    left:
+      activeItem.left * workArea.scale +
+      workArea.pageOffset.x +
+      workArea.offsetCanvasContainer.x
+  };
+};
+
 const imageQuality = (activeItem, pageWidth, pageHeight) => {
   //@to do
   let cropWidth =

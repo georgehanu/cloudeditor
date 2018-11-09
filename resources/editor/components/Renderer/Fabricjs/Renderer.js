@@ -345,7 +345,12 @@ const mapDispatchToProps = dispatch => {
     canvasReadyHandler: isReady =>
       dispatch(rendererActions.updateCanvasReady(isReady)),
     uiUpdateWorkAreaOffsetPageOfsset: (workArea, scale) =>
-      dispatch(uiActions.uiUpdateWorkAreaOffsetPageOfsset((workArea, scale)))
+      dispatch(
+        uiActions.uiUpdateWorkAreaOffsetPageOfsset({
+          workArea: workArea,
+          scale: scale
+        })
+      )
   };
 };
 
