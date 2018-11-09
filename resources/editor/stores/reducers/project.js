@@ -5,6 +5,7 @@ const {
   ADD_OBJECT_TO_PAGE
 } = require("../actionTypes/project");
 const ProjectUtils = require("../../utils/ProjectUtils");
+const ConfigUtils = require("../../utils/ConfigUtils");
 const { handleActions } = require("redux-actions");
 
 const changeProjectTitle = (state, action) => {
@@ -47,7 +48,8 @@ const addObjectToPage = (state, action) => {
   };
 };
 
-const emptyProject = ProjectUtils.getRandomProject();
+const config = ConfigUtils.getDefaults();
+const emptyProject = ProjectUtils.getRandomProject(config.project);
 
 const initialState = {
   ...emptyProject
