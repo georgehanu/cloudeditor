@@ -135,6 +135,9 @@
   background-color: #1b2939;
   padding: 5px 0 5px 0px;
 }
+#sidebar-wrapper-container .PaneContainer:hover {
+  z-index: 0;
+}
 
 #sidebar-wrapper-container .PaneHidden {
   right: 0px;
