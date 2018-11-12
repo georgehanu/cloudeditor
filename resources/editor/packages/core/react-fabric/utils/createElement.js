@@ -4,6 +4,8 @@ const Canvas = require("../components/Canvas");
 const Image = require("../components/Image");
 const Text = require("../components/Text");
 const IText = require("../components/IText");
+const activeSelection = require("../components/activeSelection");
+const Group = require("../components/Group");
 
 // Creates an element with an element type, props and a root instance
 
@@ -12,7 +14,9 @@ const TYPES = {
   Text: Text,
   IText: IText,
   Canvas: Canvas,
-  StaticCanvas: StaticCanvas
+  StaticCanvas: StaticCanvas,
+  activeSelection: activeSelection,
+  Group: Group
 };
 function createElement(type, props, ref = null) {
   // Resolve default props
@@ -34,6 +38,8 @@ function createElement(type, props, ref = null) {
     Image: () => new Image(forwardedProps),
     Text: () => new Text(forwardedProps),
     IText: () => new IText(forwardedProps),
+    Group: () => new Group(forwardedProps),
+    activeSelection: () => new activeSelection(forwardedProps),
     default: undefined
   };
 

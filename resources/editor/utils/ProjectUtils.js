@@ -186,7 +186,8 @@ const getProjectTemplate = cfg => {
       )
     },
     colors: {},
-    fonts: {}
+    fonts: {},
+    activeSelection: null
   };
   return project;
 };
@@ -292,26 +293,51 @@ const getRandomProject = cfg => {
 
   let img1 = getEmptyObject({
     type: "image",
-    width: Math.random() * 500,
-    height: Math.random() * 500,
-    left: Math.random() * 500,
-    top: Math.random() * 500,
+    width: 200,
+    height: 200,
+    left: 0,
+    top: 0,
     src: defaultImages[parseInt(Math.random() * defaultImages.length)]
   });
   let img2 = getEmptyObject({
     type: "image",
-    width: Math.random() * 500,
-    height: Math.random() * 500,
-    left: Math.random() * 500,
-    top: Math.random() * 500,
+    width: 150,
+    height: 150,
+    left: 300,
+    top: 300,
     src: defaultImages[parseInt(Math.random() * defaultImages.length)]
   });
+  let img6 = getEmptyObject({
+    type: "image",
+    width: 100,
+    height: 100,
+    left: -250,
+    top: -250,
+    src: defaultImages[parseInt(Math.random() * defaultImages.length)]
+  });
+  let img7 = getEmptyObject({
+    type: "image",
+    width: 100,
+    height: 100,
+    left: 100,
+    top: 100,
+    src: defaultImages[parseInt(Math.random() * defaultImages.length)]
+  });
+  let group = getEmptyObject({
+    type: "group",
+    width: 500,
+    height: 500,
+    left: 400,
+    top: 400,
+    _objectsIds: [img6.id, img7.id]
+  });
+
   let img3 = getEmptyObject({
     type: "image",
-    width: Math.random() * 500,
-    height: Math.random() * 500,
-    left: Math.random() * 500,
-    top: Math.random() * 500,
+    width: 50,
+    height: 50,
+    left: 350,
+    top: 0,
     src: defaultImages[parseInt(Math.random() * defaultImages.length)]
   });
   let img4 = getEmptyObject({
@@ -330,15 +356,26 @@ const getRandomProject = cfg => {
     top: Math.random() * 500,
     src: defaultImages[parseInt(Math.random() * defaultImages.length)]
   });
+  let text1 = getEmptyObject({
+    type: "text",
+    width: 100,
+    height: 100,
+    left: 100,
+    top: 100,
+    text: "Enter text here",
+    bold: true,
+    italic: false,
+    underline: true
+  });
 
   page1 = {
     ...page1,
-    objectsIds: [img1.id, img2.id, img3.id]
+    objectsIds: [img1.id, img2.id, img3.id, group.id, text1.id]
   };
 
   page2 = {
     ...page2,
-    objectsIds: [img4.id, img5.id]
+    objectsIds: []
   };
   return {
     ...project,
@@ -351,8 +388,10 @@ const getRandomProject = cfg => {
       [img1.id]: img1,
       [img2.id]: img2,
       [img3.id]: img3,
-      [img4.id]: img4,
-      [img5.id]: img5
+      [img6.id]: img6,
+      [img7.id]: img7,
+      [group.id]: group,
+      [text1.id]: text1
     },
     pagesOrder: [page1.id, page2.id],
     activePage: page1.id
@@ -371,7 +410,8 @@ const getEmptyPage = cfg => {
 const getEmptyObject = cfg => {
   let object = {
     id: uuidv4(),
-    type: false
+    type: false,
+    angle: 0
   };
 
   if (cfg && cfg.type) {
@@ -380,14 +420,50 @@ const getEmptyObject = cfg => {
         return {
           ...object,
           type: cfg.type,
-          width: cfg.width || 500,
-          height: cfg.height || 500,
-          left: cfg.left || 500,
-          top: cfg.top || 500,
+          width: cfg.width,
+          height: cfg.height,
+          left: cfg.left,
+          top: cfg.top,
           src:
             cfg.src ||
             "https://images.pexels.com/photos/67636/rose-blue-flower-rose-blooms-67636.jpeg"
         };
+      case "activeSelection":
+        return {
+          ...object,
+          type: cfg.type,
+          left: cfg.left,
+          top: cfg.top
+        };
+      case "group":
+        return {
+          ...object,
+          type: cfg.type,
+          width: cfg.width || 500,
+          height: cfg.height || 500,
+          left: cfg.left || 500,
+          top: cfg.top || 500,
+          _objectsIds: cfg._objectsIds || []
+        };
+      case "text":
+        return {
+          ...object,
+          type: cfg.type,
+          width: cfg.width,
+          height: cfg.height,
+          left: cfg.left,
+          top: cfg.top,
+          text: cfg.text || "Default text",
+          bold: cfg.bold || false,
+          underline: cfg.underline || false,
+          italic: cfg.italic || false,
+          fill: cfg.fill || "black",
+          charSpacing: cfg.charSpacing || 1,
+          fontSize: cfg.fontSize || 60,
+          fontFamily: cfg.fontFamily || "Times New Roman"
+        };
+      default:
+        break;
     }
   }
 };

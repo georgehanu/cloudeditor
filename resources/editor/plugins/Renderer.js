@@ -15,23 +15,8 @@ class Renderer extends React.Component {
     this.updatePlugins(this.props);
     return (
       <React.Fragment>
-        {<plugins.Renderer />}
-        <button
-          onClick={() =>
-            this.props.addObjectToPageHandler(
-              ProjectUtils.getEmptyObject({
-                type: "image",
-                width: Math.random() * 500,
-                height: Math.random() * 500,
-                left: Math.random() * 500,
-                top: Math.random() * 500
-              }),
-              this.props.pageId
-            )
-          }
-        >
-          Add Image
-        </button>
+        {<plugins.Renderer>{this.props.type}</plugins.Renderer>}
+
         <button
           onClick={() => this.props.changeTypeHandler("html5")}
           style={{ position: "absolute", left: "0px", top: "0px" }}
@@ -89,5 +74,7 @@ const RendererPlugin = connect(
 
 module.exports = {
   Renderer: assign(RendererPlugin),
-  reducers: { renderer: require("../stores/reducers/renderer") }
+  reducers: {
+    renderer: require("../stores/reducers/renderer")
+  }
 };

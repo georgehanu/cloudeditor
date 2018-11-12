@@ -59,8 +59,12 @@ module.exports = {
     disablePluginIf:
       "{store().getState().project.title==='Empty Project!!@!!@!@'}",
     SideBar: {
-      position: 1,
-      priority: 1
+      position: 2,
+      priority: 1,
+      text: "Add Image",
+      icon: "printqicon-newimage",
+      showMore: true,
+      tooltip: { title: "Add Image", description: "Description Image" }
     }
   }),
   reducers: { addButton: require("../stores/reducers/addButton") },

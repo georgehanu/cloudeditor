@@ -92,9 +92,9 @@ const objectTypes = shape({
 const objectDefaults = {
   angle: 0,
   backgroundColor: "",
-  borderColor: "rgba(102,153,255,0.75)",
+  borderColor: "rgba(153, 209, 34, 1)",
   borderDashArray: null,
-  borderOpacityWhenMoving: 0.4,
+  borderOpacityWhenMoving: 0.8,
   borderScaleFactor: 1,
   cacheProperties: (
     "fill stroke strokeWidth strokeDashArray width height paintFirst" +
@@ -102,9 +102,9 @@ const objectDefaults = {
   ).split(" "),
   centeredRotation: true,
   centeredScaling: false,
-  cornerColor: "rgba(102,153,255,1)",
+  cornerColor: "rgba(153, 209, 34, 1)",
   cornerDashArray: null,
-  cornerSize: 13,
+  cornerSize: 10,
   cornerStrokeColor: null,
   cornerStyle: "rect",
   dirty: true,
@@ -164,7 +164,7 @@ const objectDefaults = {
   strokeLineCap: "butt",
   strokeLineJoin: "miter",
   strokeMiterLimit: 4,
-  strokeWidth: 1,
+  strokeWidth: 0,
   top: 0,
   transformMatrix: null,
   transparentCorners: true,

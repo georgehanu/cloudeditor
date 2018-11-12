@@ -76,14 +76,23 @@ class StaticCanvas {
     }
 
     if (hasUpdates) {
-      logger.info("hasUpdates", updatedProps);
-      instance.set(updatedProps);
+      this._updateDimmensions(updatedProps);
+      const { width, height, ...otherProps } = updatedProps;
+      instance.set(otherProps);
       this._updatePicture(instance);
     }
   }
 
   _updatePicture() {
     return this.instance.requestRenderAll();
+  }
+  _updateDimmensions(updatedProps) {
+    const dim = {
+      width: updatedProps.width || this.instance.width,
+      height: updatedProps.height || this.instance.height
+    };
+
+    this.instance.setDimensions(dim);
   }
 }
 

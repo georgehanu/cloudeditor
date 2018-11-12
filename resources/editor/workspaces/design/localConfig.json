@@ -1,0 +1,15 @@
+{
+  "plugins": {
+    "mobile": ["DesignAndGo"],
+    "desktop": [
+      "Renderer",
+      {
+        "name": "DesignAndGo",
+        "hide": "{request.test==123}",
+        "cfg": {
+          "additionalConfig": 98123
+        }
+      }
+    ]
+  }
+}
