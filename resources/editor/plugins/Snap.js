@@ -76,8 +76,7 @@ class Snap extends React.Component {
         snapValue: null,
         guidelines: []
       };
-    var currentBlockObject =
-      this.instance.getActiveObject() || this.instance.getActiveGroup();
+    var currentBlockObject = this.instance.getActiveObject();
 
     this.instance.getObjects().forEach(
       (function(currentBlock) {

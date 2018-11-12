@@ -17,7 +17,7 @@ const BrightnessSlider = props => {
           className="Slider"
           type="range"
           defaultValue={props.startValue}
-          onChange={event => props.handleSlider(event.target.value)}
+          onChange={event => debounce(props.handleSlider(event.target.value))}
           min="-100"
           max="100"
           step="1"

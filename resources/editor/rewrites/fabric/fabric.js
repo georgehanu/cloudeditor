@@ -1,6 +1,7 @@
 const { fabric } = require("fabric");
 const logger = require("../../utils/LoggerUtils");
 const uuidv4 = require("uuid/v4");
+const { forEach } = require("ramda");
 fabric.util.object.extend(fabric.StaticCanvas.prototype, {
   snap: 10,
   canvasScale: 1,
@@ -40,6 +41,7 @@ fabric.util.object.extend(fabric.StaticCanvas.prototype, {
   setCanvasWorkingHeight: function(workingHeight) {
     this.canvasWorkingHeight = workingHeight;
   },
+
   _renderOverlay: function(ctx) {
     this.fire("before:overlay:render", {
       ctx: ctx,
@@ -49,7 +51,8 @@ fabric.util.object.extend(fabric.StaticCanvas.prototype, {
 });
 fabric.util.object.extend(fabric.Object.prototype, {
   designerCallbacks: {},
-  ignoreSnap: false
+  ignoreSnap: false,
+  isLoaded: false
 });
 fabric.util.object.extend(fabric.Image.prototype, {
   cropWidth: 0,
@@ -71,6 +74,8 @@ fabric.util.object.extend(fabric.Image.prototype, {
   canvasY: 0,
   canvasW: 0,
   canvasH: 0,
+  brightness: 0,
+  contrast: 0,
   _dimensionAffectingProps: {
     width: 1,
     height: 1,
@@ -514,7 +519,10 @@ fabric.Image.prototype.getMainProps = function() {
     cropX: this.cropX,
     cropY: this.cropY,
     cropWidth: this.cropWidth,
-    cropHeight: this.cropHeight
+    cropHeight: this.cropHeight,
+    leftSlider: this.leftSlider,
+    brightness: 0,
+    contrast: 0
   });
 };
 
@@ -525,6 +533,17 @@ fabric.Image.prototype._renderFill = (function(_renderFill) {
       sW = w * this._filterScalingX,
       sH = h * this._filterScalingY,
       elementToDraw = this._element;
+    let cotrast_brightness = null;
+    if (this.brightness != 0) {
+      cotrast_brightness = "brightness(" + (100 + this.brightness) + "%) ";
+    }
+    if (this.contrast != 0) {
+      cotrast_brightness += "contrast(" + (100 + this.contrast) + "%)";
+    }
+    if (cotrast_brightness) {
+      ctx.filter = cotrast_brightness;
+    }
+
     elementToDraw &&
       ctx.drawImage(
         elementToDraw,
@@ -558,5 +577,42 @@ fabric.Textbox.prototype.getMainProps = function() {
     text: this.text
   });
 };
+fabric.Object.prototype.render = (function(_render) {
+  return function(ctx) {
+    if (!this.isLoaded) {
+      return;
+    }
+    _render.call(this, ctx);
+  };
+})(fabric.Object.prototype.render);
 
+fabric.Graphics = fabric.util.createClass(fabric.Group, {
+  type: "graphics",
+  initialize: function(objects, options, isAlreadyGrouped) {
+    this.callSuper("initialize", objects, options, isAlreadyGrouped);
+  }
+});
+
+fabric.util.object.extend(fabric.util, {
+  groupGraphicsSVGElements: function(elements, options, path) {
+    var object;
+
+    if (options) {
+      if (options.width && options.height) {
+        options.centerPoint = {
+          x: options.width / 2,
+          y: options.height / 2
+        };
+      } else {
+        delete options.width;
+        delete options.height;
+      }
+    }
+    object = new fabric.Graphics(elements, options);
+    if (typeof path !== "undefined") {
+      object.sourcePath = path;
+    }
+    return object;
+  }
+});
 module.exports = { fabric };

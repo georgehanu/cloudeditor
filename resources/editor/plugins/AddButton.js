@@ -1,6 +1,7 @@
 const React = require("react");
 const { connect } = require("react-redux");
 const assign = require("object-assign");
+
 const { addObjectToPage } = require("../stores/actions/project");
 const { changeTheme } = require("../stores/actions/theme");
 const ProjectUtils = require("../utils/ProjectUtils");

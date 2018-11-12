@@ -1,5 +1,4 @@
 import * as Types from "../ToolbarConfig/types";
-import * as Operation from "../ToolbarConfig/operation";
 
 export const Bold = {
   type: Types.BUTTON_LETTER_BOLD
@@ -38,9 +37,7 @@ export const VAlignPoptext = {
 };
 
 export const LayerPoptext = {
-  type: Types.POPTEXT_LAYER,
-  operation: Operation.MERGE_DATA,
-  newData: [{ value: "sendbackward", disabled: true }]
+  type: Types.POPTEXT_LAYER
 };
 
 export const FontPoptext = {
@@ -79,4 +76,11 @@ export const ColorSelectorBackground = {
 
 export const ImageShapeMenuPoptext = {
   type: Types.POPTEXT_IMAGE_SHAPE_MENU
+};
+export const SliderInlineImage = {
+  baseType: Types.SLIDER_INLINE,
+  type: Types.SLIDER_INLINE_IMAGE
+};
+export const SimpleIconQuality = {
+  type: Types.SIMPLE_ICON_QUALITY
 };

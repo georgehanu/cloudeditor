@@ -109,5 +109,6 @@ module.exports = {
   activeSelectionSelector,
   objectsSelector,
   selectedActionsIdsSelector,
-  selectedObjectsIdsSelector
+  selectedObjectsIdsSelector,
+  pagesSelector
 };

@@ -1,5 +1,5 @@
 import React from "react";
-
+const { debounce } = require("underscore");
 import * as Utils from "../../ToolbarConfig/utils";
 
 const InlineSlider = props => {
@@ -17,12 +17,17 @@ const InlineSlider = props => {
       <input
         className=""
         type="range"
-        defaultValue={startValue}
+        value={startValue}
         onChange={event =>
-          props.ToolbarHandler({
-            mainHandler: true,
-            payloadMainHandler: event.target.value
-          })
+          debounce(
+            props.ToolbarHandler({
+              mainHandler: true,
+              payloadMainHandler: {
+                value: event.target.value,
+                type: props.type
+              }
+            })
+          )
         }
         min="0"
         max="100"

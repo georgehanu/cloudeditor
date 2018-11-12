@@ -102,8 +102,7 @@ export const Config = {
       {
         value: "bringtofront",
         label: "",
-        className: "icon printqicon-bringtofront",
-        disabled: true
+        className: "icon printqicon-bringtofront"
       },
       {
         value: "bringforward",
@@ -158,13 +157,19 @@ export const Config = {
     baseType: Types.SLIDER_WND,
     type: Types.SLIDER_WND,
     className: "icon printqicon-spacing ButtonTextSpaceing",
-    parentClassName: ""
+    parentClassName: "",
+    min: "0",
+    max: "1000",
+    step: "10"
   },
   [Types.SLIDER_OPACITY_WND]: {
     baseType: Types.SLIDER_WND,
     type: Types.SLIDER_WND,
     className: "icon printqicon-opacity ButtonTextSpaceing",
-    parentClassName: ""
+    parentClassName: "",
+    min: "0",
+    max: "200",
+    step: "2"
   },
   [Types.SLIDER_INLINE]: {
     baseType: Types.SLIDER_INLINE,
@@ -178,6 +183,15 @@ export const Config = {
     defaultValue: "28.00"
   },
   [Types.SIMPLE_ICON]: {
+    baseType: Types.SIMPLE_ICON,
+    threshold: 50,
+    range: [
+      { value: 100, className: "printqicon-goodsmiley IconSmileyOk" },
+      { value: 200, className: "printqicon-normalsmiley IconSmileyNormal" },
+      { value: 300, className: "printqicon-badsmiley IconSmileyBad" }
+    ]
+  },
+  [Types.SIMPLE_ICON_QUALITY]: {
     baseType: Types.SIMPLE_ICON,
     threshold: 50,
     range: [

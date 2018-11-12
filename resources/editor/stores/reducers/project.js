@@ -17,10 +17,15 @@ const {
   UPDATE_SELECTION_OBJECTS_COORDS,
   UPDATE_OBJECT_PROPS,
   UPDATE_ACTIVE_SELECTION_PROPS,
-  UPDATE_CROP_PARAMS
+  UPDATE_LAYER_PROP,
+  DUPLICATE_OBJ,
+  UPDATE_CROP_PARAMS,
+  DELETE_OBJ
 } = require("../actionTypes/project");
+
 const ProjectUtils = require("../../utils/ProjectUtils");
 const { handleActions } = require("redux-actions");
+const uuidv4 = require("uuid/v4");
 
 const changeProjectTitle = (state, action) => {
   return {
@@ -78,10 +83,24 @@ const updateObjectProps = (state, payload) => {
   };
 };
 const removeSelection = (state, payload) => {
+  let objectsChanges = [];
+  if (payload.objectProps) {
+    objectsChanges = reduce(
+      (acc, value) => {
+        const key = value.id;
+        delete value.id;
+        acc[key] = value;
+        return acc;
+      },
+      {},
+      payload.objectProps
+    );
+  }
   return {
     ...state,
     activeSelection: null,
-    selectedObjectsIds: []
+    selectedObjectsIds: [],
+    objects: mergeDeepLeft(objectsChanges, state.objects)
   };
 };
 const removeActionSelection = (state, payload) => {
@@ -95,6 +114,25 @@ const emptyProject = ProjectUtils.getRandomProject();
 
 const initialState = {
   ...emptyProject
+};
+
+const swap = (index1, index2, list) => {
+  if (
+    index1 < 0 ||
+    index2 < 0 ||
+    index1 > list.length - 1 ||
+    index2 > list.length - 1
+  ) {
+    return list; // index out of bound
+  }
+  const value1 = list[index1];
+  const value2 = list[index2];
+
+  let result = [...list];
+  result[index1] = value2;
+  result[index2] = value1;
+
+  return result;
 };
 
 module.exports = handleActions(
@@ -156,6 +194,87 @@ module.exports = handleActions(
             action.payload.props
           )
         }
+      };
+    },
+    [UPDATE_ACTIVE_SELECTION_PROPS]: (state, action) => {
+      return {
+        ...state,
+        activeSelection: action.payload
+      };
+    },
+    [UPDATE_LAYER_PROP]: (state, action) => {
+      const objId = action.payload.id;
+      const layerAction = action.payload.props.action;
+
+      let newObjectsId = [...state.pages[state.activePage].objectsIds];
+      const objIndex = newObjectsId.findIndex(el => {
+        return el === objId;
+      });
+
+      if (layerAction === "bringtofront") {
+        newObjectsId.splice(objIndex, 1);
+        newObjectsId = [
+          ...newObjectsId,
+          state.pages[state.activePage].objectsIds[objIndex]
+        ];
+      } else if (layerAction === "bringforward") {
+        newObjectsId = swap(objIndex, objIndex + 1, newObjectsId);
+      } else if (layerAction === "sendbackward") {
+        newObjectsId = swap(objIndex, objIndex - 1, newObjectsId);
+      } else if (layerAction === "sendtoback") {
+        newObjectsId.splice(objIndex, 1);
+        newObjectsId = [
+          state.pages[state.activePage].objectsIds[objIndex],
+          ...newObjectsId
+        ];
+      }
+
+      return {
+        ...state,
+        pages: {
+          ...state.pages,
+          [state.activePage]: {
+            ...state.pages[state.activePage],
+            objectsIds: newObjectsId
+          }
+        }
+      };
+    },
+    [DUPLICATE_OBJ]: (state, action) => {
+      console.log("duplicate");
+      const originalObj = state.objects[action.payload.id];
+      const duplicateObj = {
+        ...originalObj,
+        id: uuidv4(),
+        top: originalObj.top + 30,
+        left: originalObj.left + 30
+      };
+      return addObjectToPage(state, {
+        object: duplicateObj,
+        pageId: state.activePage
+      });
+    },
+    [DELETE_OBJ]: (state, action) => {
+      let newObjects = { ...state.objects };
+      delete newObjects[action.payload.id];
+
+      const newObjectsId = state.pages[state.activePage].objectsIds.filter(
+        el => {
+          return el !== action.payload.id;
+        }
+      );
+
+      return {
+        ...state,
+        pages: {
+          ...state.pages,
+          [state.activePage]: {
+            ...state.pages[state.activePage],
+            objectsIds: newObjectsId
+          }
+        },
+        objects: newObjects,
+        selectedObjectsIds: []
       };
     }
   },

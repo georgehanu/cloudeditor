@@ -15,11 +15,13 @@ const ColorBorderWidth = props => {
           max="100"
           step="1"
           onChange={event =>
-            props.selectWidth({
-              mainHandler: true,
-              payloadMainHandler: { [props.type]: event.target.value },
-              keepDetailsWnd: true
-            })
+            debounce(
+              props.selectWidth({
+                mainHandler: true,
+                payloadMainHandler: { [props.type]: event.target.value },
+                keepDetailsWnd: true
+              })
+            )
           }
         />
       </div>

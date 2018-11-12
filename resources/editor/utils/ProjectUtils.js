@@ -47,9 +47,9 @@ const getRandomProject = cfg => {
   const defaultImages = [
     "http://www.flexibleproduction.com/wp-content/uploads/2017/06/test-intelligenza-sociale.jpg",
     "https://images.pexels.com/photos/414171/pexels-photo-414171.jpeg?auto=compress&cs=tinysrgb&h=350",
-    "http://www.flexibleproduction.com/wp-content/uploads/2017/06/test-intelligenza-sociale.jpg",
+    //"http://www.flexibleproduction.com/wp-content/uploads/2017/06/test-intelligenza-sociale.jpg",
     "https://images.pexels.com/photos/67636/rose-blue-flower-rose-blooms-67636.jpeg",
-    "https://images.pexels.com/photos/371633/pexels-photo-371633.jpeg?auto=compress&cs=tinysrgb&h=350",
+    //"https://images.pexels.com/photos/371633/pexels-photo-371633.jpeg?auto=compress&cs=tinysrgb&h=350",
     "https://cdn.fstoppers.com/styles/large-16-9/s3/lead/2018/04/jonathan-martin-brunate-lead-image_0.jpg",
     "https://www.evoke-landscape-design.co.uk/wp-content/uploads/home-tree.jpg",
     "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSnln4X6Wha8vlaJMTkL3KEK2_v3Hxov3RqLJ5EZgJc3LbS47IG",
@@ -72,15 +72,22 @@ const getRandomProject = cfg => {
   });
 
   let text1 = getEmptyObject({
-    type: "text",
+    type: "textbox",
     width: 100,
     height: 100,
     left: 100,
     top: 100,
     text: "Enter text here",
-    bold: true,
-    italic: false,
-    underline: true
+    fill: "red"
+  });
+
+  let graphics = getEmptyObject({
+    type: "graphics",
+    width: Math.random() * 500,
+    height: 400,
+    left: 150,
+    top: 200,
+    src: "http://localhost:8080/alfa006_top.svg"
   });
 
   page1 = {
@@ -94,11 +101,7 @@ const getRandomProject = cfg => {
   };
   return {
     ...project,
-    pages: {
-      [page1.id]: page1,
-      [page2.id]: page2,
-      [page3.id]: page3
-    },
+    pages: { [page1.id]: page1, [page2.id]: page2, [page3.id]: page3 },
     objects: {
       [img1.id]: img1,
       [text1.id]: text1
@@ -143,12 +146,20 @@ const getEmptyObject = cfg => {
         return {
           ...object,
           cropH: 0,
-          cropW: 0,
-          cropX: 0,
+          cropW: 12,
+          cropX: 538,
           cropY: 0,
           alternateZoom: 0,
+          leftSlider: 69,
           src:
             "https://images.pexels.com/photos/414171/pexels-photo-414171.jpeg?auto=compress&cs=tinysrgb&h=350"
+        };
+      case "graphics":
+        return {
+          ...object,
+          src:
+            cfg.src ||
+            "https://images.pexels.com/photos/67636/rose-blue-flower-rose-blooms-67636.jpeg"
         };
       case "textbox":
         return {
@@ -188,9 +199,7 @@ const getEmptyObject = cfg => {
         };
         break;
       default:
-        return {
-          ...object
-        };
+        return { ...object };
         break;
     }
   }

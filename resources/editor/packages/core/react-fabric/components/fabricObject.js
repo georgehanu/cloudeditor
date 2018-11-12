@@ -1,6 +1,6 @@
 const logger = require("../../../../utils/LoggerUtils");
 const { objectTypes, objectDefaults } = require("./types/object");
-
+const { merge } = require("ramda");
 class FabricObject {
   constructor(props) {
     this.props = props;
@@ -17,7 +17,9 @@ class FabricObject {
     image: true,
     designerCallbacks: true
   };
-
+  setPropsToSkip(propsToSkip) {
+    this.propsToSkip = merge(this.propsToSkip, propsToSkip);
+  }
   _applyProps(props, oldProps) {
     const { instance } = this;
     let updatedProps = {};
@@ -62,6 +64,7 @@ class FabricObject {
     if (hasUpdates) {
       logger.info("hasUpdates", updatedProps);
       instance.set(updatedProps);
+      console.log("marius ", updatedProps);
       this._updatePicture(instance);
       instance.setCoords();
     }

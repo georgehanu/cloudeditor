@@ -8,8 +8,11 @@ const {
   IText,
   Textbox,
   Fabric,
-  Group
+  Group,
+  Graphics
 } = require("../../../packages/core/react-fabric");
+const ImageLoad = require("../../../packages/core/react-fabric/components/Helpers/ImageLoad");
+const GraphicsLoad = require("../../../packages/core/react-fabric/components/Helpers/GraphicsLoad");
 const { fabric } = require("../../../rewrites/fabric/fabric");
 const { map } = require("ramda");
 const ProjectUtils = require("../../../utils/ProjectUtils");
@@ -261,7 +264,7 @@ class FabricjsRenderer extends React.PureComponent {
       switch (object.type) {
         case "image":
           return (
-            <Image
+            <ImageLoad
               key={object.id}
               {...object}
               designerCallbacks={this.designerCallbacks}
@@ -277,6 +280,8 @@ class FabricjsRenderer extends React.PureComponent {
               {this.drawElements(object._elements, false)}
             </Group>
           );
+        case "graphics":
+          return <GraphicsLoad key={object.id} {...object} />;
         default:
           break;
       }
@@ -287,7 +292,6 @@ class FabricjsRenderer extends React.PureComponent {
   render() {
     const { activePage: page } = this.props;
     const { objects } = page;
-
     let elements = this.drawElements(objects, 1);
 
     let isReadyComponent = this.state.isReadyComponent;

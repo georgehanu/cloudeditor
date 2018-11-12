@@ -9,6 +9,16 @@ const logger = require("../../../../utils/LoggerUtils");
 const UPDATE_SIGNAL = {};
 
 const hostConfig = {
+  // cancelDeferredCallback: ReactScheduler.cancelDeferredCallback,
+  now: ReactDOMFrameScheduling.now,
+
+  // The Konva renderer is secondary to the React DOM renderer.
+  isPrimaryRenderer: false,
+
+  supportsMutation: true,
+
+  scheduleDeferredCallback: ReactDOMFrameScheduling.rIC,
+
   appendInitialChild(canvas, child) {
     logger.info("appendInitialChild", canvas, child);
     canvas.instance.add(child.instance);
@@ -75,22 +85,10 @@ const hostConfig = {
     return emptyObject;
   },
 
-  scheduleDeferredCallback: ReactDOMFrameScheduling.rIC,
-
   shouldSetTextContent(type, props) {
     logger.info("shouldSetTextContent", type, props);
     return false;
   },
-
-  // cancelDeferredCallback: ReactScheduler.cancelDeferredCallback,
-  now: ReactDOMFrameScheduling.now,
-
-  // The Konva renderer is secondary to the React DOM renderer.
-  isPrimaryRenderer: false,
-
-  supportsMutation: true,
-
-  // useSyncScheduling: true,
 
   appendChild(parentInstance, child) {
     logger.info("appendChild", parentInstance, child);
@@ -99,8 +97,14 @@ const hostConfig = {
   },
 
   appendChildToContainer(parentInstance, child) {
+    console.log("marius was here");
+    //we need to check if the element is already in canvas/ (for bring to front/sent to back)
+    if (parentInstance.instance._objects.indexOf(child.instance) > -1) {
+      parentInstance.instance.remove(child.instance);
+    }
     logger.info("appendChildToContainer", parentInstance, child);
     parentInstance.instance.add(child.instance);
+
     child._updatePicture();
   },
 
@@ -110,6 +114,20 @@ const hostConfig = {
 
   insertInContainerBefore(parentInstance, child, beforeChild) {
     logger.info("insertInContainerBefore", parentInstance, child, beforeChild);
+
+    //we need to check if the element is already in canvas/ (for bring to front/sent to back)
+    if (parentInstance.instance._objects.indexOf(child.instance) > -1) {
+      parentInstance.instance.remove(child.instance);
+    }
+
+    logger.info("appendChildToContainer", parentInstance, child);
+    let index = parentInstance.instance._objects.length - 1;
+    if (beforeChild.instance) {
+      index = parentInstance.instance._objects.indexOf(beforeChild.instance);
+    }
+    parentInstance.instance.insertAt(child.instance, index);
+
+    child._updatePicture();
   },
 
   removeChild(parentInstance, child) {
@@ -146,15 +164,5 @@ const hostConfig = {
 };
 
 const FabricRenderer = Reconciler(hostConfig);
-
-const foundDevTools = FabricRenderer.injectIntoDevTools({
-  findFiberByHostInstance: ReactDOMComponentTree.getClosestInstanceFromNode,
-  bundleType: process.env.NODE_ENV !== "production" ? 1 : 0,
-  version: React.version || 16,
-  rendererPackageName: "react-konva",
-  getInspectorDataForViewTag: (...args) => {
-    console.log(args);
-  }
-});
 
 module.exports = FabricRenderer;

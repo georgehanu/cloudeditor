@@ -156,7 +156,7 @@ class ObjectBlock extends React.Component {
             "max-width": ui.size.width,
             height: ui.size.height
           });
-          const resizeEvent = new Event("cropperUpdate");
+          const resizeEvent = new Event("cropperUpdateMiddle");
           document.dispatchEvent(resizeEvent);
 
           ui = this.addSnapElements(ui, resizable.coords, resizable);

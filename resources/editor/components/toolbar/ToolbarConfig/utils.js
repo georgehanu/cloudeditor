@@ -1,4 +1,5 @@
 import * as Types from "../ToolbarConfig/types";
+import * as Operation from "../ToolbarConfig/operation";
 
 export const MergeClassName = (defaultClass, newClass) => {
   if (newClass === null || newClass === undefined) {
@@ -41,7 +42,46 @@ export const filterBasedOnLocation = (items, position) => {
     .sort((a, b) => comparePosition(a, b));
 };
 
-export const LoadImageSettings = activeItem => {
+export const LoadImageSettings = (
+  toolbar,
+  activeItem,
+  activeLayer,
+  options
+) => {
+  for (let groupIndex in toolbar.groups) {
+    let group = toolbar.groups[groupIndex];
+    for (let itemIndex in group.items) {
+      let item = group.items[itemIndex];
+
+      if (item.type === Types.POPTEXT_LAYER) {
+        item.operation = Operation.MERGE_DATA;
+        item.newData = [];
+        if (activeLayer.front !== undefined && activeLayer.front === false) {
+          item.newData = [
+            { value: "bringtofront", disabled: true },
+            { value: "bringforward", disabled: true }
+          ];
+        }
+        if (activeLayer.back !== undefined && activeLayer.back === false) {
+          item.newData = [
+            ...item.newData,
+            { value: "sendbackward", disabled: true },
+            { value: "sendtoback", disabled: true }
+          ];
+        }
+      }
+      if (item.type === Types.SLIDER_INLINE_IMAGE) {
+        item.defaultValue = parseInt(activeItem.leftSlider);
+      }
+      if (item.type === Types.SIMPLE_ICON_QUALITY) {
+        item.threshold = 400;
+      }
+    }
+  }
+  return toolbar;
+};
+
+export const LoadImageAdditionalInfo = activeItem => {
   return {
     [Types.CHANGE_SHAPE_WND]: { image: activeItem.src, startValue: 180 },
     [Types.SPECIAL_EFFECTS_WND]: {
@@ -57,7 +97,7 @@ export const LoadImageSettings = activeItem => {
   };
 };
 
-export const LoadTextSettings = (toolbar, activeItem) => {
+export const LoadTextSettings = (toolbar, activeItem, activeLayer) => {
   for (let groupIndex in toolbar.groups) {
     let group = toolbar.groups[groupIndex];
     for (let itemIndex in group.items) {
@@ -67,24 +107,32 @@ export const LoadTextSettings = (toolbar, activeItem) => {
         item.selected = activeItem.bold;
       } else if (item.type === Types.BUTTON_LETTER_ITALIC) {
         item.selected = activeItem.italic;
-      }
-      if (item.type === Types.BUTTON_LETTER_UNDERLINE) {
+      } else if (item.type === Types.BUTTON_LETTER_UNDERLINE) {
         item.selected = activeItem.underline;
-      }
-
-      if (item.type === Types.COLOR_SELECTOR) {
+      } else if (item.type === Types.COLOR_SELECTOR) {
         item.color = activeItem.fill;
-      }
-
-      if (item.type === Types.SLIDER_TEXT_SPACEING) {
+      } else if (item.type === Types.SLIDER_TEXT_SPACEING) {
         item.defaultValue = parseInt(activeItem.charSpacing);
-      }
-      if (item.type === Types.INCREMENTAL_FONT_SIZE) {
+      } else if (item.type === Types.INCREMENTAL_FONT_SIZE) {
         item.defaultValue = activeItem.fontSize + ".00";
-      }
-
-      if (item.type === Types.POPTEXT_FONT) {
+      } else if (item.type === Types.POPTEXT_FONT) {
         item.value = activeItem.fontFamily;
+      } else if (item.type === Types.POPTEXT_LAYER) {
+        item.operation = Operation.MERGE_DATA;
+        item.newData = [];
+        if (activeLayer.front !== undefined && activeLayer.front === false) {
+          item.newData = [
+            { value: "bringtofront", disabled: true },
+            { value: "bringforward", disabled: true }
+          ];
+        }
+        if (activeLayer.back !== undefined && activeLayer.back === false) {
+          item.newData = [
+            ...item.newData,
+            { value: "sendbackward", disabled: true },
+            { value: "sendtoback", disabled: true }
+          ];
+        }
       }
     }
   }
@@ -134,6 +182,54 @@ export const CreatePayload = (activeitem, itemPayload) => {
     case Types.POPTEXT_FONT:
       attrs = { fontFamily: itemPayload.value };
       break;
+
+    case Types.POPTEXT_LAYER:
+      attrs = { action: itemPayload.value };
+      return { id: activeitem.id, props: attrs, action: "layer" };
+
+    case Types.POPTEXT_MENU:
+      if (itemPayload.value === "duplicate") {
+        return { id: activeitem.id, props: attrs, action: "duplicate" };
+      } else {
+        return null;
+      }
+
+    case Types.POPTEXT_IMAGE_MENU:
+      if (itemPayload.value === "duplicate") {
+        return { id: activeitem.id, props: attrs, action: "duplicate" };
+      } else if (itemPayload.value === "delete") {
+        return { id: activeitem.id, props: attrs, action: "delete" };
+      } else {
+        return null;
+      }
+    case Types.SLIDER_INLINE_IMAGE:
+      attrs = { leftSlider: itemPayload.value };
+      const resizeEvent = new Event("cropperUpdate");
+      document.dispatchEvent(resizeEvent);
+      break;
   }
   return { id: activeitem.id, props: attrs };
+};
+
+const imageQuality = (activeItem, pageWidth, pageHeight) => {
+  //@to do
+  let cropWidth =
+      activeItem.cropWidth * activeItem.workingPercent -
+      2 * activeItem.leftSlider * activeItem.unitResizeX,
+    cropHeight =
+      activeItem.cropHeight * activeItem.workingPercent -
+      2 * activeItem.leftSlider * activeItem.unitResizeX,
+    width_i =
+      activeItem.width *
+      (pageWidth / 0.75 / canvas.getCanvasWorkingWidth()) *
+      0.01041667;
+  height_i =
+    activeItem.height *
+    (pageHeight / 0.75 / canvas.getCanvasWorkingHeight()) *
+    0.01041667;
+
+  return (
+    Math.sqrt(Math.pow(cropWidth, 2) + Math.pow(cropHeight, 2)) /
+    Math.sqrt(Math.pow(width_i, 2) + Math.pow(height_i, 2))
+  );
 };

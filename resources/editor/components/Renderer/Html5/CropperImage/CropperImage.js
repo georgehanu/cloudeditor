@@ -9,18 +9,19 @@ class CropperImage extends React.Component {
       leftImage: 0,
       topImage: 0,
       minPercent: 0,
+      focalPoint: {
+        x: 0,
+        y: 0
+      },
       initialRestore: true,
       dragImageCoords: {},
       isDragging: false,
+      resizeTimes: 2,
       dragMouseCoords: {},
       workingPercent: ""
     };
   }
-  shouldComponentUpdate(prevProps, prevState) {
-    if (prevProps.uniqueId != this.props.uniqueId)
-      this.initializeDimensions(true);
-    return false;
-  }
+
   updateImage() {
     const { leftImage, topImage, widthImage } = this.options;
     const { parent } = this.props;
@@ -43,13 +44,27 @@ class CropperImage extends React.Component {
     $(image).css(imageStyle);
     $(wrapper).css(styleWrapper);
   }
+  shouldComponentUpdate() {
+    return false;
+  }
+  componentDidUpdate() {
+    return false;
+    // this.initializeDimensions(false);
+  }
   componentDidMount() {
     document.addEventListener("mousemove", this.handleMouseMove.bind(this));
     document.addEventListener("mouseup", this.handleMouseUp.bind(this));
+    document.addEventListener(
+      "cropperUpdateMiddle",
+      this.updateCropMiddle.bind(this)
+    );
     document.addEventListener("cropperUpdate", this.updateCrop.bind(this));
   }
-  updateCrop() {
+  updateCropMiddle() {
     this.options = merge(this.options, { initialRestore: false });
+    this.updateCrop();
+  }
+  updateCrop() {
     this.initializeDimensions(false);
     this.options = merge(this.options, { initialRestore: true });
   }
@@ -66,17 +81,18 @@ class CropperImage extends React.Component {
     return val;
   }
   initializeDimensions(shouldUpdate) {
-    const { initialRestore, focalX, focalY } = this.options;
+    const { initialRestore } = this.options;
     let { workingPercent, minPercent, focalPoint } = this.options;
     const { alternateZoom, parent } = this.props;
-    const originalWidth = this.el.current.offsetWidth;
-    const originalHeight = this.el.current.offsetHeight;
+
     const targetWidth = parent.offsetWidth;
     const targetHeight = parent.offsetHeight;
     let { cropX, cropY, cropH, cropW } = this.props;
     let widthRatio = 1;
     let heightRatio = 1;
-
+    $(this.el.current).css({ width: "" });
+    const originalWidth = this.el.current.offsetWidth;
+    const originalHeight = this.el.current.offsetHeight;
     if (originalWidth > 0) {
       widthRatio = targetWidth / originalWidth;
       heightRatio = targetHeight / originalHeight;
@@ -96,34 +112,31 @@ class CropperImage extends React.Component {
     }
     if (!initialRestore || !cropW) {
       workingPercent = minPercent;
-      let left = ((originalWidth / 2) * minPercent - targetWidth / 2) * -1;
-      let top = ((originalHeight / 2) * minPercent - targetHeight / 2) * -1;
-      let targetLength = originalWidth * workingPercent;
-      let containerLength = targetWidth;
-      left = this.fillContainer(
-        left,
-        targetLength,
-        containerLength,
-        alternateZoom
-      );
-      cropX = (left / minPercent) * -1;
-      targetLength = originalHeight * workingPercent;
-      containerLength = targetHeight;
-      top = this.fillContainer(
-        top,
-        targetLength,
-        containerLength,
-        alternateZoom
-      );
-      cropY = (top / minPercent) * -1;
-      cropW = targetWidth / minPercent;
-      cropH = targetHeight / minPercent;
+      focalPoint = {
+        x: Math.round(originalWidth / 2),
+        y: Math.round(originalHeight / 2)
+      };
+      // cropX = ((originalWidth * minPercent - targetWidth) / 2 / minPercent) * -1;
+      // cropY = ((originalHeight * minPercent - targetHeight) / 2 / minPercent) * -1;
+      // cropW = targetWidth / minPercent;
+      // cropH = targetHeight / minPercent;
+    } else {
+      const { leftSlider } = this.props;
+      const { resizeTimes } = this.options;
+      const resizeUnit = parseFloat(resizeTimes * minPercent) / 100;
+      const workingPercent_c = minPercent + resizeUnit * leftSlider;
+      focalPoint = {
+        x: (cropX * workingPercent_c * 1 + targetWidth / 2) / workingPercent_c,
+        y: (cropY * workingPercent_c * 1 + targetHeight / 2) / workingPercent_c
+      };
     }
     this.options = merge(
       { ...this.options },
       {
         minPercent,
         focalPoint,
+        originalWidth,
+        originalHeight,
         widthRatio,
         heightRatio,
         workingPercent,
@@ -133,33 +146,40 @@ class CropperImage extends React.Component {
         cropH
       }
     );
-    this.setZoom(minPercent, shouldUpdate);
+    this.setZoom(shouldUpdate);
   }
 
   focusOnCenter() {
-    const { workingPercent } = this.options;
+    const {
+      workingPercent,
+      originalWidth,
+      originalHeight,
+      minPercent,
+      oldWorking,
+      focalPoint
+    } = this.options;
     const { parent, alternateZoom } = this.props;
-    const originalWidth = this.el.current.offsetWidth;
-    const originalHeight = this.el.current.offsetHeight;
     const targetWidth = parent.offsetWidth;
     const targetHeight = parent.offsetHeight;
-    const { cropX, cropY } = this.options;
+    let { cropX, cropY } = this.options;
     const width = originalWidth * workingPercent;
     const height = originalHeight * workingPercent;
+
     const leftImage = this.fillContainer(
-      Math.round(cropX * workingPercent) * -1,
+      Math.round(focalPoint.x * workingPercent - targetWidth / 2) * -1,
       width,
       targetWidth,
       alternateZoom
     );
     var topImage = this.fillContainer(
-      Math.round(cropY * workingPercent) * -1,
+      Math.round(focalPoint.y * workingPercent - targetHeight / 2) * -1,
       height,
       targetHeight,
       alternateZoom
     );
     this.options = merge({ ...this.options }, { topImage, leftImage });
     this.updateImage();
+    this.storeFocalPoint();
   }
 
   updateResult(shouldUpdate) {
@@ -169,6 +189,7 @@ class CropperImage extends React.Component {
     const targetWidth = parent.offsetWidth;
     const targetHeight = parent.offsetHeight;
     let result = {};
+    let result2 = {};
     if (image) {
       result = {
         cropX: Math.floor((parseInt(image.style.left) / workingPercent) * -1),
@@ -176,7 +197,13 @@ class CropperImage extends React.Component {
         cropW: Math.round(targetWidth / workingPercent),
         cropH: Math.round(targetHeight / workingPercent)
       };
-      this.options = merge({ ...this.options }, result);
+      result2 = {
+        cropX: Math.floor(parseInt(image.style.left) / workingPercent),
+        cropY: Math.floor(parseInt(image.style.top) / workingPercent),
+        cropW: Math.round(targetWidth / workingPercent),
+        cropH: Math.round(targetHeight / workingPercent)
+      };
+      this.options = merge({ ...this.options }, result2);
       if (shouldUpdate) {
         this.props.onUpdateProps({
           id: this.props.id,
@@ -208,13 +235,13 @@ class CropperImage extends React.Component {
   }
 
   handleMouseMove(event) {
-    event.preventDefault();
     const { isDragging, dragImageCoords, dragMouseCoords } = this.options;
     const { active, parent, alternateZoom } = this.props;
     const targetWidth = parent.offsetWidth;
     const targetHeight = parent.offsetHeight;
     const image = this.el.current;
     if (isDragging && active) {
+      event.preventDefault();
       const xDif =
         (event.pageX || event.originalEvent.touches[0].pageX) -
         dragMouseCoords.x;
@@ -235,6 +262,7 @@ class CropperImage extends React.Component {
       );
       this.options = merge({ ...this.options }, { topImage, leftImage });
       this.updateImage();
+      this.storeFocalPoint();
       this.updateResult(false);
     }
   }
@@ -243,14 +271,43 @@ class CropperImage extends React.Component {
     this.options = merge({ ...this.options }, { isDragging });
     this.updateResult(true);
   }
-  setZoom(percent, shouldUpdate) {
-    const originalWidth = this.el.current.offsetWidth;
-    const widthImage = Math.ceil(originalWidth * percent);
-    const workingPercent = percent;
-    this.options = merge({ ...this.options }, { widthImage, workingPercent });
+  setZoom(shouldUpdate) {
+    let {
+      originalWidth,
+      workingPercent,
+      originalHeight,
+      cropX,
+      cropY
+    } = this.options;
+    $(this.el.current).css({ width: "" });
+
+    const { leftSlider } = this.props;
+    const { resizeTimes, minPercent } = this.options;
+    const resizeUnit = parseFloat(resizeTimes * minPercent) / 100;
+    workingPercent = minPercent + resizeUnit * leftSlider;
+
+    //cropX -= (newWidth - oldWidth) / 2 / (workingPercent / oldWorking);
+    //cropY -= (newHeight - oldHeight) / 2 / (workingPercent / oldWorking);
+    const widthImage = Math.ceil(originalWidth * workingPercent);
+    this.options = merge(
+      { ...this.options },
+      { widthImage, workingPercent, cropX, cropY }
+    );
     this.updateImage();
     this.focusOnCenter();
     this.updateResult(shouldUpdate);
+  }
+  storeFocalPoint() {
+    const { workingPercent } = this.options;
+    const { parent } = this.props;
+    const image = $(this.el.current);
+    const targetWidth = parent.offsetWidth;
+    const targetHeight = parent.offsetHeight;
+    const focalPoint = {
+      x: (parseInt(image.css("left")) * -1 + targetWidth / 2) / workingPercent,
+      y: (parseInt(image.css("top")) * -1 + targetHeight / 2) / workingPercent
+    };
+    this.options = merge(this.options, { focalPoint });
   }
   zoomIn() {
     const { minPercent, zoomSteps, workingPercent } = this.options;
