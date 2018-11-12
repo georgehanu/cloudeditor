@@ -1,13 +1,13 @@
 import React from "react";
 import * as Types from "../components/designAndGo/DesignAndGoConfig/types";
 
-import Jam1 from "../themes/default/designAndGo/assets/Jam1.png";
-import Jam2 from "../themes/default/designAndGo/assets/Jam2.png";
-import Jam3 from "../themes/default/designAndGo/assets/Jam3.png";
-import Jam4 from "../themes/default/designAndGo/assets/Jam4.png";
+import Jam1 from "../assets/default/designAndGo/Jam1.png";
+import Jam2 from "../assets/default/designAndGo/Jam2.png";
+import Jam3 from "../assets/default/designAndGo/Jam3.png";
+import Jam4 from "../assets/default/designAndGo/Jam4.png";
 
 import Layout from "../components/designAndGo/DesignAndGoItems/LayoutItems/Layout";
-import "../themes/default/designAndGo/plugin.scss";
+
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 

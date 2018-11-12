@@ -35,7 +35,7 @@ class SideBarContainer extends React.Component {
 
       const iconStyle = "icon " + (tool.icon ? tool.icon : "");
       return (
-        <li key={i}>
+        <li key={i} className={this.props.id + "Li"}>
           <SidebarButton
             clicked={() => this.showPlugin(i)}
             selected={i === this.state.pluginIndex ? true : false}
@@ -48,7 +48,7 @@ class SideBarContainer extends React.Component {
             )}
           </SidebarButton>
           <PaneContainer visible={i === this.state.pluginIndex ? true : false}>
-            <Tool {...toolCfg} items={tool.items || []} />;
+            <Tool {...toolCfg} items={tool.items || []} />
           </PaneContainer>
         </li>
       );
@@ -65,7 +65,7 @@ class SideBarContainer extends React.Component {
         className={this.props.className}
       >
         <div id={this.props.id + "-container"} style={this.props.style}>
-          <ul>{this.renderTools()}</ul>
+          <ul className={this.props.id + "Ul"}>{this.renderTools()}</ul>
         </div>
       </div>
     );

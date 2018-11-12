@@ -61,10 +61,10 @@ module.exports = {
     SideBar: {
       position: 2,
       priority: 1,
-      text: "Add Image",
+      text: "Add Button",
       icon: "printqicon-newimage",
       showMore: true,
-      tooltip: { title: "Add Image", description: "Description Image" }
+      tooltip: { title: "Add Button", description: "Add simple button" }
     }
   }),
   reducers: { addButton: require("../stores/reducers/addButton") },

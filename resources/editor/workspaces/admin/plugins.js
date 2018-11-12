@@ -5,6 +5,8 @@ const Html5Renderer = require("../../plugins/Html5Renderer");
 const SideBar = require("../../plugins/SideBar");
 const Toolbar = require("../../plugins/Toolbar");
 const AddText = require("../../plugins/AddText");
+const AddImage = require("../../plugins/AddImage");
+const AddPdf = require("../../plugins/AddPdf");
 
 const plugins = {
   SideBar: SideBar,
@@ -13,7 +15,9 @@ const plugins = {
   Renderer: Renderer,
   Toolbar: Toolbar,
   Html5Renderer: Html5Renderer,
-  AddText: AddText
+  AddText: AddText,
+  AddImage: AddImage,
+  AddPdf: AddPdf
 };
 
 const requires = {};

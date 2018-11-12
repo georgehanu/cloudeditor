@@ -4,15 +4,26 @@ const ExtractTextPlugin = require("extract-text-webpack-plugin");
 
 const EDITOR_WORKSPACE = process.env.MIX_EDITOR_WORKSPACE || "admin";
 const cssFilename = "[name].css";
-
 const editorPublicPath = "editor/" + EDITOR_WORKSPACE + "/";
+
+/* Load Theme files */
+var path = require("path");
+const themeFiles = require("./resources/editor/workspaces/" +
+  EDITOR_WORKSPACE +
+  "/theme");
+let selectedTheme = process.env.THEME || "default";
+let includeFiles = themeFiles.Themes[selectedTheme].map(el => {
+  return path.resolve(__dirname, "resources/editor/themes/" + el);
+});
+console.log(includeFiles);
 
 mix.webpackConfig({
   module: {
     rules: [
       {
-        test: /\.s[ac]ss$/,
-        exclude: [], // For newer versions
+        test: /\.scss$/,
+        exclude: [], // For newer versions,
+        include: includeFiles,
         loader: ExtractTextPlugin.extract({
           fallback: "style-loader",
           use: [
@@ -89,8 +100,19 @@ mix.autoload({
   jquery: ["$", "window.jQuery", "jQuery"]
 });
 
-mix.copy("resources/editor/assets", "public/" + editorPublicPath + "assets");
+//mix.copy("resources/editor/assets", "public/" + editorPublicPath + "assets");
 mix.copy("resources/editor/locales", "public/" + editorPublicPath + "locales");
+// for assets
+for (let plugin in themeFiles.PluginAssets) {
+  mix.copy(
+    "resources/editor/assets/" +
+      selectedTheme +
+      "/" +
+      themeFiles.PluginAssets[plugin] +
+      "/",
+    "public/" + editorPublicPath + "assets"
+  );
+}
 mix.disableNotifications();
 
 mix.react(
