@@ -4,6 +4,7 @@ const toolbar = require("../../themes/default/toolbar/plugin.scss");
 const html5Renderer = require("../../themes/default/Html5Renderer/plugin.scss");
 const addImage = require("../../themes/default/addImage/plugin.scss");
 const addPdf = require("../../themes/default/addPdf/plugin.scss");
+const blocksProps = require("../../themes/default/blocksProps/plugin.scss");
 
 module.exports = {
   theme,
@@ -11,5 +12,6 @@ module.exports = {
   toolbar,
   html5Renderer,
   addImage,
-  addPdf
+  addPdf,
+  blocksProps
 };

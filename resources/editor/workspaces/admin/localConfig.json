@@ -19,7 +19,8 @@
       },
       "AddText",
       "AddImage",
-      "AddPdf"
+      "AddPdf",
+      "BlocksProps"
     ]
   }
 }

@@ -1,0 +1,39 @@
+.Blocks {
+  margin-top: 295px;
+}
+
+.Blocks ul {
+  padding: 0;
+  margin: 0;
+  width: 240px;
+  list-style: none;
+  display: block;
+  height: 100%;
+}
+
+.Blocks ul li {
+  display: block;
+  float: left;
+}
+
+.BlockItem:hover {
+  cursor: pointer;
+  color: #99d122;
+}
+.BlockItem {
+  width: 60px;
+  display: block;
+  color: #6cbfe8;
+  font-size: 24px;
+  text-decoration: none;
+  padding: 18px;
+  height: 60px;
+  background-color: #213246;
+  -webkit-transition: background 0.2s ease, color 0.2s ease;
+  -moz-transition: background 0.2s ease, color 0.2s ease;
+  -ms-transition: background 0.2s ease, color 0.2s ease;
+  -o-transition: background 0.2s ease, color 0.2s ease;
+  transition: background 0.2s ease, color 0.2s ease;
+  overflow: hidden;
+  position: relative;
+}

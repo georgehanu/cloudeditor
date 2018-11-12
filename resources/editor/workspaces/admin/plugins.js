@@ -7,6 +7,7 @@ const Toolbar = require("../../plugins/Toolbar");
 const AddText = require("../../plugins/AddText");
 const AddImage = require("../../plugins/AddImage");
 const AddPdf = require("../../plugins/AddPdf");
+const BlocksProp = require("../../plugins/BlocksProps");
 
 const plugins = {
   SideBar: SideBar,
@@ -17,7 +18,8 @@ const plugins = {
   Html5Renderer: Html5Renderer,
   AddText: AddText,
   AddImage: AddImage,
-  AddPdf: AddPdf
+  AddPdf: AddPdf,
+  BlocksProp
 };
 
 const requires = {};
