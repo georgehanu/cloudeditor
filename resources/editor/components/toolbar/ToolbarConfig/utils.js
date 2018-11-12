@@ -41,6 +41,31 @@ export const filterBasedOnLocation = (items, position) => {
     })
     .sort((a, b) => comparePosition(a, b));
 };
+export const imageQuality = (activeItem, options) => {
+  let cropWidth =
+      activeItem.cropWidth * activeItem.workingPercent -
+      2 * activeItem.leftSlider * activeItem.unitResizeX,
+    cropHeight =
+      activeItem.cropHeight * activeItem.workingPercent -
+      2 * activeItem.leftSlider * activeItem.unitResizeX,
+    width_i =
+      activeItem.width *
+      (options.pageDimmensions.pageWidth /
+        0.75 /
+        options.uiPageOffset.canvas.workingWidth) *
+      0.01041667,
+    height_i =
+      activeItem.height *
+      (options.pageDimmensions.pageHeight /
+        0.75 /
+        options.uiPageOffset.canvas.workingHeight) *
+      0.01041667,
+    result =
+      Math.sqrt(Math.pow(cropWidth, 2) + Math.pow(cropHeight, 2)) /
+      Math.sqrt(Math.pow(width_i, 2) + Math.pow(height_i, 2));
+  console.log("image dpi is ", result);
+  return result;
+};
 
 export const LoadImageSettings = (
   toolbar,
@@ -74,7 +99,7 @@ export const LoadImageSettings = (
         item.defaultValue = parseInt(activeItem.leftSlider);
       }
       if (item.type === Types.SIMPLE_ICON_QUALITY) {
-        item.threshold = 400;
+        item.threshold = imageQuality(activeItem, options);
       }
     }
   }
@@ -214,33 +239,12 @@ export const calculateToolBarPosition = (activeItem, workArea) => {
     top:
       activeItem.top * workArea.scale +
       workArea.pageOffset.y +
-      workArea.offsetCanvasContainer.y,
+      workArea.offsetCanvasContainer.y -
+      40,
     left:
       activeItem.left * workArea.scale +
+      (activeItem.width * workArea.scale) / 2 +
       workArea.pageOffset.x +
       workArea.offsetCanvasContainer.x
   };
-};
-
-const imageQuality = (activeItem, pageWidth, pageHeight) => {
-  //@to do
-  let cropWidth =
-      activeItem.cropWidth * activeItem.workingPercent -
-      2 * activeItem.leftSlider * activeItem.unitResizeX,
-    cropHeight =
-      activeItem.cropHeight * activeItem.workingPercent -
-      2 * activeItem.leftSlider * activeItem.unitResizeX,
-    width_i =
-      activeItem.width *
-      (pageWidth / 0.75 / canvas.getCanvasWorkingWidth()) *
-      0.01041667;
-  height_i =
-    activeItem.height *
-    (pageHeight / 0.75 / canvas.getCanvasWorkingHeight()) *
-    0.01041667;
-
-  return (
-    Math.sqrt(Math.pow(cropWidth, 2) + Math.pow(cropHeight, 2)) /
-    Math.sqrt(Math.pow(width_i, 2) + Math.pow(height_i, 2))
-  );
 };

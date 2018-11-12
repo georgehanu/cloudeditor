@@ -20,7 +20,8 @@ module.exports = handleActions(
       workArea = {
         ...workArea,
         pageOffset: action.payload.workArea,
-        scale: action.payload.scale
+        scale: action.payload.scale,
+        canvas: action.payload.canvas
       };
       return { ...state, workArea: workArea };
     },

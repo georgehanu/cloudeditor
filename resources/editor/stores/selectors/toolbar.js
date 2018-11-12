@@ -47,18 +47,16 @@ const selectedObjectLayerSelector = createSelector(
     return availableLayer;
   }
 );
-const selectedPageWidthSelector = createSelector(
+const selectedPageDimmensionsSelector = createSelector(
   [pagesSelector, activePageIdSelector],
   (pages, pageId) => {
-    return pages[pageId].width;
+    return {
+      pageWidth: pages[pageId].width,
+      pageHeight: pages[pageId].height
+    };
   }
 );
-const selectedPageHeightSelector = createSelector(
-  [pagesSelector, activePageIdSelector],
-  (pages, pageId) => {
-    return pages[pageId].height;
-  }
-);
+
 const uiSelector = state => (state && state.ui) || {};
 const uiPageOffsetSelector = createSelector([uiSelector], ui => {
   return ui.workArea;
@@ -66,7 +64,6 @@ const uiPageOffsetSelector = createSelector([uiSelector], ui => {
 module.exports = {
   selectedObjectToolbarSelector,
   selectedObjectLayerSelector,
-  selectedPageWidthSelector,
-  selectedPageHeightSelector,
+  selectedPageDimmensionsSelector,
   uiPageOffsetSelector
 };

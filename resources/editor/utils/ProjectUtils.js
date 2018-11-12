@@ -462,7 +462,8 @@ const getEmptyObject = cfg => {
           cropX: 0,
           cropY: 0,
           cropWidth: 0,
-          cropHeight: 0
+          cropHeight: 0,
+          workingPercent: 1
         };
       case "graphics":
         return {
@@ -530,6 +531,10 @@ const getEmptyUI = cfg => {
       offsetCanvasContainer: {
         x: 0,
         y: 0
+      },
+      canvas: {
+        workingWidth: 0,
+        workingHeight: 0
       }
     }
   };

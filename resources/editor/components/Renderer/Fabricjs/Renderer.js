@@ -126,7 +126,11 @@ class FabricjsRenderer extends React.PureComponent {
     const result = updatePageOffset(this.props, this.editorContainer.current);
     this.props.uiUpdateWorkAreaOffsetPageOfsset(
       { x: result.canvasOffsetX, y: result.canvasOffsetY },
-      result.scale
+      result.scale,
+      {
+        workingWidth: result.canvasWorkingWidth,
+        workingHeight: result.canvasWorkingHeight
+      }
     );
     this.setState(result);
   };
@@ -341,14 +345,20 @@ FabricjsRenderer.defaultProps = {
 const mapDispatchToProps = dispatch => {
   return {
     updateCropParams: (id, props) =>
-      dispatch(projectActions.updateCropParams({ id, props })),
+      dispatch(
+        projectActions.updateCropParams({
+          id,
+          props
+        })
+      ),
     canvasReadyHandler: isReady =>
       dispatch(rendererActions.updateCanvasReady(isReady)),
-    uiUpdateWorkAreaOffsetPageOfsset: (workArea, scale) =>
+    uiUpdateWorkAreaOffsetPageOfsset: (workArea, scale, canvas) =>
       dispatch(
         uiActions.uiUpdateWorkAreaOffsetPageOfsset({
           workArea: workArea,
-          scale: scale
+          scale: scale,
+          canvas: canvas
         })
       )
   };

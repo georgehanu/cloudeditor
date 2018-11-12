@@ -4,8 +4,7 @@ const { connect } = require("react-redux");
 const {
   selectedObjectToolbarSelector,
   selectedObjectLayerSelector,
-  selectedPageWidthSelector,
-  selectedPageHeightSelector,
+  selectedPageDimmensionsSelector,
   uiPageOffsetSelector
 } = require("../stores/selectors/toolbar");
 
@@ -174,8 +173,8 @@ class Toolbar extends React.Component {
         activeItem,
         this.props.activeLayer,
         {
-          pageWidth: this.props.pageWidth,
-          pageHeight: this.props.pageHeight
+          pageDimmensions: this.props.pageDimmensions,
+          uiPageOffset: this.props.uiPageOffset
         }
       );
       attributes = Utils.LoadImageAdditionalInfo(activeItem);
@@ -268,8 +267,7 @@ const mapStateToProps = state => {
   return {
     activeToolbar: selectedObjectToolbarSelector(state),
     activeLayer: selectedObjectLayerSelector(state),
-    pageWidth: selectedPageWidthSelector(state),
-    pageHeight: selectedPageHeightSelector(state),
+    pageDimmensions: selectedPageDimmensionsSelector(state),
     uiPageOffset: uiPageOffsetSelector(state)
   };
 };
