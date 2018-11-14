@@ -139,7 +139,10 @@
   z-index: 0;
 }
 
-#sidebar-wrapper-container .PaneHidden {
+#sidebar-wrapper-container .PaneContainer.PaneHidden,
+#sidebar-wrapper-container .PaneContainer.PaneHidden.PaneTransparent,
+#sidebar-wrapper-container .PaneContainer.PaneHidden.PaneBlocks,
+#sidebar-wrapper-container .PaneContainer.PaneHidden.PaneProjects {
   right: 0px;
   z-index: -1;
 }
@@ -147,4 +150,21 @@
 #sidebar-wrapper-container .SidebarButtonSelected,
 #sidebar-wrapper-container .SidebarButton:hover {
   color: #99d122;
+}
+
+#sidebar-wrapper-container .PaneContainer.PaneTransparent {
+  width: auto;
+  height: auto;
+  right: -240px;
+  top: 300px;
+  padding: 0px;
+}
+
+#sidebar-wrapper-container .PaneContainer.PaneTransparent.PaneShow.PaneBlocks {
+  right: -240px;
+}
+
+#sidebar-wrapper-container
+  .PaneContainer.PaneTransparent.PaneShow.PaneProjects {
+  right: -120px;
 }

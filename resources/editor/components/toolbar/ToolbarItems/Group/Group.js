@@ -39,9 +39,8 @@ const Group = props => {
                   payloadDetailsComponent: item.settingsPayload
                 })
           }
-        >
-          <span className={item.className} />
-        </Button>
+          spanClassName={item.className}
+        />
       );
     } else if (
       item.baseType === Types.POPTEXT_VALUE ||

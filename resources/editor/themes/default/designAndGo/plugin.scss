@@ -338,9 +338,3 @@
 .SliderCarousel div {
   outline: none;
 }
-
-@media screen and (max-width: 842px) {
-  .SmallSlider.SliderCarousel .slick-slider {
-    left: 500px !important;
-  }
-}

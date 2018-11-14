@@ -1,4 +1,5 @@
 import React from "react";
+const { debounce } = require("underscore");
 
 const ColorBorderWidth = props => {
   return (

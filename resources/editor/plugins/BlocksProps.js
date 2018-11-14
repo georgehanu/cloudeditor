@@ -4,6 +4,20 @@ import assign from "object-assign";
 import { withNamespaces } from "react-i18next";
 import BlockItem from "../components/blocksProps/BlockItem";
 
+const {
+  moveableSelector,
+  resizableSelector,
+  snapSelector,
+  rotateSelector
+} = require("../stores/selectors/ui");
+
+const {
+  setMoveable,
+  setResizable,
+  setSnap,
+  setRotate
+} = require("../stores/actions/ui");
+
 const BlocksProps = props => {
   return (
     <div className="Blocks">
@@ -14,6 +28,8 @@ const BlocksProps = props => {
             title: "Enable/Disable",
             description: "Enable/Disable Move Blocks"
           }}
+          selected={props.moveableSelector}
+          clicked={props.setMoveable}
         />
         <BlockItem
           class="printqicon-rotatable"
@@ -21,6 +37,26 @@ const BlocksProps = props => {
             title: "Enable/Disable",
             description: "Enable/Disable Resize Blocks"
           }}
+          selected={props.resizableSelector}
+          clicked={props.setResizable}
+        />
+        <BlockItem
+          class="printqicon-snap"
+          tooltip={{
+            title: "Enable/Disable",
+            description: "Enable/Disable Snap Blocks"
+          }}
+          selected={props.snapSelector}
+          clicked={props.setSnap}
+        />
+        <BlockItem
+          class="printqicon-resizable"
+          tooltip={{
+            title: "Enable/Disable",
+            description: "Enable/Disable Rotate Blocks"
+          }}
+          selected={props.rotateSelector}
+          clicked={props.setRotate}
         />
       </ul>
     </div>
@@ -28,11 +64,21 @@ const BlocksProps = props => {
 };
 
 const mapStateToProps = state => {
-  return {};
+  return {
+    moveableSelector: moveableSelector(state),
+    resizableSelector: resizableSelector(state),
+    snapSelector: snapSelector(state),
+    rotateSelector: rotateSelector(state)
+  };
 };
 
 const mapDispatchToProps = dispatch => {
-  return {};
+  return {
+    setMoveable: () => dispatch(setMoveable()),
+    setResizable: () => dispatch(setResizable()),
+    setSnap: () => dispatch(setSnap()),
+    setRotate: () => dispatch(setRotate())
+  };
 };
 
 const BlocksPropsPlugin = connect(
@@ -49,7 +95,9 @@ module.exports = {
       priority: 1,
       text: "Blocks",
       icon: "printqicon-blockoptions",
-      showMore: true
+      showMore: true,
+      showPaneBackground: false,
+      paneBackgroundClass: "PaneBlocks"
     }
   }),
   reducers: { ui: require("../stores/reducers/ui") }

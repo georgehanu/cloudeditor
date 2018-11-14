@@ -8,8 +8,11 @@ class SliderCarousel extends React.Component {
   };
 
   changeSlider = value => {
+    if (value && this.state.showFullSlider) {
+      return false;
+    }
     this.setState({ showFullSlider: !this.state.showFullSlider });
-    //this.setState({showFullSlider:value});
+    return !this.state.showFullSlider;
   };
 
   componentDidMount() {

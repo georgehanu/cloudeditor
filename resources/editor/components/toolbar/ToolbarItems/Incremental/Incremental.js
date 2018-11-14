@@ -26,15 +26,13 @@ const Incremental = props => {
         <Button
           className="IncrementalAdd"
           clicked={() => props.handleIncrement(true)}
-        >
-          <span>+</span>
-        </Button>
+          spanText="+"
+        />
         <Button
           className="IncrementalSub"
           clicked={() => props.handleIncrement(false)}
-        >
-          <span>-</span>
-        </Button>
+          spanText="-"
+        />
       </div>
     </div>
   );

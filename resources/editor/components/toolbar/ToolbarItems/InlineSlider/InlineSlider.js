@@ -1,6 +1,7 @@
 import React from "react";
 
 import * as Utils from "../../ToolbarConfig/utils";
+const { debounce } = require("underscore");
 
 const InlineSlider = props => {
   const parentClassName = Utils.MergeClassName(

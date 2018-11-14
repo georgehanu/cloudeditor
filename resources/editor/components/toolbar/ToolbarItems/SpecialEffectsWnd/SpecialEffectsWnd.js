@@ -66,15 +66,13 @@ const SpecialEffectsWnd = props => {
         <Button
           className="SpecialEffectsTab"
           clicked={() => props.setActiveTab(1)}
-        >
-          <span className="icon printqicon-effects" />
-        </Button>
+          spanClassName="icon printqicon-effects"
+        />
         <Button
           className="SpecialEffectsTab"
           clicked={() => props.setActiveTab(2)}
-        >
-          <span className="icon printqicon-brightness-contrast" />
-        </Button>
+          spanClassName="icon printqicon-brightness-contrast"
+        />
       </div>
       <div className="SpecialEffectsContent">
         {contentTab1}

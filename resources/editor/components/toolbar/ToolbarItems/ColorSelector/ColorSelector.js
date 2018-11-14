@@ -13,12 +13,9 @@ const ColorSelector = props => {
             payloadDetailsComponent: props
           })
         }
-      >
-        <span
-          className="ColorSelectorButton"
-          style={{ backgroundColor: props.color }}
-        />
-      </Button>
+        spanClassName="ColorSelectorButton"
+        spanStyleBackgroundColor={props.color}
+      />
     </div>
   );
 };

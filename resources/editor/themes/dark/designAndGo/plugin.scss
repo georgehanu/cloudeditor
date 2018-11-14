@@ -288,10 +288,10 @@
 }
 
 .slick-prev.slick-arrow {
-  left: 50% !important;
+  left: calc(50% + 50px) !important;
 }
 .slick-next.slick-arrow {
-  right: 0 !important;
+  right: 50px !important;
 }
 
 .slick-dots {
@@ -311,10 +311,10 @@
   left: 50%;
 }
 .SmallSlider.SliderCarousel .slick-prev.slick-arrow {
-  left: 0px !important;
+  left: calc(0% + 50px) !important;
 }
 .SmallSlider.SliderCarousel .slick-next.slick-arrow {
-  right: 50% !important;
+  right: calc(50% + 50px) !important;
 }
 
 .SmallSlider.SliderCarousel .SliderPage {
@@ -323,9 +323,11 @@
 
 .SliderPage {
   height: auto;
-  width: 300px;
+  width: 27%;
   left: 60%;
   position: relative;
+  max-width: 500px;
+  min-width: 400px;
 }
 
 .LeftPanel,
@@ -334,4 +336,11 @@
 }
 .InputLabelContent input {
   box-sizing: border-box;
+}
+
+.SliderCarousel div {
+  outline: none;
+}
+
+@media (min-width: 768px) {
 }

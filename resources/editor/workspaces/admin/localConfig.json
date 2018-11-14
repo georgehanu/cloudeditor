@@ -20,7 +20,8 @@
       "AddText",
       "AddImage",
       "AddPdf",
-      "BlocksProps"
+      "BlocksProps",
+      "Project"
     ]
   }
 }

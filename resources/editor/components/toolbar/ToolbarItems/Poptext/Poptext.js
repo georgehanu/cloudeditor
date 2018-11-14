@@ -8,8 +8,9 @@ import * as Operation from "../../ToolbarConfig/operation";
 
 const Poptext = props => {
   let icons = null;
-  let value = null;
-  let dropDown = null;
+  let spanClassName = null;
+  let spanText = null;
+
   let data = props.data;
 
   if (props.newData && props.operation) {
@@ -55,13 +56,15 @@ const Poptext = props => {
       );
     });
 
-    value = <span className={props.className} />;
+    //value = <span className={props.className} />;
+    spanClassName = props.className;
     if (props.selected) {
       const index = data.findIndex(el => {
         return el.value === props.selected;
       });
       if (index >= 0) {
-        value = <span className={data[index].className} />;
+        //value = <span className={data[index].className} />;
+        spanClassName = data[index].className;
       }
     }
   } else if (props.baseType === Types.POPTEXT_VALUE) {
@@ -78,10 +81,9 @@ const Poptext = props => {
       );
     });
 
-    value = <span className="PoptextValueText">{props.value}</span>;
-  }
-  if (props.dropDown) {
-    dropDown = <span className={props.dropDown} />;
+    //value = <span className="PoptextValueText">{props.value}</span>;
+    spanClassName = "PoptextValueText";
+    spanText = props.value;
   }
 
   const ulClass = Utils.MergeClassName(
@@ -95,10 +97,12 @@ const Poptext = props => {
 
   return (
     <div className={parentClassName}>
-      <Button clicked={() => props.handleButtonClick(!props.expanded)}>
-        {value}
-        {dropDown}
-      </Button>
+      <Button
+        clicked={() => props.handleButtonClick(!props.expanded)}
+        dropDown={props.dropDown}
+        spanClassName={spanClassName}
+        spanText={spanText}
+      />
 
       <ul className={ulClass} onMouseLeave={() => props.handleMouseLeave()}>
         {icons}

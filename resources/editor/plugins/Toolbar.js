@@ -1,15 +1,4 @@
 import React from "react";
-const assign = require("object-assign");
-const { connect } = require("react-redux");
-const {
-  selectedObjectToolbarSelector,
-  selectedObjectLayerSelector
-} = require("../stores/selectors/toolbar");
-
-const { setObjectFromToolbar } = require("../stores/actions/toolbar");
-
-const randomColor = require("randomcolor");
-
 import ToolbarArea from "../components/toolbar/ToolbarItems/ToolbarArea/ToolbarArea";
 import SettingsWnd from "../components/toolbar/ToolbarItems/SettingsWnd/SettingsWnd";
 
@@ -23,6 +12,17 @@ import * as Utils from "../components/toolbar/ToolbarConfig/utils";
 
 import ImageToolbar from "../components/toolbar/ToolbarTypes/image";
 import TextToolbar from "../components/toolbar/ToolbarTypes/text";
+
+const assign = require("object-assign");
+const { connect } = require("react-redux");
+const {
+  selectedObjectToolbarSelector,
+  selectedObjectLayerSelector
+} = require("../stores/selectors/toolbar");
+
+const { setObjectFromToolbar } = require("../stores/actions/toolbar");
+
+const randomColor = require("randomcolor");
 
 class Toolbar extends React.Component {
   state = {

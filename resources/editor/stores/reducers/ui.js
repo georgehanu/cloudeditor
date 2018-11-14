@@ -2,13 +2,21 @@ const {
   ADD_IMAGE_TO_GALLERY,
   REMOVE_IMAGE_FROM_GALLERY,
   ADD_PDF_TO_GALLERY,
-  REMOVE_PDF_FROM_GALLERY
+  REMOVE_PDF_FROM_GALLERY,
+  SET_MOVEABLE,
+  SET_RESIZABLE,
+  SET_SNAP,
+  SET_ROTATE
 } = require("../actionTypes/ui");
 
 const initialState = {
   uploadedImages: [],
   storeImages: [],
-  uploadedPdfs: []
+  uploadedPdfs: [],
+  moveable: false,
+  resizable: false,
+  snap: true,
+  rotate: false
 };
 const uuidv4 = require("uuid/v4");
 const { handleActions } = require("redux-actions");
@@ -55,6 +63,30 @@ module.exports = handleActions(
       return {
         ...state,
         uploadedPdfs: newUploadedPdfs
+      };
+    },
+    [SET_MOVEABLE]: (state, action) => {
+      return {
+        ...state,
+        moveable: !state.moveable
+      };
+    },
+    [SET_RESIZABLE]: (state, action) => {
+      return {
+        ...state,
+        resizable: !state.resizable
+      };
+    },
+    [SET_SNAP]: (state, action) => {
+      return {
+        ...state,
+        snap: !state.snap
+      };
+    },
+    [SET_ROTATE]: (state, action) => {
+      return {
+        ...state,
+        rotate: !state.rotate
       };
     }
   },

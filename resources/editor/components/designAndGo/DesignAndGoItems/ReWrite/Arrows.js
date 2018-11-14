@@ -4,26 +4,30 @@ Arrows.PrevArrow.prototype.clickHandler = function clickHandler(options, e) {
   if (e) {
     e.preventDefault();
   }
-  window.changeSlider(true);
-  this.forceUpdate();
-  this.props.clickHandler(options, e);
-  setTimeout(() => {
-    window.changeSlider(false);
+  let returnValue = window.changeSlider(true);
+  if (returnValue) {
     this.forceUpdate();
-  }, 500);
+    this.props.clickHandler(options, e);
+    setTimeout(() => {
+      window.changeSlider(false);
+      this.forceUpdate();
+    }, 500);
+  }
 };
 
 Arrows.NextArrow.prototype.clickHandler = function clickHandler(options, e) {
   if (e) {
     e.preventDefault();
   }
-  window.changeSlider(true);
-  this.forceUpdate();
-  this.props.clickHandler(options, e);
-  setTimeout(() => {
-    window.changeSlider(false);
+  let returnValue = window.changeSlider(true);
+  if (returnValue) {
     this.forceUpdate();
-  }, 500);
+    this.props.clickHandler(options, e);
+    setTimeout(() => {
+      window.changeSlider(false);
+      this.forceUpdate();
+    }, 500);
+  }
 };
 
 module.exports = Arrows;

@@ -47,7 +47,12 @@ class SideBarContainer extends React.Component {
               <span className="icon More printqicon-lefttriangle" />
             )}
           </SidebarButton>
-          <PaneContainer visible={i === this.state.pluginIndex ? true : false}>
+          <PaneContainer
+            visible={i === this.state.pluginIndex ? true : false}
+            showPaneBackground={tool.showPaneBackground}
+            paneBackgroundClass={tool.paneBackgroundClass}
+            index={i}
+          >
             <Tool {...toolCfg} items={tool.items || []} />
           </PaneContainer>
         </li>

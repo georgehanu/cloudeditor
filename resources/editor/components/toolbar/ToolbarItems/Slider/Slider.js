@@ -21,9 +21,8 @@ const Slider = props => {
             payloadDetailsComponent: props
           })
         }
-      >
-        {value}
-      </Button>
+        spanClassName={props.className}
+      />
     </div>
   );
 };

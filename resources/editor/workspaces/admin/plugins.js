@@ -8,6 +8,7 @@ const AddText = require("../../plugins/AddText");
 const AddImage = require("../../plugins/AddImage");
 const AddPdf = require("../../plugins/AddPdf");
 const BlocksProp = require("../../plugins/BlocksProps");
+const Project = require("../../plugins/Project");
 
 const plugins = {
   SideBar: SideBar,
@@ -19,7 +20,8 @@ const plugins = {
   AddText: AddText,
   AddImage: AddImage,
   AddPdf: AddPdf,
-  BlocksProp
+  BlocksProp,
+  Project
 };
 
 const requires = {};
