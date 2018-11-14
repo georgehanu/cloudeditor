@@ -461,9 +461,14 @@ const getEmptyObject = cfg => {
             "https://images.pexels.com/photos/67636/rose-blue-flower-rose-blooms-67636.jpeg",
           cropX: 0,
           cropY: 0,
-          cropWidth: 0,
-          cropHeight: 0,
-          workingPercent: 1
+          cropW: 0,
+          cropH: 0,
+          ratio: 1,
+          brightness: 0,
+          contrast: 0,
+          filter: null,
+          imageWidth: 0,
+          imageHeight: 0
         };
       case "graphics":
         return {

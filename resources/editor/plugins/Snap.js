@@ -482,8 +482,12 @@ class Snap extends React.Component {
     });
   };
   render() {
+    var x = {
+      position: "absolute",
+      bottom: 10
+    };
     return (
-      <div>
+      <div style={x}>
         <button onClick={this.toggleSnap}>Toogle Snap</button>
         <span>{this.state.isEnable ? 1 : 0}</span>
       </div>

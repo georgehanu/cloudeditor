@@ -29,6 +29,10 @@ const InlineSlider = props => {
             })
           )
         }
+        onMouseUp={event => {
+          const evt = new Event("update_crop_params");
+          document.dispatchEvent(evt);
+        }}
         min="0"
         max="100"
         step="1"

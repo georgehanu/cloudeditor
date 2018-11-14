@@ -25,8 +25,8 @@ class Image extends FabricObject {
       this.instance.designerCallbacks.updateCropParams(this.instance.id, {
         cropX: this.instance.cropX,
         cropY: this.instance.cropY,
-        cropWidth: this.instance.cropWidth,
-        cropHeight: this.instance.cropHeight
+        cropW: this.instance.cropW,
+        cropH: this.instance.cropH
       });
     }
   }

@@ -61,9 +61,30 @@ const uiSelector = state => (state && state.ui) || {};
 const uiPageOffsetSelector = createSelector([uiSelector], ui => {
   return ui.workArea;
 });
+const uiScaleSelector = createSelector([uiSelector], ui => {
+  return ui.workArea.scale;
+});
+const uiFullHeightSelector = createSelector([uiSelector], ui => {
+  return ui.workArea.canvas.fullHeight;
+});
+const uiFullWidthSelector = createSelector([uiSelector], ui => {
+  return ui.workArea.canvas.fullWidth;
+});
+const uiZoomSelector = createSelector([uiSelector], ui => {
+  return ui.workArea.zoom;
+});
+const uiViewportTransformSelector = createSelector([uiSelector], ui => {
+  return ui.workArea.viewportTransform;
+});
+
 module.exports = {
   selectedObjectToolbarSelector,
   selectedObjectLayerSelector,
   selectedPageDimmensionsSelector,
-  uiPageOffsetSelector
+  uiPageOffsetSelector,
+  uiScaleSelector,
+  uiFullHeightSelector,
+  uiFullWidthSelector,
+  uiZoomSelector,
+  uiViewportTransformSelector
 };

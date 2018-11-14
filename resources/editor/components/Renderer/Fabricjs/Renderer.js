@@ -24,8 +24,6 @@ const updatePageOffset = (props, editorContainer) => {
   const { adjustment, activePage } = props;
 
   let parentDimension = editorContainer.getBoundingClientRect();
-  parentDimension.width -= adjustment;
-  parentDimension.height -= adjustment;
 
   let scale = Math.min(
     parentDimension.height / activePage.height,
@@ -129,7 +127,9 @@ class FabricjsRenderer extends React.PureComponent {
       result.scale,
       {
         workingWidth: result.canvasWorkingWidth,
-        workingHeight: result.canvasWorkingHeight
+        workingHeight: result.canvasWorkingHeight,
+        fullWidth: result.width,
+        fullHeight: result.height
       }
     );
     this.setState(result);
@@ -255,6 +255,26 @@ class FabricjsRenderer extends React.PureComponent {
       updateCropParams: this.props.updateCropParams
     };
   };
+  getTools = () => {
+    return this.props.items.sort((a, b) => a.position - b.position);
+  };
+  getTool = tool => {
+    return tool.plugin;
+  };
+  getToolConfig = tool => {
+    if (tool.tool) {
+      return {};
+    }
+    return this.props.toolCfg || {};
+  };
+  renderTools = () => {
+    const tools = this.getTools();
+    return tools.map((tool, i) => {
+      const Tool = this.getTool(tool);
+      const toolCfg = this.getToolConfig(tool);
+      return <Tool {...toolCfg} items={tool.items || []} key={i.toString()} />;
+    });
+  };
   drawElements(objects, needOffset) {
     let elements = Object.keys(objects).map(obKey => {
       const object = { ...objects[obKey] };
@@ -309,7 +329,7 @@ class FabricjsRenderer extends React.PureComponent {
     return (
       <div className="render-container">
         <div
-          style={{ background: "#F3F4F6", height: "100%" }}
+          style={{ background: "#F3F4F6" }}
           className="canvasContainer"
           ref={this.editorContainer}
         >
@@ -328,19 +348,12 @@ class FabricjsRenderer extends React.PureComponent {
               {elements}
             </Fabric>
           )}
+          {this.renderTools()}
         </div>
       </div>
     );
   }
 }
-
-FabricjsRenderer.propTypes = {
-  adjustment: number
-};
-
-FabricjsRenderer.defaultProps = {
-  adjustment: 60
-};
 
 const mapDispatchToProps = dispatch => {
   return {

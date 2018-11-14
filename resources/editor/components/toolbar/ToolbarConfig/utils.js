@@ -42,12 +42,8 @@ export const filterBasedOnLocation = (items, position) => {
     .sort((a, b) => comparePosition(a, b));
 };
 export const imageQuality = (activeItem, options) => {
-  let cropWidth =
-      activeItem.cropWidth * activeItem.workingPercent -
-      2 * activeItem.leftSlider * activeItem.unitResizeX,
-    cropHeight =
-      activeItem.cropHeight * activeItem.workingPercent -
-      2 * activeItem.leftSlider * activeItem.unitResizeX,
+  let cropWidth = activeItem.cropW * activeItem.ratio,
+    cropHeight = activeItem.cropH * activeItem.ratio,
     width_i =
       activeItem.width *
       (options.pageDimmensions.pageWidth /
@@ -228,7 +224,7 @@ export const CreatePayload = (activeitem, itemPayload) => {
         return null;
       }
     case Types.SLIDER_INLINE_IMAGE:
-      attrs = { leftSlider: itemPayload.value };
+      attrs = { leftSlider: parseFloat(itemPayload.value) };
       break;
   }
   return { id: activeitem.id, props: attrs };

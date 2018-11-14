@@ -12,9 +12,9 @@
       "AddButton",
       "TabBar",
       "Renderer",
-
       "Snap",
-      "Toolbar"
+      "Toolbar",
+      "Zoom"
     ]
   },
   "project": {

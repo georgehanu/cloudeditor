@@ -195,9 +195,9 @@ export const Config = {
     baseType: Types.SIMPLE_ICON,
     threshold: 50,
     range: [
-      { value: 100, className: "printqicon-goodsmiley IconSmileyOk" },
+      { value: 100, className: "printqicon-badsmiley IconSmileyBad" },
       { value: 200, className: "printqicon-normalsmiley IconSmileyNormal" },
-      { value: 300, className: "printqicon-badsmiley IconSmileyBad" }
+      { value: 300, className: "printqicon-goodsmiley IconSmileyOk" }
     ]
   },
   [Types.COLOR_SELECTOR]: {
