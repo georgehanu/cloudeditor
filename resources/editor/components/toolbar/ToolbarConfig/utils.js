@@ -176,6 +176,15 @@ export const LoadTextAdditionalInfo = activeItem => {
 export const CreatePayload = (activeitem, itemPayload) => {
   let attrs = {};
   switch (itemPayload.type) {
+    case Types.FLIP_CHOOSER:
+      attrs = { flip: itemPayload.value };
+      break;
+    case Types.FILTER_CHOOSER:
+      attrs = { filter: itemPayload.value };
+      if (itemPayload.value == "original") {
+        attrs = { filter: "", flip: "" };
+      }
+      break;
     case Types.BUTTON_LETTER_BOLD:
       attrs = { bold: !activeitem.bold };
       break;
@@ -224,7 +233,9 @@ export const CreatePayload = (activeitem, itemPayload) => {
         return null;
       }
     case Types.SLIDER_INLINE_IMAGE:
-      attrs = { leftSlider: parseFloat(itemPayload.value) };
+      attrs = { leftSlider: itemPayload.value };
+      const resizeEvent = new Event("cropperUpdate");
+      document.dispatchEvent(resizeEvent);
       break;
   }
   return { id: activeitem.id, props: attrs };

@@ -206,7 +206,6 @@ export const Config = {
     settingsHandler: Types.COLOR_SELECTOR_WND,
     parentClassName: ""
   },
-
   [Types.COLOR_SELECTOR_BACKGROUND]: {
     baseType: Types.COLOR,
     className: "icon printqicon-spacing",
@@ -218,7 +217,6 @@ export const Config = {
     },
     parentClassName: ""
   },
-
   [Types.COLOR_SELECTOR_WND]: {
     baseType: Types.COLOR_SELECTOR_WND,
     type: Types.COLOR_SELECTOR_WND,
@@ -338,13 +336,48 @@ export const Config = {
     className: "icon printqicon-opacity ButtonTextSpaceing",
     parentClassName: "",
     data: [
-      { text: "Original", className: "original" },
-      { text: "Sepia", className: "sepia" },
-      { text: "Graustufen", className: "greyscale" },
-      { text: "Umkehren", className: "invert" },
-      { text: "Horizontal spiegeln", className: "flip_horizontal" },
-      { text: "Vertikal spiegeln", className: "flip_vertical" },
-      { text: "Beide Richtungen spiegeln", className: "flip_both" }
+      {
+        text: "Original",
+        className: "original",
+        value: "original",
+        settingsHandler: Types.FILTER_CHOOSER
+      },
+      {
+        text: "Sepia",
+        className: "sepia",
+        value: "sepia",
+        settingsHandler: Types.FILTER_CHOOSER
+      },
+      {
+        text: "Graustufen",
+        className: "greyscale",
+        value: "grayscale",
+        settingsHandler: Types.FILTER_CHOOSER
+      },
+      {
+        text: "Umkehren",
+        className: "invert",
+        value: "invert",
+        settingsHandler: Types.FILTER_CHOOSER
+      },
+      {
+        text: "Horizontal spiegeln",
+        className: "flip_horizontal",
+        value: "flip_horizontal",
+        settingsHandler: Types.FLIP_CHOOSER
+      },
+      {
+        text: "Vertikal spiegeln",
+        className: "flip_vertical",
+        value: "flip_vertical",
+        settingsHandler: Types.FLIP_CHOOSER
+      },
+      {
+        text: "Beide Richtungen spiegeln",
+        className: "flip_both",
+        value: "flip_both",
+        settingsHandler: Types.FLIP_CHOOSER
+      }
     ]
   },
   [Types.CHANGE_SHAPE_WND]: {

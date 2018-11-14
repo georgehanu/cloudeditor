@@ -19,15 +19,13 @@ const InlineSlider = props => {
         type="range"
         value={startValue}
         onChange={event =>
-          debounce(
-            props.ToolbarHandler({
-              mainHandler: true,
-              payloadMainHandler: {
-                value: event.target.value,
-                type: props.type
-              }
-            })
-          )
+          props.ToolbarHandler({
+            mainHandler: true,
+            payloadMainHandler: {
+              value: event.target.value,
+              type: props.type
+            }
+          })
         }
         onMouseUp={event => {
           const evt = new Event("update_crop_params");

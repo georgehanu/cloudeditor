@@ -141,19 +141,19 @@ const getPagesDefaults = cfg => {
         {
           trimbox: merge(
             {
-              top: 0,
-              right: 0,
-              bottom: 0,
-              left: 0
+              top: 20,
+              right: 20,
+              bottom: 20,
+              left: 20
             },
             pathOr({}, ["boxes", "trimbox"], cfg)
           ),
           bleed: merge(
             {
-              top: 0,
-              right: 0,
-              bottom: 0,
-              left: 0
+              top: 10,
+              right: 10,
+              bottom: 10,
+              left: 10
             },
             pathOr({}, ["boxes", "bleed"], cfg)
           )
@@ -411,16 +411,17 @@ const getRandomProject = cfg => {
     pages: { [page1.id]: page1, [page2.id]: page2, [page3.id]: page3 },
     objects: {
       [img1.id]: img1,
+      [text1.id]: text1,
       [img2.id]: img2,
       [img3.id]: img3,
-      [img6.id]: img6,
+      [img4.id]: img4,
       [img5.id]: img5,
+      [img6.id]: img6,
       [img7.id]: img7,
       [group.id]: group,
-      [text1.id]: text1,
       [graphics.id]: graphics
     },
-    pagesOrder: [page1.id, page2.id],
+    pagesOrder: [page1.id, page2.id, page3.id],
     activePage: page1.id
   };
 };
@@ -447,7 +448,10 @@ const getEmptyObject = cfg => {
     resizable: cfg.resizable || 1,
     rotatable: cfg.rotatable || 1,
     movable: cfg.movable || 1,
+    rotateAngle: cfg.rotateAngle || 0,
+    ispSnap: cfg.ispSnap || 1,
     orientation: cfg.orientation || "north",
+    rotate: cfg.rotate || 0,
     angle: 0
   };
 
@@ -456,10 +460,10 @@ const getEmptyObject = cfg => {
       case "image":
         return {
           ...object,
-          src:
-            cfg.src ||
-            "https://images.pexels.com/photos/67636/rose-blue-flower-rose-blooms-67636.jpeg",
-          cropX: 0,
+          src: cfg.src,
+          cropH: 0,
+          cropW: 12,
+          cropX: 538,
           cropY: 0,
           cropW: 0,
           cropH: 0,
