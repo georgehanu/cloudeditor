@@ -3,18 +3,27 @@ import Fields from "../LayoutItems/Fields";
 import Title from "../LayoutItems/Title";
 import Description from "../LayoutItems/Description";
 
-const LeftPanel = props => {
-  return (
-    <div className="LeftPanel">
-      <div className="LeftPaneHorizontal">
-        <div className="LeftPaneHorizontalStyled">
-          <Title {...props.data.title} />
-          <Description items={props.data.description} />
-          <Fields items={props.data.items} />
+class LeftPanel extends React.Component {
+  handleColorChange = color => {
+    console.log(color);
+  };
+
+  render() {
+    return (
+      <div className="LeftPanel">
+        <div className="LeftPaneHorizontal">
+          <div className="LeftPaneHorizontalStyled">
+            <Title {...this.props.data.title} />
+            <Description items={this.props.data.description} />
+            <Fields
+              items={this.props.data.items}
+              handleColorChange={this.handleColorChange}
+            />
+          </div>
         </div>
       </div>
-    </div>
-  );
-};
+    );
+  }
+}
 
 export default LeftPanel;

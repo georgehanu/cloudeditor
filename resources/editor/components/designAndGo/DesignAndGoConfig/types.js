@@ -5,3 +5,4 @@ export const TEXT = "TEXT";
 export const INPUT = "INPUT";
 export const BUTTON = "BUTTON";
 export const DIV = "DIV";
+export const COLOR = "COLOR";

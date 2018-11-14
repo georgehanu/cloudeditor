@@ -1,0 +1,203 @@
+.DesignAndGoMenu {
+  position: absolute;
+  overflow-y: auto;
+  left: 0px;
+  top: 0px;
+  box-shadow: rgb(0, 0, 0) 0px 0px 14px;
+  height: 100%;
+  background: rgb(245, 245, 245);
+}
+
+.MenuButton {
+  color: rgb(234, 125, 125);
+  text-decoration: none;
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 15px;
+  line-height: 2em;
+}
+
+.MenuButton {
+  position: fixed;
+  top: 5px;
+  left: 10px;
+}
+
+.Backdrop {
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  z-index: 100;
+  left: 0;
+  top: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.MenuModal,
+.MenuDataModal {
+  z-index: 500;
+  background-color: white;
+  box-shadow: 1px 1px 1px black;
+  padding: 16px;
+  box-sizing: border-box;
+  transition: all 0.3s ease-out;
+  padding: 0px;
+  position: relative;
+  width: 240px;
+  overflow-y: auto;
+  left: 0px;
+  top: 0px;
+  box-shadow: rgb(0, 0, 0) 0px 0px 14px;
+  height: 100%;
+  background: rgb(245, 245, 245);
+}
+
+.MenuHeader {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  -webkit-box-align: center;
+  align-items: center;
+  font-size: 22px;
+  padding: 12px 20px;
+  background: rgba(100, 100, 100, 0.05);
+
+  color: white;
+  text-shadow: none;
+  background: rgb(234, 125, 125);
+}
+
+.MenuTitle {
+  color: currentcolor;
+  text-shadow: inherit;
+  line-height: 40px;
+  flex: 1 0 auto;
+  font-size: 22px;
+  font-weight: 500;
+}
+
+.CloseMenu {
+  position: absolute;
+  right: 32px;
+  top: 10px;
+  width: 32px;
+  height: 32px;
+  opacity: 0.3;
+}
+.CloseMenu:hover {
+  opacity: 1;
+}
+.CloseMenu:before,
+.CloseMenu:after {
+  position: absolute;
+  left: 15px;
+  content: " ";
+  height: 33px;
+  width: 2px;
+  background-color: #333;
+}
+.CloseMenu:before {
+  transform: rotate(45deg);
+}
+.CloseMenu:after {
+  transform: rotate(-45deg);
+}
+
+.MenuLinks {
+  position: relative;
+  margin-left: 20px;
+  margin-top: 20px;
+}
+
+.MenuLinks ul {
+  font-size: 14px;
+  font-weight: 300;
+  line-height: 22px;
+  list-style: none;
+  padding: 0px;
+  margin: 0px 0px 8px;
+}
+
+.MenuLinks ul li {
+  text-indent: 0px;
+  padding-left: 0px;
+  margin-left: 0px;
+  margin-bottom: 10px;
+}
+
+.MenuLinks ul li a {
+  color: rgb(234, 125, 125);
+  text-decoration: none;
+  cursor: pointer;
+}
+.MenuLinks ul li a:hover {
+  text-decoration: underline;
+}
+
+.EditButtonContainer {
+  display: none;
+}
+
+/* for Mobile */
+@media (max-width: 842px) {
+  /* Menu */
+  .MenuButtonContainer {
+    position: fixed;
+    width: 100%;
+    text-align: -webkit-center;
+    top: 75px;
+  }
+
+  .MenuButton {
+    position: relative;
+    left: 0px;
+  }
+
+  .MenuModal,
+  .MenuDataModal {
+    width: 100%;
+  }
+
+  .DesignAndGoMenu {
+    width: 100%;
+    background: transparent;
+  }
+
+  .EditButtonContainer {
+    /*display:block;
+      width: 100%;
+      text-align: -webkit-center;*/
+    display: inline-block;
+    position: fixed;
+    width: 100%;
+    text-align: -webkit-center;
+    top: 300px;
+  }
+
+  .EditButton {
+    display: inline-block;
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 700;
+    height: 40px;
+    line-height: 40px;
+    cursor: pointer;
+    text-align: center;
+    color: white;
+    touch-action: manipulation;
+    text-shadow: none;
+    padding: 0px 16px;
+    border-radius: 5px;
+    text-decoration: none;
+    border-width: 0px;
+    border-style: initial;
+    border-color: initial;
+    border-image: initial;
+    background: rgb(234, 125, 125);
+    transition: background-color 0.3s ease 0s, color 0.3s ease 0s;
+  }
+}
+
+.ColorPicker .hue-picker {
+  width: 100% !important;
+}

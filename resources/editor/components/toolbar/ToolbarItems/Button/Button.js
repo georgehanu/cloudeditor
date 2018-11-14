@@ -38,8 +38,6 @@ const Button = enhance(props => {
   );
   const dropDown = props.dropDown ? <span className={props.dropDown} /> : null;
 
-  console.log(props, "SAPN");
-
   return (
     <button
       type="button"

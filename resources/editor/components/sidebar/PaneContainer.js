@@ -1,13 +1,16 @@
 import React from "react";
 
 const PaneContainer = props => {
-  const transparent =
-    props.showPaneBackground === undefined || props.showPaneBackground
-      ? ""
-      : " PaneTransparent ";
+  let transparent = "";
+  let style = {};
+  if (
+    props.showPaneBackground !== undefined &&
+    props.showPaneBackground === false
+  ) {
+    transparent = "PaneTransparent";
+    style = { top: props.index * 60 + "px" };
+  }
 
-  const style =
-    transparent === " PaneTransparent " ? { top: props.index * 60 + "px" } : {};
   const className =
     (props.paneBackgroundClass ? props.paneBackgroundClass : "") +
     " " +

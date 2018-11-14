@@ -1,10 +1,11 @@
 const Renderer = require("../../plugins/Renderer");
-//const Html5Renderer = require("../../plugins/Html5Renderer");
 const DesignAndGo = require("../../plugins/DesignAndGo");
+const DesignAndGoMenu = require("../../plugins/DesignAndGoMenu");
 
 const plugins = {
   DesignAndGo: DesignAndGo,
-  Renderer: Renderer
+  Renderer: Renderer,
+  DesignAndGoMenu
 };
 
 const requires = {};

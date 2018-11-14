@@ -74,6 +74,28 @@ const Config = {
         maxLenght: 12
       },
       {
+        type: Types.COLOR,
+        label: "Options",
+        class: "Input ColorButtonGroup",
+        fieldName: "wineAlcool",
+        colors: [
+          {
+            containerColor: "red",
+            containerBgColor: "green",
+            color1: "blue",
+            color2: "yellow"
+          },
+          { color1: "blue", color2: "yellow" },
+          {},
+          {
+            colorPicker: true,
+            containerColor: "red",
+            containerBgColor: "green",
+            selected: true
+          }
+        ]
+      },
+      {
         type: Types.BUTTON,
         label: "Buy Stickers",
         class: "Button",
@@ -86,31 +108,12 @@ const Config = {
 class DesignAndGo extends React.Component {
   render() {
     return (
-      <div className="App">
+      <div className="DesignAndGo">
         <Layout data={Config.data} sliderData={jamData} />
       </div>
     );
   }
 }
-/*
-const mapStateToProps = state => {
-  return {
-    activeToolbar: selectedObjectToolbarSelector(state),
-    activeLayer: selectedObjectLayerSelector(state)
-  };
-};
-
-const mapDispatchToProps = dispatch => {
-  return {
-    setObjectFromToolbar: payload => dispatch(setObjectFromToolbar(payload))
-  };
-};
-
-const ToolbarPlugin = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Toolbar);
-*/
 
 module.exports = {
   DesignAndGo: assign(DesignAndGo),
