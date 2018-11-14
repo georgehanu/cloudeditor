@@ -1,8 +1,8 @@
 const React = require("react");
 const { connect } = require("react-redux");
-const { changeSearchValue } = require("../store/actions");
+const { changeSearchValue } = require("../../store/actions");
 
-class Search extends React.Component {
+class ClubsSearch extends React.Component {
   state = {
     value: ""
   };
@@ -40,4 +40,4 @@ const mapDispatchToProps = dispatch => {
 module.exports = connect(
   null,
   mapDispatchToProps
-)(Search);
+)(ClubsSearch);

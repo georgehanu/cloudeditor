@@ -48,7 +48,7 @@ class SideBarContainer extends React.Component {
             )}
           </SidebarButton>
           <PaneContainer visible={i === this.state.pluginIndex ? true : false}>
-            <Tool {...toolCfg} items={tool.items || []} />;
+            <Tool {...toolCfg} items={tool.items || []} />
           </PaneContainer>
         </li>
       );

@@ -1,7 +1,7 @@
 const React = require("react");
 const { connect } = require("react-redux");
 const assign = require("object-assign");
-const FupaBuilder = require("./Fupa/Fupa");
+const FupaBuilder = require("./Fupa/FupaBuilder");
 
 class Fupa extends React.Component {
   render() {
@@ -27,6 +27,6 @@ module.exports = {
       tooltip: { title: "Fupa", description: "Description" }
     }
   }),
-  reducers: { addButton: require("./Fupa/store/reducers") },
+  reducers: { fupa: require("./Fupa/store/reducers") },
   epics: require("./Fupa/store/epics")
 };
