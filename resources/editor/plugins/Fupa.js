@@ -1,10 +1,11 @@
 const React = require("react");
 const { connect } = require("react-redux");
 const assign = require("object-assign");
+const FupaBuilder = require("./Fupa/Fupa");
 
 class Fupa extends React.Component {
   render() {
-    return <div>Fupa</div>;
+    return <FupaBuilder />;
   }
 }
 
@@ -17,13 +18,15 @@ const FupaPlugin = connect(
 
 module.exports = {
   Fupa: assign(FupaPlugin, {
-    disablePluginIf:
-      "{store().getState().project.title==='Empty Project!!@!!@!@'}",
     SideBar: {
       position: 1,
-      priority: 1
+      priority: 1,
+      text: "Fupa",
+      icon: "printqicon-newtext",
+      showMore: true,
+      tooltip: { title: "Fupa", description: "Description" }
     }
   }),
-  reducers: { addButton: require("../stores/reducers/addButton") },
-  epics: require("../stores/epics/addButton")
+  reducers: { addButton: require("./Fupa/store/reducers") },
+  epics: require("./Fupa/store/epics")
 };

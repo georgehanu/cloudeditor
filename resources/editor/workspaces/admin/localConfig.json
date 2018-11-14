@@ -9,7 +9,18 @@
           "additionalConfig": 123
         }
       },
-      "Fupa",
+      {
+        "name": "Fupa",
+        "hide": true,
+        "cfg": {
+          "className": "test"
+        },
+        "override": {
+          "SideBar": {
+            "text": "Fupa"
+          }
+        }
+      },
       "Html5Renderer"
     ]
   },
