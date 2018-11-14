@@ -17,8 +17,10 @@ const SpecialEffectsWnd = props => {
           image={props.itemData.image}
           text={el.text}
           className={el.className}
+          value={el.value}
           handler={props.handler}
           ToolbarHandler={props.ToolbarHandler}
+          settingsHandler={el.settingsHandler}
         />
       </li>
     );

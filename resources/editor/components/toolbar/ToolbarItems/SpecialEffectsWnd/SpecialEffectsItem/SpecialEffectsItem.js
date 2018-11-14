@@ -14,12 +14,15 @@ const SpecialEffectsItem = props => {
         <div className="SpecialEffectsActions">
           <span
             className="SpecialEffectsOK pic select icon printqicon-ok"
-            onClick={() =>
+            onClick={() => {
               props.ToolbarHandler({
                 mainHandler: true,
-                payloadMainHandler: props.className
-              })
-            }
+                payloadMainHandler: {
+                  value: props.value,
+                  type: props.settingsHandler
+                }
+              });
+            }}
           />
         </div>
       </div>

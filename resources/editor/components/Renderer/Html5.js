@@ -13,6 +13,7 @@ const {
 
 const Objects = require("./Html5/Objects");
 const Lines = require("./Html5/SnapLines");
+const Boxes = require("./Html5/Boxes/Boxes");
 
 class Html5Renderer extends React.Component {
   state = {
@@ -69,6 +70,7 @@ class Html5Renderer extends React.Component {
             scale={scale}
           />
           <Lines lines={this.props.snapLines} scale={scale} />
+          <Boxes scale={scale} />
           <div id="fitTextEscaper" />
         </div>
       );

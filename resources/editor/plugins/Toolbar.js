@@ -4,8 +4,8 @@ const { connect } = require("react-redux");
 const {
   selectedObjectToolbarSelector,
   selectedObjectLayerSelector,
-  selectedPageWidthSelector,
-  selectedPageHeightSelector
+  selectedPageDimmensionsSelector,
+  uiPageOffsetSelector
 } = require("../stores/selectors/toolbar");
 
 const { setObjectFromToolbar } = require("../stores/actions/toolbar");
@@ -164,6 +164,7 @@ class Toolbar extends React.Component {
     }
 
     const activeItem = this.props.activeToolbar;
+    const uiPageOffset = this.props.uiPageOffset;
 
     let attributes = {};
     if (activeItem.type === "image") {
@@ -172,8 +173,8 @@ class Toolbar extends React.Component {
         activeItem,
         this.props.activeLayer,
         {
-          pageWidth: this.props.pageWidth,
-          pageHeight: this.props.pageHeight
+          pageDimmensions: this.props.pageDimmensions,
+          uiPageOffset: this.props.uiPageOffset
         }
       );
       attributes = Utils.LoadImageAdditionalInfo(activeItem);
@@ -187,7 +188,10 @@ class Toolbar extends React.Component {
     }
     if (toolbarData === null) return null;
 
-    let containerStyle = { top: activeItem.top, left: activeItem.left };
+    let containerStyle = Utils.calculateToolBarPosition(
+      activeItem,
+      uiPageOffset
+    );
     const topAreaGroups = Utils.filterBasedOnLocation(
       toolbarData.groups,
       Types.Position.TOP
@@ -263,8 +267,8 @@ const mapStateToProps = state => {
   return {
     activeToolbar: selectedObjectToolbarSelector(state),
     activeLayer: selectedObjectLayerSelector(state),
-    pageWidth: selectedPageWidthSelector(state),
-    pageHeight: selectedPageHeightSelector(state)
+    pageDimmensions: selectedPageDimmensionsSelector(state),
+    uiPageOffset: uiPageOffsetSelector(state)
   };
 };
 

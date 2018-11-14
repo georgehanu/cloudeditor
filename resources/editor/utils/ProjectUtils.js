@@ -1,4 +1,170 @@
 const uuidv4 = require("uuid/v4");
+const { merge, mergeAll, pathOr } = require("ramda");
+
+const getObjectColorTemplate = cfg => {
+  return merge(
+    {
+      colorSpace: "DeviceRGB",
+      transparent: 1,
+      htmlRGB: null,
+      RGB: null,
+      CMYK: null,
+      separation: null,
+      separationColorSpace: null,
+      separationColor: null
+    },
+    cfg || {}
+  );
+};
+
+const getObjectsDefaults = cfg => {
+  const { general, image, text, pdf, qr, ...custom } = cfg || {};
+  const generalCfg = merge(
+    {
+      editable: 1, //user can edit a block
+      ignoreOnRest: 0, //this block will be ignored on rest
+      onTop: 0, //specify if a block is on top
+      required: 0, //user must specify a value for this block
+      movable: 1, //can be moved
+      resizable: 1, //user can resize this block
+      rotatable: 1, //user can rotate this block
+      rotateAngle: 0, // rotation angle of the block in deg
+      snapable: 0, // if snap is allow or not
+      tetha: 0, //this is rotation angle in radians for translate rotation in PDF
+      visible: 1, //if false, a block is NOT visible in the editor, but visible in PDF
+      orientate: "north", //PDFLIB orientation - not used
+      opacity: 1, // opacity of the block
+      realType: null, //specifies what is the real type of the block(image, pdf, qr, )
+      width: 0,
+      height: 0,
+      left: 0,
+      top: 0,
+      bgColor: getObjectColorTemplate(general.bgColor || {}),
+      borderColor: getObjectColorTemplate(general.borderColor || {}),
+      borderWidth: 0
+    },
+    general || {}
+  );
+
+  const imageCfg = merge(
+    {
+      type: "image",
+      realType: "image",
+      alternateZoom: 0,
+      backgroundBlock: 0,
+      borderWidth: 0,
+      contrast: 0,
+      luminosite: 0,
+      flipHorizontal: 0,
+      flipVertical: 0,
+      flipBoth: 0,
+      greyscale: 0,
+      invert: 0,
+      sepia: 0,
+      leftSlider: 0,
+      localImages: 0,
+      selectBox: 0,
+      src: 0
+    },
+    image || {}
+  );
+  const pdfCfg = mergeAll([
+    image,
+    {
+      realType: "pdf"
+    },
+    pdf || {}
+  ]);
+
+  const qrCfg = mergeAll([
+    image,
+    {
+      realType: "qr"
+    },
+    qr || {}
+  ]);
+
+  const textCfg = merge(
+    {
+      alignment: "center",
+      bold: 0,
+      charSpacing: 0,
+      circleText: 0,
+      fillColor: getObjectColorTemplate(text.fillColor || {}),
+      deviationX: 0,
+      deviationY: 0,
+      fontId: 1,
+      fontSize: 24,
+      italic: 0,
+      lineHeightN: 120,
+      lineHeightP: false,
+      maxLength: 0,
+      prefix: "",
+      sufix: "",
+      type: "text",
+      underline: 0,
+      vAlignment: "middle",
+      wordSpacing: 0,
+      value: "Edit Text Here"
+    },
+    text || {}
+  );
+
+  const customCfg = custom || {};
+
+  return {
+    generalCfg,
+    imageCfg,
+    pdfCfg,
+    qrCfg,
+    textCfg,
+    ...customCfg
+  };
+};
+
+const getDocumentDefaults = cfg => {
+  const defaults = merge(
+    {
+      facingPages: false
+    },
+    cfg || {}
+  );
+  return defaults;
+};
+
+const getPagesDefaults = cfg => {
+  const defaults = merge(
+    {
+      width: 1080,
+      height: 1080,
+      boxes: merge(
+        {
+          trimbox: merge(
+            {
+              top: 20,
+              right: 20,
+              bottom: 20,
+              left: 20
+            },
+            pathOr({}, ["boxes", "trimbox"], cfg)
+          ),
+          bleed: merge(
+            {
+              top: 10,
+              right: 10,
+              bottom: 10,
+              left: 10
+            },
+            pathOr({}, ["boxes", "bleed"], cfg)
+          )
+        },
+        (cfg && cfg.boxes) || {}
+      )
+    },
+    cfg || {}
+  );
+  return defaults;
+};
 
 const getProjectTemplate = cfg => {
   const project = {
@@ -8,7 +174,20 @@ const getProjectTemplate = cfg => {
     activePage: null,
     objects: {},
     selectedObjectsIds: [],
-    activeSelection: null
+    activeSelection: null,
+    configs: {
+      document: getDocumentDefaults(
+        (cfg && cfg.defaults && cfg.defaults.document) || {}
+      ),
+      pages: getPagesDefaults(
+        (cfg && cfg.defaults && cfg.defaults.pages) || {}
+      ),
+      objects: getObjectsDefaults(
+        (cfg && cfg.defaults && cfg.defaults.objects) || {}
+      )
+    },
+    colors: {},
+    fonts: {}
   };
   return project;
 };
@@ -23,6 +202,58 @@ const getProjectPageTemplate = cfg => {
       type: "color"
     }
   };
+};
+
+const getColorTemplate = cfg => {
+  return merge(
+    {
+      id: uuidv4(),
+      label: null, //label of the color
+      htmlRGB: null, //html value of the color
+      RGB: null, //pdflib RGB value
+      CMYK: null, //pdflib CMYK value
+      separation: null, // pdflib Separation color value
+      separationColorSpace: null, //fallback for separation color
+      separationColor: null //fallback for separation color
+    },
+    cfg || {}
+  );
+};
+
+const getFontTemplate = cfg => {
+  return merge(
+    {
+      id: uuidv4(),
+      label: null, //label of the color
+      font: null,
+      icon: null
+    },
+    cfg || {}
+  );
+};
+
+const getEmptyFont = cfg => {
+  return getFontTemplate(cfg);
+};
+
+const getEmptyColor = cfg => {
+  return getColorTemplate(cfg);
+};
+
+const getFontMetricTemplate = cfg => {
+  return merge(
+    {
+      cb: null,
+      emSize: null,
+      hhAscent: null,
+      hhDescent: null,
+      ir: null,
+      typoAscent: null,
+      winAscent: null,
+      winDescent: null
+    },
+    cfg || {}
+  );
 };
 
 /**
@@ -106,7 +337,7 @@ const getRandomProject = cfg => {
       [img1.id]: img1,
       [text1.id]: text1
     },
-    pagesOrder: [page1.id, page2.id],
+    pagesOrder: [page1.id, page2.id, page3.id],
     activePage: page1.id
   };
 };
@@ -151,6 +382,7 @@ const getEmptyObject = cfg => {
           cropY: 0,
           alternateZoom: 0,
           leftSlider: 69,
+          filter: "",
           src:
             "https://images.pexels.com/photos/414171/pexels-photo-414171.jpeg?auto=compress&cs=tinysrgb&h=350"
         };
@@ -205,11 +437,61 @@ const getEmptyObject = cfg => {
   }
 };
 
+const getEmptyUI = cfg => {
+  return {
+    colors: {},
+    fonts: {},
+    fontMetrics: {},
+    workArea: {
+      zoom: 1,
+      scale: 1,
+      pageOffset: {
+        x: 0,
+        y: 0
+      },
+      offsetCanvasContainer: {
+        x: 0,
+        y: 0
+      },
+      canvas: {
+        workingWidth: 0,
+        workingHeight: 0
+      }
+    }
+  };
+};
+
+const getRandomUI = cfg => {
+  const ui = getEmptyUI(cfg);
+  const color1 = getEmptyColor({ id: 1, label: "white", htmlRGB: "#fff" });
+  const color2 = getEmptyColor({ id: 2, label: "red", htmlRGB: "#f00" });
+  const font1 = getEmptyFont({ label: "Helvetica", id: 1 });
+  const font2 = getEmptyFont({ label: "Arial", id: 2 });
+
+  return {
+    ...ui,
+    colors: {
+      ...ui.colors,
+      [color1.id]: color1,
+      [color2.id]: color2
+    },
+    fonts: {
+      ...ui.fonts,
+      [font1.id]: font1,
+      [font2.id]: font2
+    }
+  };
+};
+
 const ProjectUtils = {
   getEmptyProject,
   getRandomProject,
   getEmptyPage,
-  getEmptyObject
+  getEmptyObject,
+  getEmptyUI,
+  getRandomUI,
+  getEmptyColor,
+  getEmptyFont
 };
 
 module.exports = ProjectUtils;

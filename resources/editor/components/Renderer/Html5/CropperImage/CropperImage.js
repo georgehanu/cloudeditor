@@ -48,7 +48,6 @@ class CropperImage extends React.Component {
     return false;
   }
   componentDidUpdate() {
-    return false;
     // this.initializeDimensions(false);
   }
   componentDidMount() {
@@ -65,7 +64,8 @@ class CropperImage extends React.Component {
     this.updateCrop();
   }
   updateCrop() {
-    this.initializeDimensions(false);
+    //  this.initializeDimensions(false);
+    this.setZoom();
     this.options = merge(this.options, { initialRestore: true });
   }
   fillContainer(val, targetLength, containerLength, alternate_zoom) {
@@ -333,6 +333,24 @@ class CropperImage extends React.Component {
       width: targetWidth,
       height: targetHeight
     };
+    let filterString = "";
+    let flipStyle = "";
+    if (this.props.filter.length) {
+      filterString = this.props.filter + "(1)";
+    }
+    switch (this.props.flip) {
+      case "flip_horizontal":
+        flipStyle = "scaleX(-1)";
+        break;
+      case "flip_vertical":
+        flipStyle = "scaleY(-1)";
+        break;
+      case "flip_both":
+        flipStyle = "scale(-1)";
+        break;
+    }
+    const filterStyle = { filter: filterString, transform: flipStyle };
+
     return (
       <div ref={this.wrapper} className="jwc_frame" style={styleWrapper}>
         <img
@@ -342,6 +360,7 @@ class CropperImage extends React.Component {
           onMouseDown={e => this.handleMouseDown(e)}
           src={this.props.src}
           ref={this.el}
+          style={filterStyle}
         />
       </div>
     );
