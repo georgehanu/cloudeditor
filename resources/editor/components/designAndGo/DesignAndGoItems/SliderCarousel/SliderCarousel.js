@@ -1,6 +1,7 @@
 import React from "react";
-//import Slider from "react-slick";
+import { withNamespaces } from "react-i18next";
 import CustomSlider from "../ReWrite/CustomSlider";
+import UploadImage from "../LayoutItems/UploadImage";
 
 class SliderCarousel extends React.Component {
   state = {
@@ -22,21 +23,23 @@ class SliderCarousel extends React.Component {
   render() {
     const className =
       "SliderCarousel " + (this.state.showFullSlider ? "" : "SmallSlider");
-    const pages = this.props.data.map((el, index) => {
+    const pages = this.props.sliderData.map((el, index) => {
       return (
         <div key={index}>
-          <img className="SliderPage" src={el} alt="slideImage" />
+          <img className="SliderPage" src={el.image} alt="slideImage" />
+          {el.upload && <UploadImage />}
         </div>
       );
     });
     var settings = {
-      dots: true,
+      dots: false,
       infinite: true,
       speed: 500,
       slidesToShow: 1,
       slidesToScroll: 1,
       swipe: true,
-      draggable: false
+      draggable: false,
+      verticalSwiping: false
     };
     return (
       <div className={className}>
@@ -46,4 +49,4 @@ class SliderCarousel extends React.Component {
   }
 }
 
-export default SliderCarousel;
+export default withNamespaces("designAndGo")(SliderCarousel);

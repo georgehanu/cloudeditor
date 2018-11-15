@@ -1,6 +1,6 @@
 {
   "plugins": {
     "mobile": ["DesignAndGo"],
-    "desktop": ["Renderer", "DesignAndGo", "DesignAndGoMenu"]
+    "desktop": ["Renderer", "DesignAndGo"]
   }
 }

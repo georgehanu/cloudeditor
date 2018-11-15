@@ -11,10 +11,19 @@ import Layout from "../components/designAndGo/DesignAndGoItems/LayoutItems/Layou
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
+import { withNamespaces } from "react-i18next";
+import MenuModal from "../components/designAndGo/DesignAndGoItems/UI/MenuModal";
+import MenuDataModal from "../components/designAndGo/DesignAndGoItems/UI/MenuDataModal";
+
 const assign = require("object-assign");
 
 // this should be in store ???
-const jamData = [Jam1, Jam2, Jam3, Jam4];
+const pageData = [
+  { image: Jam1, upload: true },
+  { image: Jam2 },
+  { image: Jam3, upload: true },
+  { image: Jam4 }
+];
 
 const Config = {
   data: {
@@ -96,6 +105,11 @@ const Config = {
         ]
       },
       {
+        type: Types.UPLOAD_IMAGE,
+        class: "Button Input",
+        fieldName: "send"
+      },
+      {
         type: Types.BUTTON,
         label: "Buy Stickers",
         class: "Button",
@@ -106,17 +120,54 @@ const Config = {
 };
 
 class DesignAndGo extends React.Component {
+  state = {
+    menuOpened: false,
+    dataOpened: false
+  };
+
+  onMenuCloseHandler = () => {
+    this.setState({ menuOpened: false, dataOpened: false });
+  };
+  onMenuOpenHandler = () => {
+    this.setState({ menuOpened: true });
+  };
+  onDataOpenHandler = () => {
+    this.setState({ dataOpened: true });
+  };
+
   render() {
     return (
       <div className="DesignAndGo">
-        <Layout data={Config.data} sliderData={jamData} />
+        <div className="DesignAndGoMenu">
+          {this.state.menuOpened && (
+            <MenuModal
+              show={this.state.menuOpened}
+              modalClosed={this.onMenuCloseHandler}
+            />
+          )}
+          {this.state.dataOpened && (
+            <MenuDataModal
+              show={this.state.dataOpened}
+              modalClosed={this.onMenuCloseHandler}
+            />
+          )}
+        </div>
+
+        <Layout
+          data={Config.data}
+          sliderData={pageData}
+          onMenuOpenHandler={this.onMenuOpenHandler}
+          onDataOpenHandler={this.onDataOpenHandler}
+        />
       </div>
     );
   }
 }
 
+const DesignAndGoPlugin = withNamespaces("designAndGo")(DesignAndGo);
+
 module.exports = {
-  DesignAndGo: assign(DesignAndGo),
+  DesignAndGo: assign(DesignAndGoPlugin),
   reducers: {},
   epics: {}
 };

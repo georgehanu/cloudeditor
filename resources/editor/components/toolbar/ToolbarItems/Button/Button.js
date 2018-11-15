@@ -44,7 +44,7 @@ const Button = enhance(props => {
       className={className}
       onClick={props.clicked}
       {...props.tooltipData}
-      style={{ backgroundColor: randomColor() }}
+      //style={{ backgroundColor: randomColor() }}
     >
       {dropDown}
       {spanContent}

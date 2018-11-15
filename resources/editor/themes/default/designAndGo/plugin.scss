@@ -15,13 +15,13 @@
   text-shadow: transparent 0px 1px 1px;
   background-color: white;
 }
-
+/*
 @media screen and (min-width: 842px) {
   .MainContainer {
     min-height: 760px;
   }
 }
-
+*/
 .MainContainer {
   background-image: url("/editor/design/assets/bg.png");
   flex-direction: row;
@@ -38,12 +38,12 @@
   flex-direction: column;
   margin: 0px auto;
 }
-
+/*
 @media screen and (min-width: 842px) {
   .StyledSplitPane {
     min-height: 760px;
   }
-}
+}*/
 .StyledSplitPane {
   flex-direction: row;
   -webkit-box-align: stretch;

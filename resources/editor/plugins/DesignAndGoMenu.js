@@ -1,7 +1,7 @@
 import React from "react";
 import { withNamespaces } from "react-i18next";
-import MenuModal from "../components/designAndGoMenu/MenuModal";
-import MenuDataModal from "../components/designAndGoMenu/MenuDataModal";
+import MenuModal from "../components/designAndGo/DesignAndGoItems/UI/MenuModal";
+import MenuDataModal from "../components/designAndGo/DesignAndGoItems/UI/MenuDataModal";
 const assign = require("object-assign");
 
 class DesignAndGoMenu extends React.Component {
@@ -21,8 +21,11 @@ class DesignAndGoMenu extends React.Component {
   };
 
   render() {
+    const menuOpenClass =
+      "DesignAndGoMenu" +
+      (this.state.menuOpened ? " DesignAndGoMenuOpened " : "");
     return (
-      <div className="DesignAndGoMenu">
+      <div className={menuOpenClass}>
         {this.state.menuOpened && (
           <MenuModal
             show={this.state.menuOpened}

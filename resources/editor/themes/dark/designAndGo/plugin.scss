@@ -43,7 +43,51 @@
   .StyledSplitPane {
     min-height: 760px;
   }
+  .LeftPanel {
+    min-width: 420px;
+    border-right: 1px solid rgba(255, 255, 255, 0.6);
+    padding: 30px 0px;
+  }
+  .RightPanel {
+    max-height: 800px;
+  }
+  .LeftPaneHorizontal {
+    align-self: flex-end;
+    max-width: 700px;
+    width: 100%;
+  }
+  .LeftPaneHorizontalStyled {
+    max-width: 460px;
+    width: -webkit-fill-available;
+    margin: 0px auto;
+    padding: 0px 20px;
+  }
+  .TitleContainer {
+    margin-bottom: 18px;
+  }
+  .InputName.Input {
+    margin-right: 4px;
+    width: calc(50% - 4px);
+  }
+
+  .InputType.Input {
+    margin-left: 4px;
+    width: calc(50% - 4px);
+  }
+
+  .InputDate.Input,
+  .Input.ColorButtonGroup {
+    width: calc(50% - 4px);
+  }
+
+  .Input.ColorButtonGroup {
+    margin-left: 5px;
+  }
+  .FieldsContainer {
+    margin-bottom: -6px;
+  }
 }
+
 .StyledSplitPane {
   flex-direction: row;
   -webkit-box-align: stretch;
@@ -58,14 +102,6 @@
   margin: 0px auto;
 }
 
-@media screen and (min-width: 842px) {
-  .LeftPanel {
-    min-width: 420px;
-    border-right: 1px solid rgba(255, 255, 255, 0.6);
-    padding: 30px 0px;
-  }
-}
-
 .LeftPanel {
   height: 100%;
   display: flex;
@@ -74,12 +110,6 @@
   justify-content: center;
   flex: 1 0 50%;
   background: rgba(255, 255, 255, 0.5);
-}
-
-@media screen and (min-width: 842px) {
-  .RightPanel {
-    max-height: 800px;
-  }
 }
 
 .RightPanel {
@@ -95,13 +125,6 @@
   width: 100px;
 }
 
-@media screen and (min-width: 842px) {
-  .LeftPaneHorizontal {
-    align-self: flex-end;
-    max-width: 700px;
-    width: 100%;
-  }
-}
 .LeftPaneHorizontal {
   display: flex;
   height: 100%;
@@ -111,23 +134,9 @@
   flex: 1 1 0%;
 }
 
-@media screen and (min-width: 842px) {
-  .LeftPaneHorizontalStyled {
-    max-width: 460px;
-    width: -webkit-fill-available;
-    margin: 0px auto;
-    padding: 0px 20px;
-  }
-}
 .LeftPaneHorizontalStyled {
   position: relative;
   /*overflow-y: auto;*/
-}
-
-@media screen and (min-width: 842px) {
-  .TitleContainer {
-    margin-bottom: 18px;
-  }
 }
 
 .TitleContainerLink a {
@@ -168,33 +177,6 @@
 .Description {
   margin-top: 0px;
   margin-bottom: 8px;
-}
-
-@media screen and (min-width: 842px) {
-  .FieldsContainer {
-    margin-bottom: -6px;
-  }
-}
-
-@media screen and (min-width: 842px) {
-  .InputName.Input {
-    margin-right: 4px;
-    width: calc(50% - 4px);
-  }
-
-  .InputType.Input {
-    margin-left: 4px;
-    width: calc(50% - 4px);
-  }
-
-  .InputDate.Input,
-  .Input.ColorButtonGroup {
-    width: calc(50% - 4px);
-  }
-
-  .Input.ColorButtonGroup {
-    margin-left: 5px;
-  }
 }
 
 .Input {
@@ -238,10 +220,6 @@
   z-index: 100;
   position: relative;
   outline: none;
-}
-
-.slick-slider button {
-  /*background-color: black!important;*/
 }
 
 .slick-arrow.slick-prev,
@@ -318,17 +296,46 @@
   /*max-width: 500px;*/
   min-width: 300px;
   display: inline-block;
-  top: 17%;
+  top: 20%;
 }
 
-@media (min-width: 1100px) {
+@media (min-width: 1380px) {
   .SliderPage {
     width: calc(50% - 140px);
     left: calc(50% + 70px);
+    max-width: 550px;
+    top: 100px;
   }
 
   .SmallSlider.SliderCarousel .SliderPage {
     left: 70px;
+  }
+
+  .slick-prev.slick-arrow {
+    left: calc(50% + 20px) !important;
+  }
+  .slick-next.slick-arrow {
+    left: calc(50% + 590px) !important;
+  }
+  .SmallSlider.SliderCarousel .slick-prev.slick-arrow {
+    left: calc(0% + 20px) !important;
+  }
+  .SmallSlider.SliderCarousel .slick-next.slick-arrow {
+    left: calc(0% + 590px) !important;
+  }
+
+  /* take height also in consideration */
+  @media (max-height: 750px) {
+    .SliderPage {
+      width: calc(50% - 240px);
+      left: calc(50% + 120px);
+      max-width: 450px;
+      top: 50px;
+    }
+
+    .SmallSlider.SliderCarousel .SliderPage {
+      left: 120px;
+    }
   }
 }
 
@@ -362,10 +369,32 @@
   height: 100%;
 }
 
+.SliderCarousel .UploadFileInputs {
+  display: none;
+}
+
 /* for Mobile */
 @media (max-width: 842px) {
-  .FieldsContainer,
+  .SliderCarousel.SmallSlider,
+  .SliderCarousel {
+    //position: relative;
+    height: 370px;
+  }
+
+  .SliderCarousel .UploadFileInputs {
+    display: block;
+    width: 230px;
+  }
+
+  .FieldsContainer .Input,
   .RightPanel {
+    display: none;
+  }
+  .FieldsContainer .Input.ColorButtonGroup {
+    display: block;
+  }
+
+  .FieldsContainer .UploadFileInputs {
     display: none;
   }
   .LeftPaneHorizontalStyled {
@@ -378,21 +407,15 @@
 
   .SmallSlider.SliderCarousel .slick-slider {
     left: 0%;
+
+    touch-action: auto;
+    -ms-touch-action: auto;
   }
   .SliderPage {
     left: 0%;
-    top: 24%;
+    top: 0%;
     width: 80%;
   }
-  /*
-  .SliderPage {
-    left: 25%;    
-  }
-
-  .SmallSlider.SliderCarousel .SliderPage {   
-    left: 25%;
-  }
-  */
   .slick-prev.slick-arrow {
     left: 20px !important;
   }
@@ -408,10 +431,20 @@
 
   .slick-slide div {
     text-align: -webkit-center;
+    height: 50%;
   }
 
   .DescriptionHeader {
     margin-top: 15px;
+  }
+
+  .slick-list,
+  .slick-track {
+    height: auto;
+  }
+
+  .slick-slider.slick-initialized {
+    height: auto;
   }
 }
 
@@ -498,4 +531,282 @@
 
 .ColorButtonContainer {
   margin-top: 5px;
+}
+
+/* Menu */
+.DesignAndGoMenu {
+  position: absolute;
+  overflow-y: auto;
+  left: 0px;
+  top: 0px;
+  box-shadow: rgb(0, 0, 0) 0px 0px 14px;
+  height: 100%;
+  background: rgb(245, 245, 245);
+}
+
+.MenuButton {
+  color: rgb(234, 125, 125);
+  text-decoration: none;
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 15px;
+  line-height: 2em;
+}
+
+.MenuButton {
+  position: fixed;
+  top: 5px;
+  left: 10px;
+}
+
+.Backdrop {
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  z-index: 100;
+  left: 0;
+  top: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.MenuModal,
+.MenuDataModal {
+  z-index: 500;
+  background-color: white;
+  box-shadow: 1px 1px 1px black;
+  padding: 16px;
+  box-sizing: border-box;
+  transition: all 0.3s ease-out;
+  padding: 0px;
+  position: relative;
+  width: 240px;
+  overflow-y: auto;
+  left: 0px;
+  top: 0px;
+  box-shadow: rgb(0, 0, 0) 0px 0px 14px;
+  height: 100%;
+  background: rgb(245, 245, 245);
+}
+
+.MenuHeader {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  -webkit-box-align: center;
+  align-items: center;
+  font-size: 22px;
+  padding: 12px 20px;
+  background: rgba(100, 100, 100, 0.05);
+
+  color: white;
+  text-shadow: none;
+  background: rgb(234, 125, 125);
+}
+
+.MenuTitle {
+  color: currentcolor;
+  text-shadow: inherit;
+  line-height: 40px;
+  flex: 1 0 auto;
+  font-size: 22px;
+  font-weight: 500;
+}
+
+.CloseMenu {
+  position: absolute;
+  right: 32px;
+  top: 10px;
+  width: 32px;
+  height: 32px;
+  opacity: 0.3;
+}
+.CloseMenu:hover {
+  opacity: 1;
+}
+.CloseMenu:before,
+.CloseMenu:after {
+  position: absolute;
+  left: 15px;
+  content: " ";
+  height: 33px;
+  width: 2px;
+  background-color: #333;
+}
+.CloseMenu:before {
+  transform: rotate(45deg);
+}
+.CloseMenu:after {
+  transform: rotate(-45deg);
+}
+
+.MenuLinks {
+  position: relative;
+  margin-left: 20px;
+  margin-top: 20px;
+}
+
+.MenuLinks ul {
+  font-size: 14px;
+  font-weight: 300;
+  line-height: 22px;
+  list-style: none;
+  padding: 0px;
+  margin: 0px 0px 8px;
+}
+
+.MenuLinks ul li {
+  text-indent: 0px;
+  padding-left: 0px;
+  margin-left: 0px;
+  margin-bottom: 10px;
+}
+
+.MenuLinks ul li a {
+  color: rgb(234, 125, 125);
+  text-decoration: none;
+  cursor: pointer;
+}
+.MenuLinks ul li a:hover {
+  text-decoration: underline;
+}
+
+.EditButtonContainer {
+  display: none;
+}
+
+.MenuButtonContainer {
+  width: 100%;
+  text-align: -webkit-center;
+  top: 75px;
+}
+.MenuButtonContainerMobile {
+  display: none;
+}
+
+.EditLabelButton,
+.UploadButtonMobile {
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 700;
+  height: 40px;
+  line-height: 40px;
+  cursor: pointer;
+  text-align: center;
+  color: white;
+  touch-action: manipulation;
+  text-shadow: none;
+  padding: 0px 16px;
+  border-radius: 5px;
+  text-decoration: none;
+  border-width: 0px;
+  border-style: initial;
+  border-color: initial;
+  border-image: initial;
+  background: rgb(234, 125, 125);
+  transition: background-color 0.3s ease 0s, color 0.3s ease 0s;
+}
+.EditLabelButton {
+  display: none;
+}
+.UploadButtonMobile {
+  display: none;
+}
+
+/* for Mobile */
+@media (max-width: 842px) {
+  .ColorPicker .hue-picker {
+    width: 230px !important;
+  }
+
+  .MenuButtonContainer {
+    display: none;
+  }
+  /* Menu */
+  .MenuButtonContainerMobile,
+  .EditLabelButtonContainer {
+    width: 100%;
+    text-align: -webkit-center;
+    top: 0px;
+    display: inline-block;
+  }
+
+  .MenuButton {
+    position: relative;
+    left: 0px;
+    top: 0px;
+  }
+
+  .EditLabelButton {
+    position: relative;
+    left: 0px;
+    top: -320px;
+  }
+
+  .LeftPanel {
+    background: none;
+  }
+  .StyledSplitPane {
+    background: rgba(255, 255, 255, 0.5);
+  }
+
+  .MenuModal,
+  .MenuDataModal {
+    width: 100%;
+  }
+
+  .DesignAndGoMenu {
+    width: 100%;
+    background: transparent;
+  }
+
+  .EditLabelButton,
+  .UploadButtonMobile {
+    display: inline-block;
+  }
+}
+
+.ColorPicker .hue-picker {
+  width: 100% !important;
+  max-width: 230px;
+}
+
+.UploadFileInputs {
+  position: relative;
+  height: 40px;
+  width: 100%;
+}
+
+.UploadFormInput {
+  position: absolute;
+  text-align: right;
+  -moz-opacity: 0;
+  opacity: 0;
+  height: 40px;
+  width: 100%;
+  display: none;
+}
+
+.UploadLabel {
+  display: inline-block;
+  width: 100%;
+  height: 100%;
+
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 700;
+  height: 40px;
+  line-height: 40px;
+  cursor: pointer;
+  text-align: center;
+  color: white;
+  touch-action: manipulation;
+  text-shadow: none;
+  border-radius: 5px;
+  text-decoration: none;
+  border-width: 0px;
+  border-style: initial;
+  border-color: initial;
+  border-image: initial;
+  background: rgb(234, 125, 125);
+  transition: background-color 0.3s ease 0s, color 0.3s ease 0s;
 }

@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import MenuHeader from "./MenuModalItems/MenuHeader";
-import MenuLink from "./MenuModalItems/MenuLink";
 
 import Backdrop from "./Backdrop";
 
