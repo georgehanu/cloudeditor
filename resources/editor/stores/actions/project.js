@@ -8,6 +8,7 @@ const {
   REMOVE_ACTION_SELECTION,
   UPDATE_SELECTION_OBJECTS_COORDS,
   UPDATE_OBJECT_PROPS,
+  CHANGE_PAGE,
   UPDATE_CROP_PARAMS
 } = require("../actionTypes/project");
 const { createActions } = require("redux-actions");
@@ -22,6 +23,7 @@ const {
   removeActionSelection,
   updateSelectionObjectsCoords,
   updateObjectProps,
+  changePage,
   updateCropParams
 } = createActions(
   CHANGE_PROJECT_TITLE,
@@ -33,6 +35,7 @@ const {
   REMOVE_ACTION_SELECTION,
   UPDATE_SELECTION_OBJECTS_COORDS,
   UPDATE_OBJECT_PROPS,
+  CHANGE_PAGE,
   UPDATE_CROP_PARAMS
 );
 
@@ -46,5 +49,6 @@ module.exports = {
   removeActionSelection,
   updateSelectionObjectsCoords,
   updateObjectProps,
+  changePage,
   updateCropParams
 };

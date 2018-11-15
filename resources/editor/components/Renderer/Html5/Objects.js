@@ -14,6 +14,7 @@ const objects = props => (
           height={height * scale}
           left={left * scale}
           top={top * scale}
+          viewOnly={props.viewOnly}
           {...otherProps}
           onUpdateProps={props.onUpdateProps}
         />

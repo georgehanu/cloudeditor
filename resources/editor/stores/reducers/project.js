@@ -20,7 +20,8 @@ const {
   UPDATE_LAYER_PROP,
   DUPLICATE_OBJ,
   UPDATE_CROP_PARAMS,
-  DELETE_OBJ
+  DELETE_OBJ,
+  CHANGE_PAGE
 } = require("../actionTypes/project");
 
 const ProjectUtils = require("../../utils/ProjectUtils");
@@ -42,6 +43,12 @@ const addObject = (state, action) => {
       ...state.objects,
       [action.object.id]: action.object
     }
+  };
+};
+const changePage = (state, payload) => {
+  return {
+    ...state,
+    activePage: payload
   };
 };
 
@@ -141,6 +148,9 @@ module.exports = handleActions(
   {
     [CHANGE_PROJECT_TITLE]: (state, action) => {
       return changeProjectTitle(state, action.payload);
+    },
+    [CHANGE_PAGE]: (state, action) => {
+      return changePage(state, action.payload);
     },
     [ADD_OBJECT]: (state, action) => {
       return addObject(state, action.payload);

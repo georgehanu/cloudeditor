@@ -39,18 +39,22 @@ class ObjectBlock extends React.Component {
     return null;
   }
   componentDidUpdate() {
-    var element = this.el.current;
-    const active = this.props.active || false;
-    this.updateDraggable(!active);
-    $(element).data("rotateAngle", this.props.rotateAngle);
+    if (!this.props.viewOnly) {
+      var element = this.el.current;
+      const active = this.props.active || false;
+      this.updateDraggable(!active);
+      $(element).data("rotateAngle", this.props.rotateAngle);
+    }
   }
 
   componentDidMount() {
-    const element = this.el.current;
-    this.initObjectDraggable();
-    this.initObjectResizable();
-    this.initObjectRotatable();
-    $(element).data("rotateAngle", this.props.rotateAngle);
+    if (!this.props.viewOnly) {
+      const element = this.el.current;
+      this.initObjectDraggable();
+      this.initObjectResizable();
+      this.initObjectRotatable();
+      $(element).data("rotateAngle", this.props.rotateAngle);
+    }
   }
   addSnapElements(ui, snapElements, handler) {
     if (this.props.ispSnap) {
@@ -178,11 +182,13 @@ class ObjectBlock extends React.Component {
     }
   }
   onMouseDownHandler = event => {
-    event.stopPropagation();
-    this.props.onStartActionHandler(this.props.id);
+    if (!this.props.viewOnly) {
+      event.stopPropagation();
+      this.props.onStartActionHandler(this.props.id);
+    }
   };
   onMouseUpHandler = () => {
-    this.props.onStopActionHandler(this.props.id);
+    if (!this.props.viewOnly) this.props.onStopActionHandler(this.props.id);
   };
   updateDraggable(status) {
     const el = $(this.el.current);
@@ -202,7 +208,7 @@ class ObjectBlock extends React.Component {
     el.draggable("enable");
   }
   onClickHandler = event => {
-    this.props.onSetActiveBlockHandler(this.props.id);
+    if (!this.props.viewOnly) this.props.onSetActiveBlockHandler(this.props.id);
   };
   render() {
     const { width, height, top, left, type, ...otherProps } = this.props;
@@ -229,7 +235,6 @@ class ObjectBlock extends React.Component {
       default:
         break;
     }
-    console.log("my current state", this.state);
     return (
       <div
         className={[
