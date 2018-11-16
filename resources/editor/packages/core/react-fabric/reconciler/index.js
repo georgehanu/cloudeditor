@@ -97,7 +97,6 @@ const hostConfig = {
   },
 
   appendChildToContainer(parentInstance, child) {
-    console.log("marius was here");
     //we need to check if the element is already in canvas/ (for bring to front/sent to back)
     if (parentInstance.instance._objects.indexOf(child.instance) > -1) {
       parentInstance.instance.remove(child.instance);

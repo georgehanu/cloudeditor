@@ -654,4 +654,62 @@ fabric.Canvas.prototype.updateCropParams = function() {
     }
   }
 };
+fabric.Textbox.prototype._initDimensions = function() {
+  this.isEditing && this.initDelayedCursor();
+  this.clearContextTop();
+  this._clearCache();
+  // clear dynamicMinWidth as it will be different after we re-wrap line
+  this.dynamicMinWidth = 0;
+  // wrap lines
+  this._styleMap = this._generateStyleMap(this._splitText());
+  // if after wrapping, the width is smaller than dynamicMinWidth, change the width and re-wrap
+  /*if (this.dynamicMinWidth > this.width) {
+    this._set("width", this.dynamicMinWidth);
+  }*/
+  if (this.textAlign.indexOf("justify") !== -1) {
+    // once text is measured we need to make space fatter to make justified text.
+    this.enlargeSpaces();
+  }
+  // clear cache and re-calculate height
+  // this.height = this.calcTextHeight();
+  this.saveState({ propertySet: "_dimensionAffectingProps" });
+};
+fabric.Textbox.prototype.initDimensions = function() {
+  if (this.__skipDimension) {
+    return;
+  }
+
+  this._initDimensions();
+  // Use defined height as a fixed value. If there's no height value, then use max or calculated height
+  if (!this.height) this.height = this.height || this.calcTextHeight();
+  debugger;
+  // If fontResizing mode enabled
+  var textWidth = this.calcTextWidth();
+  var textHeight = this.calcTextHeight();
+  if (textWidth > this.width) {
+    this.fontSize -= 1;
+    this.width = this.maxWidth;
+    this.initDimensions();
+  } else if (textHeight > this.height) {
+    this.fontSize -= 1;
+    this.initDimensions();
+  }
+};
+fabric.Textbox.prototype.initialize = (function(_initialize) {
+  return function(text, options) {
+    _initialize.call(this, text, options);
+    if (
+      this.designerCallbacks &&
+      typeof this.designerCallbacks.updateObjectProps === "function"
+    ) {
+      this.designerCallbacks.updateObjectProps({
+        id: this.id,
+        props: {
+          fontSize: this.fontSize
+        }
+      });
+    }
+  };
+})(fabric.Textbox.prototype.initialize);
+
 module.exports = { fabric };

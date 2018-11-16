@@ -7,7 +7,7 @@ const { activePageSelector } = require("../project");
 const documentBoxesSelector = state =>
   (state && state.project.configs.pages && state.project.configs.pages.boxes) ||
   {};
-const getLines = (activePage, coords) => {
+const getLines = (activePage, coords, helper_type) => {
   let lines = [];
   const height = activePage.height - (coords.top + coords.bottom);
   const width = activePage.width - (coords.left + coords.right);
@@ -16,28 +16,32 @@ const getLines = (activePage, coords) => {
     y: coords.top,
     width: 1,
     height: height,
-    key: uuidv4()
+    key: uuidv4(),
+    helper_type: helper_type
   });
   lines.push({
     x: coords.left,
     y: coords.top,
     width: width,
     height: 1,
-    key: uuidv4()
+    key: uuidv4(),
+    helper_type: helper_type
   });
   lines.push({
     x: activePage.width - coords.right,
     y: coords.top,
     width: 1,
     height: height,
-    key: uuidv4()
+    key: uuidv4(),
+    helper_type: helper_type
   });
   lines.push({
     x: coords.left,
     y: activePage.height - coords.bottom,
     width: width,
     height: 1,
-    key: uuidv4()
+    key: uuidv4(),
+    helper_type: helper_type
   });
   return lines;
 };
@@ -63,14 +67,14 @@ const bleedCoordsSelector = createSelector(
 const bleedLinesSelector = createSelector(
   [activePageSelector, bleedCoordsSelector],
   (activePage, coords) => {
-    const lines = getLines(activePage, coords);
+    const lines = getLines(activePage, coords, "bleedbox");
     return lines;
   }
 );
 const trimboxLinesSelector = createSelector(
   [activePageSelector, trimboxCoordsSelector],
   (activePage, coords) => {
-    const lines = getLines(activePage, coords);
+    const lines = getLines(activePage, coords, "trimbox");
     return lines;
   }
 );

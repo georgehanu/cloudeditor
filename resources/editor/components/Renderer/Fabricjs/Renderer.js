@@ -9,16 +9,23 @@ const {
   Textbox,
   Fabric,
   Group,
-  Graphics
+  Graphics,
+  Line,
+  BleedBox,
+  TrimBox
 } = require("../../../packages/core/react-fabric");
 const ImageLoad = require("../../../packages/core/react-fabric/components/Helpers/ImageLoad");
 const GraphicsLoad = require("../../../packages/core/react-fabric/components/Helpers/GraphicsLoad");
 const { fabric } = require("../../../rewrites/fabric/fabric");
-const { map } = require("ramda");
+const { map, concat } = require("ramda");
 const ProjectUtils = require("../../../utils/ProjectUtils");
 const projectActions = require("../../../stores/actions/project");
 const uiActions = require("../../../stores/actions/ui");
 const rendererActions = require("../../../stores/actions/renderer");
+const {
+  trimboxLinesSelector,
+  bleedLinesSelector
+} = require("../../../stores/selectors/Html5/Boxes");
 
 const updatePageOffset = (props, editorContainer) => {
   const { adjustment, activePage } = props;
@@ -252,7 +259,8 @@ class FabricjsRenderer extends React.PureComponent {
   };
   designerCallbacks = () => {
     return {
-      updateCropParams: this.props.updateCropParams
+      updateCropParams: this.props.updateCropParams,
+      updateObjectProps: this.props.updateObjectProps
     };
   };
   getTools = () => {
@@ -303,7 +311,13 @@ class FabricjsRenderer extends React.PureComponent {
         case "text":
           return <IText key={object.id} {...object} />;
         case "textbox":
-          return <Textbox key={object.id} {...object} />;
+          return (
+            <Textbox
+              key={object.id}
+              {...object}
+              designerCallbacks={this.designerCallbacks}
+            />
+          );
         case "group":
           return (
             <Group key={object.id} {...object}>
@@ -319,10 +333,43 @@ class FabricjsRenderer extends React.PureComponent {
     });
     return elements;
   }
+
+  drawHelperLines() {
+    const { bleedLines: bleedLines } = this.props;
+    const { trimboxLines: trimboxLines } = this.props;
+
+    const helpers = map(idx => {
+      const object = { ...idx };
+      let x1 = object.x,
+        y1 = object.y;
+
+      delete object.x;
+      delete object.y;
+
+      object.left = x1 * this.state.scale + this.state.canvasOffsetX;
+      object.top = y1 * this.state.scale + this.state.canvasOffsetY;
+
+      object.width =
+        object.width !== 1 ? object.width * this.state.scale : object.width;
+      object.height =
+        object.height !== 1 ? object.height * this.state.scale : object.height;
+
+      switch (object.helper_type) {
+        case "bleedbox":
+          return <BleedBox {...object} />;
+        case "trimbox":
+          return <TrimBox {...object} />;
+        default:
+          return null;
+      }
+    }, concat(bleedLines, trimboxLines));
+    return helpers;
+  }
   render() {
     const { activePage: page } = this.props;
     const { objects } = page;
     let elements = this.drawElements(objects, 1);
+    let helperElements = this.drawHelperLines();
 
     let isReadyComponent = this.state.isReadyComponent;
 
@@ -346,6 +393,7 @@ class FabricjsRenderer extends React.PureComponent {
               canvasReadyHandler={this.props.canvasReadyHandler}
             >
               {elements}
+              {helperElements}
             </Fabric>
           )}
           {this.renderTools()}
@@ -376,9 +424,15 @@ const mapDispatchToProps = dispatch => {
       )
   };
 };
+const mapStateToProps = state => {
+  return {
+    trimboxLines: trimboxLinesSelector(state),
+    bleedLines: bleedLinesSelector(state)
+  };
+};
 
 module.exports = connect(
-  null,
+  mapStateToProps,
   mapDispatchToProps
 )(FabricjsRenderer);
 //module.exports = FabricjsRenderer;
