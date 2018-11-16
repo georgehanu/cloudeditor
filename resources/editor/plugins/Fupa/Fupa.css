@@ -1,3 +1,15 @@
+.fupa {
+  height: 100%;
+  width: 100%;
+  font-family: Arial, sans-serif;
+  font-size: 12px;
+  color: #121212;
+  background-color: #ececec;
+  padding: 5px;
+  overflow-y: auto;
+  box-sizing: border-box;
+}
+
 .fupa td {
   padding: 5px 2px;
 }
@@ -5,7 +17,7 @@
   margin: 0;
   margin-bottom: 9px;
   margin-left: 0;
-  width: 300px;
+  width: 100%;
   padding: 0;
   border-spacing: 0;
 }

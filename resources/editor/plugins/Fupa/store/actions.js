@@ -6,7 +6,11 @@ const actionCreators = createActions(
   actionTypes.FETCH_CLUBS,
   actionTypes.FETCH_CLUBS_FULFILLED,
   actionTypes.FETCH_CLUBS_FAILED,
-  actionTypes.CHANGE_CURRENT_CLUB
+  actionTypes.CHANGE_CURRENT_CLUB,
+  actionTypes.FETCH_CLUB_TEAMS_FULFILLED,
+  actionTypes.FETCH_CLUB_TEAMS_FAILED,
+  actionTypes.SELECT_CLUB_TEAM,
+  actionTypes.BACK_TO_SEARCH
 );
 
 module.exports = actionCreators;

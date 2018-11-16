@@ -6,7 +6,7 @@ const Spinner = require("../../UI/Spinner/Spinner");
 const Error = require("../../UI/Error/Error");
 
 const clubSelection = props => {
-  const { t, tReady, clubs } = props;
+  const { t, tReady, clubs, hide } = props;
   let renderedClubs = null;
 
   const clubItem = club => {
@@ -29,7 +29,7 @@ const clubSelection = props => {
       <tr
         style={{ cursor: "pointer" }}
         key={club.id}
-        onClick={() => props.selected(club.id)}
+        onClick={() => props.selected(club)}
       >
         <td width="40" align="center">
           <div
@@ -61,6 +61,7 @@ const clubSelection = props => {
   if (!tReady) return null;
   if (props.loading) return <Spinner />;
   if (props.error) return <Error errorMsg={t("clubsFetchFail")} />;
+  if (hide) return null;
   if (isEmpty(clubs)) return null;
   renderedClubs = pipe(
     filter(propEq("type", "club")),

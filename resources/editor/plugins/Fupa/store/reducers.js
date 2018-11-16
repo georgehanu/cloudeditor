@@ -7,20 +7,26 @@ const initialState = {
   clubsState: {
     error: null,
     loading: false,
-    currentClub: null,
     clubs: []
   },
-  teamsState: {
+  currentClub: {},
+  clubTeamsState: {
     error: null,
     loading: false,
-    currentTeam: null,
     teams: []
+  },
+  currentTeam: {},
+  currentTeamState: {
+    error: null,
+    loading: false
   }
 };
 
 const changeSearchValue = (state, value) => {
   const updatedState = {
-    searchValue: value
+    searchValue: value,
+    currentClub: {},
+    currentTeam: {}
   };
   return updateObject(state, updatedState);
 };
@@ -60,12 +66,56 @@ const failUpdateClubs = (state, error) => {
   };
 };
 
-const changeCurrentClub = (state, clubId) => {
+const changeCurrentClub = (state, club) => {
   return {
     ...state,
-    clubsState: {
-      ...state.clubsState,
-      currentClub: clubId
+    currentClub: club,
+    clubTeamsState: {
+      ...state.clubTeamsState,
+      loading: true,
+      error: null,
+      teams: []
+    }
+  };
+};
+
+const updateClubTeams = (state, teams) => {
+  return {
+    ...state,
+    clubTeamsState: {
+      ...state.clubTeamsState,
+      loading: false,
+      error: null,
+      teams: teams
+    }
+  };
+};
+
+const failUpdateClubTeams = (state, error) => {
+  return {
+    ...state,
+    clubTeamsState: {
+      ...state.clubTeamsState,
+      loading: false,
+      error: error,
+      teams: []
+    }
+  };
+};
+
+const changeCurrentTeam = (state, team) => {
+  return state;
+};
+
+const backToSearch = state => {
+  return {
+    ...state,
+    currentClub: {},
+    clubTeamsState: {
+      ...state.clubTeamsState,
+      loading: false,
+      error: null,
+      teams: []
     }
   };
 };
@@ -90,6 +140,22 @@ module.exports = handleActions(
     [actionTypes.CHANGE_CURRENT_CLUB]: (state, action) => {
       console.log("CHANGE_CURRENT_CLUB", action);
       return changeCurrentClub(state, action.payload);
+    },
+    [actionTypes.FETCH_CLUB_TEAMS_FULFILLED]: (state, action) => {
+      console.log("FETCH_CLUB_TEAMS_FULFILLED", action);
+      return updateClubTeams(state, action.payload);
+    },
+    [actionTypes.FETCH_CLUB_TEAMS_FAILED]: (state, action) => {
+      console.log("FETCH_CLUB_TEAMS_FAILED", action);
+      return failUpdateClubTeams(state, action.payload);
+    },
+    [actionTypes.SELECT_CLUB_TEAM]: (state, action) => {
+      console.log("SELECT_CLUB_TEAM", action);
+      return selectClubTeam(state, action.payload);
+    },
+    [actionTypes.BACK_TO_SEARCH]: (state, action) => {
+      console.log("BACK_TO_SEARCH", action);
+      return backToSearch(state);
     }
   },
   initialState

@@ -1,3 +1,4 @@
+//https://fupa.docs.stoplight.io/api-docs-v1/club/get-one-club
 const Rx = require("rxjs");
 const { switchMap, catchError } = require("rxjs/operators");
 const { ofType } = require("redux-observable");
@@ -30,6 +31,32 @@ module.exports = {
           }),
           catchError(error => {
             return Rx.of(actions.fetchClubsFailed());
+          })
+        );
+      })
+    ),
+  fetchClubTeamsEpic: action$ =>
+    action$.pipe(
+      ofType(actionTypes.CHANGE_CURRENT_CLUB),
+      switchMap(action => {
+        const { payload } = action;
+        return Rx.from(
+          axios
+            .get("/teams", {
+              params: {
+                club: payload.slug,
+                additionalFields: "competition,currentRank"
+              }
+            })
+            .then(res => res.data)
+        ).pipe(
+          switchMap(data => {
+            if (data.errors === false)
+              return Rx.of(actions.fetchClubTeamsFulfilled(data.data));
+            return Rx.of(actions.fetchClubTeamsFailed());
+          }),
+          catchError(error => {
+            return Rx.of(actions.fetchClubTeamsFailed());
           })
         );
       })
