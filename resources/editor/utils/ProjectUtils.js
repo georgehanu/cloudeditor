@@ -377,6 +377,8 @@ const getRandomProject = cfg => {
     left: 100,
     top: 100,
     fontSize: 70,
+    bold: true,
+    italic: true,
     text:
       "Lorem\nIpsum is simply dummy text of the \nprinting and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever \nsince the 1500s, when an unknown printer took a galley of type \nand scrambled it to make a type specimen book ",
     fill: "red"
@@ -394,13 +396,7 @@ const getRandomProject = cfg => {
   page1 = {
     ...page1,
     objectsIds: [
-      img3.id,
-      graphics.id,
-      img1.id,
-      img2.id,
-      img7.id,
-      img5.id,
-      text1.id
+      /*img3.id, graphics.id, img1.id, img2.id, img7.id, img5.id,*/ text1.id
     ]
   };
 
@@ -492,7 +488,9 @@ const getEmptyObject = cfg => {
           left: cfg.width || 500,
           top: cfg.top || 500,
           fontSize: cfg.fontSize || 90,
-          text: cfg.text || "Lorem Ipsum"
+          text: cfg.text || "Lorem Ipsum",
+          bold: cfg.bold || false,
+          italic: cfg.italic || false
         };
       case "activeSelection":
         return { ...object, type: cfg.type, left: cfg.left, top: cfg.top };

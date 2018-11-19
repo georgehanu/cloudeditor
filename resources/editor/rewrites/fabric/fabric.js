@@ -682,7 +682,6 @@ fabric.Textbox.prototype.initDimensions = function() {
   this._initDimensions();
   // Use defined height as a fixed value. If there's no height value, then use max or calculated height
   if (!this.height) this.height = this.height || this.calcTextHeight();
-  debugger;
   // If fontResizing mode enabled
   var textWidth = this.calcTextWidth();
   var textHeight = this.calcTextHeight();
