@@ -573,7 +573,9 @@ fabric.ActiveSelection.prototype.initialize = (function(_initialize) {
 fabric.Textbox.prototype.getMainProps = function() {
   return fabric.util.object.extend(this.callSuper("getMainProps"), {
     fontSize: this.fontSize,
-    text: this.text
+    text: this.text,
+    textAlign: this.textAlign,
+    vAlign: this.vAlign
   });
 };
 fabric.Object.prototype.render = (function(_render) {
@@ -710,5 +712,17 @@ fabric.Textbox.prototype.initialize = (function(_initialize) {
     }
   };
 })(fabric.Textbox.prototype.initialize);
-
+fabric.util.object.extend(fabric.Textbox.prototype, {
+  vAlign: "top" //center,bottom
+});
+fabric.Textbox.prototype._getTopOffset = function() {
+  switch (this.vAlign) {
+    case "top":
+      return -this.height / 2;
+    case "center":
+      return -this.calcTextHeight() / 2;
+    case "bottom":
+      return this.height / 2 - this.calcTextHeight();
+  }
+};
 module.exports = { fabric };
