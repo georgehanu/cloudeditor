@@ -24,9 +24,10 @@ class SliderCarousel extends React.Component {
     const className =
       "SliderCarousel " + (this.state.showFullSlider ? "" : "SmallSlider");
     const pages = this.props.sliderData.map((el, index) => {
+      let className = "SliderPage " + el.classImg;
       return (
         <div key={index}>
-          <img className="SliderPage" src={el.image} alt="slideImage" />
+          <div className={className} />
           {el.upload && <UploadImage />}
         </div>
       );

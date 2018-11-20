@@ -11,7 +11,6 @@ class LeftPanel extends React.Component {
   };
 
   render() {
-    console.log(this.props, "LeftPanel");
     return (
       <div className="LeftPanel">
         <div className="MenuButtonContainer">

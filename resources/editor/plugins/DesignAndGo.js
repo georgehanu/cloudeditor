@@ -14,15 +14,16 @@ import "slick-carousel/slick/slick-theme.css";
 import { withNamespaces } from "react-i18next";
 import MenuModal from "../components/designAndGo/DesignAndGoItems/UI/MenuModal";
 import MenuDataModal from "../components/designAndGo/DesignAndGoItems/UI/MenuDataModal";
+import SignInModal from "../components/designAndGo/DesignAndGoItems/UI/SignInModal";
 
 const assign = require("object-assign");
 
 // this should be in store ???
 const pageData = [
-  { image: Jam1, upload: true },
-  { image: Jam2 },
-  { image: Jam3, upload: true },
-  { image: Jam4 }
+  { image: Jam1, upload: true, classImg: "ImageJam1" },
+  { image: Jam2, classImg: "ImageJam2" },
+  { image: Jam3, upload: true, classImg: "ImageJam3" },
+  { image: Jam4, classImg: "ImageJam4" }
 ];
 
 const Config = {
@@ -122,17 +123,25 @@ const Config = {
 class DesignAndGo extends React.Component {
   state = {
     menuOpened: false,
-    dataOpened: false
+    dataOpened: false,
+    signInOpened: false
   };
 
   onMenuCloseHandler = () => {
-    this.setState({ menuOpened: false, dataOpened: false });
+    this.setState({
+      menuOpened: false,
+      dataOpened: false,
+      signInOpened: false
+    });
   };
   onMenuOpenHandler = () => {
     this.setState({ menuOpened: true });
   };
   onDataOpenHandler = () => {
     this.setState({ dataOpened: true });
+  };
+  onSignInOpenHandler = () => {
+    this.setState({ menuOpened: false, signInOpened: true });
   };
 
   render() {
@@ -143,15 +152,23 @@ class DesignAndGo extends React.Component {
             <MenuModal
               show={this.state.menuOpened}
               modalClosed={this.onMenuCloseHandler}
+              onSignInOpenHandler={this.onSignInOpenHandler}
             />
           )}
           {this.state.dataOpened && (
             <MenuDataModal
               show={this.state.dataOpened}
               modalClosed={this.onMenuCloseHandler}
+              data={Config.data}
             />
           )}
         </div>
+        {this.state.signInOpened && (
+          <SignInModal
+            show={this.state.signInOpened}
+            modalClosed={this.onMenuCloseHandler}
+          />
+        )}
 
         <Layout
           data={Config.data}
@@ -168,6 +185,6 @@ const DesignAndGoPlugin = withNamespaces("designAndGo")(DesignAndGo);
 
 module.exports = {
   DesignAndGo: assign(DesignAndGoPlugin),
-  reducers: {},
-  epics: {}
+  reducers: { designAndGo: require("../stores/reducers/designAndGo") },
+  epics: require("../stores/epics/designAndGo")
 };

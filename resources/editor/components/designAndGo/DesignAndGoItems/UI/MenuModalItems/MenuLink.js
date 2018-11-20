@@ -7,6 +7,8 @@ const MenuLink = props => {
       href="#"
       onClick={e => {
         e.preventDefault();
+
+        props.clicked();
       }}
     >
       {props.linkName}
@@ -14,4 +16,4 @@ const MenuLink = props => {
   );
 };
 
-export default withNamespaces("designAndGoMenu")(MenuLink);
+export default withNamespaces("designAndGo")(MenuLink);

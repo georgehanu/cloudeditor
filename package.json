@@ -65,6 +65,7 @@
     "style-loader": "^0.23.1"
   },
   "dependencies": {
+    "axios": "^0.18.0",
     "fabric": "^2.4.2-b",
     "fbjs": "^1.0.0",
     "i18next": "^11.9.1",
@@ -80,6 +81,7 @@
     "react-color": "^2.14.1",
     "react-dom": "^16.6.0",
     "react-draggable": "^3.0.5",
+    "react-dropzone": "^7.0.1",
     "react-hot-loader": "^4.3.11",
     "react-i18next": "^8.0.8",
     "react-reconciler": "^0.16.0",
