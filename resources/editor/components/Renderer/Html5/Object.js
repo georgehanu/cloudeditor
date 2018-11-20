@@ -95,8 +95,8 @@ class ObjectBlock extends React.Component {
           this.props.onUpdateProps({
             id: this.props.id,
             props: {
-              top: ui.position.top / this.props.scale,
-              left: ui.position.left / this.props.scale
+              top: ui.position.top / this.props.scale - this.props.offsetTop,
+              left: ui.position.left / this.props.scale - this.props.offsetLeft
             }
           });
           this.props.onStopActionHandler(this.props.id);

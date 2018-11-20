@@ -51,6 +51,7 @@ class CropperImage extends React.Component {
     // this.initializeDimensions(false);
   }
   componentDidMount() {
+    return;
     document.addEventListener("mousemove", this.handleMouseMove.bind(this));
     document.addEventListener("mouseup", this.handleMouseUp.bind(this));
     document.addEventListener(
@@ -354,6 +355,9 @@ class CropperImage extends React.Component {
     return (
       <div ref={this.wrapper} className="jwc_frame" style={styleWrapper}>
         <img
+          onLoad={() => {
+            if (!this.props.viewOnly) this.initializeDimensions();
+          }}
           onMouseDown={e => this.handleMouseDown(e)}
           src={this.props.src}
           ref={this.el}

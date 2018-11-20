@@ -4,7 +4,19 @@ const ObjectBlock = require("./Object");
 const objects = props => (
   <React.Fragment>
     {Object.keys(props.items).map(obKey => {
-      const { width, height, left, top, ...otherProps } = props.items[obKey];
+      let {
+        width,
+        height,
+        left,
+        top,
+        offsetLeft,
+        offsetTop,
+        ...otherProps
+      } = props.items[obKey];
+      if (props.viewOnly) {
+        offsetLeft = 0;
+        offsetTop = 0;
+      }
       const scale = props.scale;
       return (
         <ObjectBlock
@@ -12,8 +24,10 @@ const objects = props => (
           scale={scale}
           width={width * scale}
           height={height * scale}
-          left={left * scale}
-          top={top * scale}
+          offsetLeft={offsetLeft}
+          offsetTop={offsetTop}
+          left={(left + offsetLeft) * scale}
+          top={(top + offsetTop) * scale}
           viewOnly={props.viewOnly}
           {...otherProps}
           onUpdateProps={props.onUpdateProps}

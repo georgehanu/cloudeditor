@@ -9,7 +9,8 @@ const { snapLinesSelector } = require("../../stores/selectors/Html5/SnapLines");
 const {
   changeObjectPosition,
   changeObjectDimensions,
-  updateObjectProps
+  updateObjectProps,
+  changePage
 } = require("./../../stores/actions/project");
 
 const Objects = require("./Html5/Objects");
@@ -25,6 +26,9 @@ class Html5Renderer extends React.Component {
   constructor(props) {
     super(props);
     this.canvasContainerRef = React.createRef();
+  }
+  changePageHandler(params) {
+    this.props.onChangePageHandler(params);
   }
   shouldComponentUpdate() {
     if (!this.props.viewOnly) {
@@ -77,13 +81,34 @@ class Html5Renderer extends React.Component {
         LinesRender = <Lines lines={this.props.snapLines} scale={scale} />;
         BoxesRender = <Boxes scale={scale} />;
       }
+      let overlays = null;
+      if (!this.props.viewOnly) {
+        overlays = this.props.overlays.map(overlay => {
+          const overlayStyle = {
+            width: overlay.width * scale,
+            left: overlay.left * scale
+          };
+          return (
+            <div
+              key={overlay.id}
+              style={overlayStyle}
+              onClick={() =>
+                this.changePageHandler({
+                  page_id: overlay.id,
+                  group_id: overlay.group_id
+                })
+              }
+              className="overlayHelper"
+            />
+          );
+        });
+      }
       page = (
         <div
           className="page-container page"
           style={{
             width: width,
-            height: height,
-            backgroundColor: randomColor()
+            height: height
           }}
         >
           <Objects
@@ -94,6 +119,7 @@ class Html5Renderer extends React.Component {
           />
           {BoxesRender}
           {LinesRender}
+          {overlays}
           <div id="fitTextEscaper" />
         </div>
       );
@@ -130,7 +156,8 @@ const mapStateToProps = state => {
 };
 const mapDispatchToProps = dispatch => {
   return {
-    onUpdatePropsHandler: payload => dispatch(updateObjectProps(payload))
+    onUpdatePropsHandler: payload => dispatch(updateObjectProps(payload)),
+    onChangePageHandler: payload => dispatch(changePage(payload))
   };
 };
 module.exports = connect(

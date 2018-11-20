@@ -1,5 +1,6 @@
 const uuidv4 = require("uuid/v4");
 const { merge, mergeAll, pathOr } = require("ramda");
+const randomcolor = require("randomcolor");
 
 const getObjectColorTemplate = cfg => {
   return merge(
@@ -126,7 +127,12 @@ const getDocumentDefaults = cfg => {
   const defaults = merge(
     {
       facingPages: false,
-      facingNumber: 2
+      facingNumber: 2,
+      showTrimbox: true,
+      groups: {
+        group_1: ["page_1", "page_2", "page_3"],
+        group_3: ["page_4"]
+      }
     },
     cfg || {}
   );
@@ -173,6 +179,8 @@ const getProjectTemplate = cfg => {
     pages: {},
     pagesOrder: [],
     activePage: null,
+    selectedPage: null,
+    activeGroup: null,
     objects: {},
     selectedObjectsIds: [],
     activeSelection: null,
@@ -200,7 +208,8 @@ const getProjectPageTemplate = cfg => {
     height: (cfg && cfg.height) || 1080,
     objectsIds: [],
     background: {
-      type: "color"
+      type: "color",
+      color: randomcolor()
     }
   };
 };
@@ -271,7 +280,8 @@ const getEmptyProject = cfg => {
       [emptyPage.id]: emptyPage
     },
     pagesOrder: [emptyPage.id],
-    activePage: emptyPage.id
+    activePage: emptyPage.id,
+    selectedPage: emptyPage.id
   };
 };
 
@@ -297,9 +307,9 @@ const getRandomProject = cfg => {
     type: "image",
     width: 343.16999999999996,
     height: 921.4480733944953,
-    left: Math.random() * 500,
+    left: 0,
     orientation: "north",
-    top: Math.random() * 500,
+    top: 0,
     src:
       "https://images.pexels.com/photos/414171/pexels-photo-414171.jpeg?auto=compress&cs=tinysrgb&h=350"
   });
@@ -308,8 +318,8 @@ const getRandomProject = cfg => {
     type: "textbox",
     width: 100,
     height: 100,
-    left: 100,
-    top: 100,
+    left: 0,
+    top: 0,
     text: "Enter text here",
     fill: "red"
   });
@@ -325,16 +335,24 @@ const getRandomProject = cfg => {
 
   page1 = {
     ...page1,
+    id: "page_1",
     objectsIds: [img1.id, text1.id]
   };
 
   page4 = {
     ...page4,
+    id: "page_4",
     objectsIds: [img1.id, text1.id]
   };
 
+  page3 = {
+    ...page3,
+    id: "page_3",
+    objectsIds: []
+  };
   page2 = {
     ...page2,
+    id: "page_2",
     objectsIds: []
   };
   return {
@@ -350,7 +368,9 @@ const getRandomProject = cfg => {
       [text1.id]: text1
     },
     pagesOrder: [page1.id, page2.id, page3.id, page4.id],
-    activePage: page1.id
+    activePage: page1.id,
+    selectedPage: page1.id,
+    activeGroup: "group_1"
   };
 };
 
@@ -369,8 +389,8 @@ const getEmptyObject = cfg => {
     type: cfg.type || false,
     width: cfg.width || 500,
     height: cfg.height || 500,
-    left: cfg.left || 500,
-    top: cfg.top || 500,
+    left: cfg.left,
+    top: cfg.top,
     editable: cfg.editable || 1,
     value: cfg.value || "default value",
     resizable: cfg.resizable || 1,
@@ -411,8 +431,6 @@ const getEmptyObject = cfg => {
           type: "textbox",
           width: cfg.width || 0,
           height: cfg.height || 0,
-          left: cfg.width || 500,
-          top: cfg.top || 500,
           fontSize: cfg.fontSize || 20,
           text: cfg.text || "Lorem Ipsum"
         };
