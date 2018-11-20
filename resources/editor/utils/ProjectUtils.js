@@ -314,6 +314,42 @@ const getRandomProject = cfg => {
       "https://images.pexels.com/photos/414171/pexels-photo-414171.jpeg?auto=compress&cs=tinysrgb&h=350"
   });
 
+  let img3 = getEmptyObject({
+    type: "image",
+    width: Math.random() * 500,
+    height: Math.random() * 500,
+    left: Math.random() * 500,
+    top: Math.random() * 500,
+    orientation: "north",
+    src: defaultImages[0]
+  });
+  let img4 = getEmptyObject({
+    type: "image",
+    width: Math.random() * 500,
+    height: Math.random() * 500,
+    left: Math.random() * 500,
+    top: Math.random() * 500,
+    orientation: "north",
+    src: defaultImages[parseInt(Math.random() * defaultImages.length)]
+  });
+  let img5 = getEmptyObject({
+    type: "image",
+    width: Math.random() * 500,
+    height: Math.random() * 500,
+    left: Math.random() * 500,
+    orientation: "north",
+    top: Math.random() * 500,
+    src: defaultImages[4]
+  });
+  let text6 = getEmptyObject({
+    type: "image",
+    width: Math.random() * 500,
+    height: Math.random() * 500,
+    left: Math.random() * 500,
+    orientation: "north",
+    top: Math.random() * 500,
+    value: "this is a default value for text"
+  });
   let text1 = getEmptyObject({
     type: "textbox",
     width: 100,
@@ -367,6 +403,7 @@ const getRandomProject = cfg => {
       [img1.id]: img1,
       [text1.id]: text1
     },
+
     pagesOrder: [page1.id, page2.id, page3.id, page4.id],
     activePage: page1.id,
     selectedPage: page1.id,
@@ -408,15 +445,19 @@ const getEmptyObject = cfg => {
       case "image":
         return {
           ...object,
+          src: cfg.src,
           cropH: 0,
           cropW: 12,
           cropX: 538,
           cropY: 0,
-          alternateZoom: 0,
-          leftSlider: 69,
+          cropW: 0,
+          cropH: 0,
+          ratio: 1,
+          brightness: 0,
+          contrast: 0,
           filter: "",
-          src:
-            "https://images.pexels.com/photos/414171/pexels-photo-414171.jpeg?auto=compress&cs=tinysrgb&h=350"
+          imageWidth: 0,
+          imageHeight: 0
         };
       case "graphics":
         return {

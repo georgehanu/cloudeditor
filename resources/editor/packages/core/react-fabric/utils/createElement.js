@@ -8,6 +8,10 @@ const Textbox = require("../components/Textbox");
 const activeSelection = require("../components/activeSelection");
 const Group = require("../components/Group");
 const Graphics = require("../components/Graphics");
+const Line = require("../components/Line");
+const Rect = require("../components/Rect");
+const TrimBox = require("../components/Helpers/TrimBox");
+const BleedBox = require("../components/Helpers/BleedBox");
 
 // Creates an element with an element type, props and a root instance
 
@@ -20,7 +24,11 @@ const TYPES = {
   StaticCanvas: StaticCanvas,
   activeSelection: activeSelection,
   Group: Group,
-  Graphics: Graphics
+  Line: Line,
+  Graphics: Graphics,
+  BleedBox: BleedBox,
+  TrimBox: TrimBox,
+  Rect: Rect
 };
 function createElement(type, props, ref = null) {
   // Resolve default props
@@ -45,6 +53,10 @@ function createElement(type, props, ref = null) {
     Textbox: () => new Textbox(forwardedProps),
     Group: () => new Group(forwardedProps),
     Graphics: () => new Graphics(forwardedProps),
+    Line: () => new Line(forwardedProps),
+    TrimBox: () => new TrimBox(forwardedProps),
+    BleedBox: () => new BleedBox(forwardedProps),
+    Rect: () => new Rect(forwardedProps),
     activeSelection: () => new activeSelection(forwardedProps),
     default: undefined
   };

@@ -82,7 +82,7 @@ export const Config = {
         className: "icon printqicon-top_valign"
       },
       {
-        value: "middle_valign",
+        value: "center_valign",
         label: "",
         className: "icon printqicon-middle_valign"
       },
@@ -130,20 +130,15 @@ export const Config = {
     dropDown: "icon printqicon-selectdown DropDownArrow",
     data: [
       {
-        value: "GreatVibes-Regular",
-        label: "GreatVibes-Regular",
-        className: "GreatVibesRegularFont"
+        value: "Arial",
+        label: "Arial",
+        className: "Arial"
       },
-      { value: "PT Sans", label: "PT Sans", className: "PTSansFont" },
+      { value: "Dax", label: "Dax", className: "Dax" },
       {
-        value: "PTSans-Bold",
-        label: "PTSans-Bold",
-        className: "PTSansBoldFont"
-      },
-      {
-        value: "Roboto-Regular",
-        label: "Roboto-Regular",
-        className: "RobotoFont"
+        value: "Helvetica",
+        label: "Helvetica",
+        className: "Helvetica"
       }
     ]
   },
@@ -195,9 +190,9 @@ export const Config = {
     baseType: Types.SIMPLE_ICON,
     threshold: 50,
     range: [
-      { value: 100, className: "printqicon-goodsmiley IconSmileyOk" },
+      { value: 100, className: "printqicon-badsmiley IconSmileyBad" },
       { value: 200, className: "printqicon-normalsmiley IconSmileyNormal" },
-      { value: 300, className: "printqicon-badsmiley IconSmileyBad" }
+      { value: 300, className: "printqicon-goodsmiley IconSmileyOk" }
     ]
   },
   [Types.COLOR_SELECTOR]: {

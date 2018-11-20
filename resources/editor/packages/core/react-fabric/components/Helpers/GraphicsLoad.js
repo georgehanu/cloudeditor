@@ -24,19 +24,7 @@ class GraphicsLoad extends Component {
       );
 
       forEach(obj => {
-        obj.isLoaded = 1; /*
-        obj.scaleX *= scale;
-        obj.scaleY *= scale;
-        obj.left = obj.left * scale;
-        obj.top = obj.top * scale;
-
-        if (this.props.width / options.width < this.props.height / options.height) {
-          obj.left = obj.left + Math.abs((this.props.width - options.width) / 2);
-          obj.top = obj.top + Math.abs((this.props.height - options.height) / 2);
-        } else {
-          obj.left = obj.left + Math.abs((this.props.width - options.width) / 2);
-          obj.top = obj.top + Math.abs((this.props.height - options.height) / 2);
-        }*/
+        obj.isLoaded = 1;
       }, objects);
       let loadedObject = fabric.util.groupGraphicsSVGElements(objects, options);
       loadedObject.isLoaded = 1;

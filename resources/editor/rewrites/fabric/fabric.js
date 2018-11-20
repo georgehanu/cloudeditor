@@ -52,35 +52,37 @@ fabric.util.object.extend(fabric.StaticCanvas.prototype, {
 fabric.util.object.extend(fabric.Object.prototype, {
   designerCallbacks: {},
   ignoreSnap: false,
-  isLoaded: false
+  isLoaded: false,
+  lockSkewingX: false,
+  lockSkewingY: false
 });
 fabric.util.object.extend(fabric.Image.prototype, {
-  cropWidth: 0,
-  cropHeight: 0,
-  originalWidth: 0,
-  originalHeight: 0,
-  resizeTimes: 5,
-  workingPercent: 1,
+  cropX: 0,
+  cropY: 0,
+  cropW: 0,
+  cropH: 0,
   leftSlider: 0,
-  unitResizeX: 0,
-  unitResizeY: 0,
+  fitMethod: "cover", //cover,contain
+  brightness: 0,
+  contrast: 0,
+  ratio: 1,
+  resizeTimes: 5,
   isEditing: 0,
   _lastScaleX: 1,
   _lastScaleY: 1,
   _savedProps: {},
   editable: 1,
-  fitMethod: "cover", //cover,contain
   canvasX: 0,
   canvasY: 0,
   canvasW: 0,
   canvasH: 0,
-  brightness: 0,
-  contrast: 0,
+
   _dimensionAffectingProps: {
     width: 1,
     height: 1,
     scaleX: 1,
-    scaleY: 1
+    scaleY: 1,
+    leftSlider: 1
   },
   initBehavior: function() {
     this.initAddedHandler();
@@ -318,8 +320,8 @@ fabric.util.object.extend(fabric.Image.prototype, {
           flipY = this.flipY ? -1 : 1;
         switch (this.fitMethod) {
           case "contain":
-            scaleX = (this.width * this.scaleX) / this.width;
-            scaleY = (this.width * this.scaleY) / this.width;
+            scaleX = this.getScaledWidth() / this.width;
+            scaleY = this.getScaledHeight() / this.height;
 
             xPos = this.limit(
               this._savedProps.startCanvasX +
@@ -338,29 +340,20 @@ fabric.util.object.extend(fabric.Image.prototype, {
             this.canvasY = yPos;
             break;
           case "cover":
-            widthRatio = this.cropWidth / (this.width * this.scaleX);
-            heightRatio = this.cropHeight / (this.height * this.scaleY);
-            scaleX =
-              this.cropWidth /
-              (this.cropWidth - this.leftSlider * this.unitResizeX * 2);
-            scaleY =
-              this.cropHeight /
-              (this.cropHeight - this.leftSlider * this.unitResizeY * 2);
+            widthRatio = this.cropW / this.getScaledWidth();
+            heightRatio = this.cropH / this.getScaledHeight();
             xPos = this.limit(
               this._savedProps.startCx -
-                (flipX * (xPos - this._savedProps.startX) * widthRatio) /
-                  scaleX,
-              -(this.unitResizeX * this.leftSlider),
-              imgW - this.cropWidth + this.unitResizeX * this.leftSlider
+                flipX * (xPos - this._savedProps.startX) * widthRatio,
+              0,
+              imgW - this.cropW
             );
             yPos = this.limit(
               this._savedProps.startCy -
-                (flipY * (yPos - this._savedProps.startY) * heightRatio) /
-                  scaleY,
-              -(this.unitResizeY * this.leftSlider),
-              imgH - this.cropHeight + this.unitResizeY * this.leftSlider
+                flipY * (yPos - this._savedProps.startY) * heightRatio,
+              0,
+              imgH - this.cropH
             );
-
             this.cropX = xPos;
             this.cropY = yPos;
             break;
@@ -382,6 +375,7 @@ fabric.util.object.extend(fabric.Image.prototype, {
     var oldScaleY = this.scaleY;
     var oldWidth = this.width;
     var oldHeight = this.height;
+    var oldLeftSlider = this.leftSlider;
 
     this.callSuper("_set", key, value);
 
@@ -390,7 +384,8 @@ fabric.util.object.extend(fabric.Image.prototype, {
         oldScaleX != this.scaleX ||
         oldScaleY != this.scaleY ||
         oldWidth != this.width ||
-        oldHeight != this.height
+        oldHeight != this.height ||
+        oldLeftSlider != this.leftSlider
       ) {
         this._setViewBox({});
         this.setCoords();
@@ -402,8 +397,8 @@ fabric.util.object.extend(fabric.Image.prototype, {
       return;
     }
 
-    var originalWidth = this._originalElement.width,
-      originalHeight = this._originalElement.height,
+    var originalWidth = this.imageWidth || this._originalElement.width,
+      originalHeight = this.imageHeigth || this._originalElement.height,
       scaleX = options.scaleX
         ? Math.abs(parseFloat(options.scaleX))
         : this.scaleX,
@@ -469,6 +464,14 @@ fabric.util.object.extend(fabric.Image.prototype, {
           cx = (originalWidth - cw) * 0.5;
           cy = (originalHeight - ch) * 0.5;
           /// make sure source rectangle is valid
+          let unitResizeX = (cw - cw / this.resizeTimes) / 2 / 100,
+            unitResizeY = (ch - ch / this.resizeTimes) / 2 / 100;
+
+          cx = cx + unitResizeX * this.leftSlider;
+          cy = cy + unitResizeY * this.leftSlider;
+          cw = cw - 2 * unitResizeX * this.leftSlider;
+          ch = ch - 2 * unitResizeY * this.leftSlider;
+
           if (cx < 0) cx = 0;
           if (cy < 0) cy = 0;
           if (cw > originalWidth) cw = originalWidth;
@@ -483,13 +486,8 @@ fabric.util.object.extend(fabric.Image.prototype, {
 
     this.cropX = cx;
     this.cropY = cy;
-    this.cropWidth = cw;
-    this.cropHeight = ch;
-
-    this.unitResizeX =
-      (this.cropWidth - this.cropWidth / this.resizeTimes) / 2 / 100;
-    this.unitResizeY =
-      (this.cropHeight - this.cropHeight / this.resizeTimes) / 2 / 100;
+    this.cropW = cw;
+    this.cropH = ch;
     this.canvasX = canvasX;
     this.canvasY = canvasY;
     this.canvasW = canvasW;
@@ -504,7 +502,11 @@ fabric.Object.prototype.getMainProps = function() {
     height: this.height,
     angle: this.angle,
     flipX: this.flipX,
-    flipY: this.flipY
+    flipY: this.flipY,
+    cropX: this.cropX,
+    cropY: this.cropY,
+    cropW: this.cropW,
+    cropH: this.cropH
   };
 };
 fabric.Image.prototype.initialize = (function(initialize) {
@@ -518,22 +520,19 @@ fabric.Image.prototype.getMainProps = function() {
   return fabric.util.object.extend(this.callSuper("getMainProps"), {
     cropX: this.cropX,
     cropY: this.cropY,
-    cropWidth: this.cropWidth,
-    cropHeight: this.cropHeight,
+    cropW: this.cropW,
+    cropH: this.cropH,
     leftSlider: this.leftSlider,
-    brightness: 0,
-    contrast: 0
+    brightness: this.brightness,
+    contrast: this.contrast
   });
 };
 
 fabric.Image.prototype._renderFill = (function(_renderFill) {
   return function(ctx) {
-    var w = this.cropWidth,
-      h = this.cropHeight,
-      sW = w * this._filterScalingX,
-      sH = h * this._filterScalingY,
-      elementToDraw = this._element;
-    let cotrast_brightness = null;
+    let elementToDraw = this._element,
+      cotrast_brightness = null;
+
     if (this.brightness != 0) {
       cotrast_brightness = "brightness(" + (100 + this.brightness) + "%) ";
     }
@@ -547,10 +546,10 @@ fabric.Image.prototype._renderFill = (function(_renderFill) {
     elementToDraw &&
       ctx.drawImage(
         elementToDraw,
-        this.cropX * this._filterScalingX + this.unitResizeX * this.leftSlider,
-        this.cropY * this._filterScalingY + this.unitResizeY * this.leftSlider,
-        sW - 2 * this.unitResizeX * this.leftSlider,
-        sH - 2 * this.unitResizeY * this.leftSlider,
+        this.cropX,
+        this.cropY,
+        this.cropW,
+        this.cropH,
         this.canvasX,
         this.canvasY,
         this.canvasW,
@@ -574,7 +573,9 @@ fabric.ActiveSelection.prototype.initialize = (function(_initialize) {
 fabric.Textbox.prototype.getMainProps = function() {
   return fabric.util.object.extend(this.callSuper("getMainProps"), {
     fontSize: this.fontSize,
-    text: this.text
+    text: this.text,
+    textAlign: this.textAlign,
+    vAlign: this.vAlign
   });
 };
 fabric.Object.prototype.render = (function(_render) {
@@ -615,4 +616,113 @@ fabric.util.object.extend(fabric.util, {
     return object;
   }
 });
+fabric.Canvas.prototype.addOrRemove = (function(_addOrRemove) {
+  return function(functor, eventjsFunctor) {
+    _addOrRemove.call(this, functor, eventjsFunctor);
+    functor(
+      document,
+      "update_crop_params",
+      (function(that) {
+        return function() {
+          that.updateCropParams();
+        };
+      })(this)
+    );
+  };
+})(fabric.Canvas.prototype.addOrRemove);
+fabric.Canvas.prototype.updateCropParams = function() {
+  if (this._activeObject) {
+    switch (this._activeObject.type) {
+      case "image":
+        if (
+          this._activeObject.designerCallbacks &&
+          this._activeObject.designerCallbacks.updateCropParams &&
+          typeof this._activeObject.designerCallbacks.updateCropParams ===
+            "function"
+        ) {
+          this._activeObject.designerCallbacks.updateCropParams(
+            this._activeObject.id,
+            {
+              cropX: this._activeObject.cropX,
+              cropY: this._activeObject.cropY,
+              cropW: this._activeObject.cropW,
+              cropH: this._activeObject.cropH
+            }
+          );
+        }
+        break;
+      default:
+        break;
+    }
+  }
+};
+fabric.Textbox.prototype._initDimensions = function() {
+  this.isEditing && this.initDelayedCursor();
+  this.clearContextTop();
+  this._clearCache();
+  // clear dynamicMinWidth as it will be different after we re-wrap line
+  this.dynamicMinWidth = 0;
+  // wrap lines
+  this._styleMap = this._generateStyleMap(this._splitText());
+  // if after wrapping, the width is smaller than dynamicMinWidth, change the width and re-wrap
+  /*if (this.dynamicMinWidth > this.width) {
+    this._set("width", this.dynamicMinWidth);
+  }*/
+  if (this.textAlign.indexOf("justify") !== -1) {
+    // once text is measured we need to make space fatter to make justified text.
+    this.enlargeSpaces();
+  }
+  // clear cache and re-calculate height
+  // this.height = this.calcTextHeight();
+  this.saveState({ propertySet: "_dimensionAffectingProps" });
+};
+fabric.Textbox.prototype.initDimensions = function() {
+  if (this.__skipDimension) {
+    return;
+  }
+
+  this._initDimensions();
+  // Use defined height as a fixed value. If there's no height value, then use max or calculated height
+  if (!this.height) this.height = this.height || this.calcTextHeight();
+  // If fontResizing mode enabled
+  var textWidth = this.calcTextWidth();
+  var textHeight = this.calcTextHeight();
+  if (textWidth > this.width) {
+    this.fontSize -= 1;
+    this.width = this.maxWidth;
+    this.initDimensions();
+  } else if (textHeight > this.height) {
+    this.fontSize -= 1;
+    this.initDimensions();
+  }
+};
+fabric.Textbox.prototype.initialize = (function(_initialize) {
+  return function(text, options) {
+    _initialize.call(this, text, options);
+    if (
+      this.designerCallbacks &&
+      typeof this.designerCallbacks.updateObjectProps === "function"
+    ) {
+      this.designerCallbacks.updateObjectProps({
+        id: this.id,
+        props: {
+          fontSize: this.fontSize
+        }
+      });
+    }
+  };
+})(fabric.Textbox.prototype.initialize);
+fabric.util.object.extend(fabric.Textbox.prototype, {
+  vAlign: "top" //center,bottom
+});
+fabric.Textbox.prototype._getTopOffset = function() {
+  switch (this.vAlign) {
+    case "top":
+      return -this.height / 2;
+    case "center":
+      return -this.calcTextHeight() / 2;
+    case "bottom":
+      return this.height / 2 - this.calcTextHeight();
+  }
+};
 module.exports = { fabric };

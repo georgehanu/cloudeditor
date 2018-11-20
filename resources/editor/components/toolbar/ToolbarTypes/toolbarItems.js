@@ -33,7 +33,7 @@ export const MenuPoptext = {
 
 export const VAlignPoptext = {
   type: Types.POPTEXT_VALIGN,
-  selected: "bottom_valign"
+  selected: "top_valign"
 };
 
 export const LayerPoptext = {

@@ -42,12 +42,8 @@ export const filterBasedOnLocation = (items, position) => {
     .sort((a, b) => comparePosition(a, b));
 };
 export const imageQuality = (activeItem, options) => {
-  let cropWidth =
-      activeItem.cropWidth * activeItem.workingPercent -
-      2 * activeItem.leftSlider * activeItem.unitResizeX,
-    cropHeight =
-      activeItem.cropHeight * activeItem.workingPercent -
-      2 * activeItem.leftSlider * activeItem.unitResizeX,
+  let cropWidth = activeItem.cropW * activeItem.ratio,
+    cropHeight = activeItem.cropH * activeItem.ratio,
     width_i =
       activeItem.width *
       (options.pageDimmensions.pageWidth /
@@ -128,7 +124,17 @@ export const LoadTextSettings = (toolbar, activeItem, activeLayer) => {
     for (let itemIndex in group.items) {
       let item = group.items[itemIndex];
 
-      if (item.type === Types.BUTTON_LETTER_BOLD) {
+      if (item.type === Types.POPTEXT_VALIGN) {
+        item.selected = activeItem.vAlign + "_valign";
+      } else if (item.type === Types.BUTTON_LEFT_ALIGNED) {
+        item.selected = activeItem.textAlign == "left";
+      } else if (item.type === Types.BUTTON_RIGHT_ALIGNED) {
+        item.selected = activeItem.textAlign == "right";
+      } else if (item.type === Types.BUTTON_CENTER_ALIGNED) {
+        item.selected = activeItem.textAlign == "center";
+      } else if (item.type === Types.BUTTON_JUSTIFY_ALIGNED) {
+        item.selected = activeItem.textAlign == "justify";
+      } else if (item.type === Types.BUTTON_LETTER_BOLD) {
         item.selected = activeItem.bold;
       } else if (item.type === Types.BUTTON_LETTER_ITALIC) {
         item.selected = activeItem.italic;
@@ -180,6 +186,21 @@ export const LoadTextAdditionalInfo = activeItem => {
 export const CreatePayload = (activeitem, itemPayload) => {
   let attrs = {};
   switch (itemPayload.type) {
+    case Types.POPTEXT_VALIGN:
+      attrs = { vAlign: itemPayload.value.replace("_valign", "") };
+      break;
+    case Types.BUTTON_CENTER_ALIGNED:
+      attrs = { textAlign: "center" };
+      break;
+    case Types.BUTTON_LEFT_ALIGNED:
+      attrs = { textAlign: "left" };
+      break;
+    case Types.BUTTON_RIGHT_ALIGNED:
+      attrs = { textAlign: "right" };
+      break;
+    case Types.BUTTON_JUSTIFY_ALIGNED:
+      attrs = { textAlign: "justify" };
+      break;
     case Types.FLIP_CHOOSER:
       attrs = { flip: itemPayload.value };
       break;

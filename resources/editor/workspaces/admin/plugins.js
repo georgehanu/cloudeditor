@@ -5,7 +5,9 @@ const Html5Renderer = require("../../plugins/Html5Renderer");
 const SideBar = require("../../plugins/SideBar");
 const Snap = require("../../plugins/Snap");
 const Toolbar = require("../../plugins/Toolbar");
+const Zoom = require("../../plugins/Zoom");
 const Pagination = require("../../plugins/Html5Plugins/Pagination");
+const ZoomButtons = require("../../plugins/ZoomButtons");
 
 const plugins = {
   SideBar: SideBar,
@@ -15,7 +17,9 @@ const plugins = {
   Renderer: Renderer,
   Snap: Snap,
   Toolbar: Toolbar,
-  Pagination: Pagination
+  Zoom: Zoom,
+  Pagination: Pagination,
+  ZoomButtons: ZoomButtons
 };
 
 const requires = {};

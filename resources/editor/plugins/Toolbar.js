@@ -215,8 +215,8 @@ class Toolbar extends React.Component {
         itemData = { ...attributes[this.state.detailsWndComponent] };
       }
     }
-    /*
-    const randomStyle = {
+
+    /*const randomStyle = {
       backgroundColor: randomColor()
     };*/
 

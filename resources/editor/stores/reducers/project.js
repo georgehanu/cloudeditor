@@ -140,7 +140,8 @@ const config = ConfigUtils.getDefaults();
 const emptyProject = ProjectUtils.getRandomProject(config.project);
 
 const initialState = {
-  ...emptyProject
+  ...emptyProject,
+  ui: ProjectUtils.getEmptyUI()
 };
 
 const swap = (index1, index2, list) => {

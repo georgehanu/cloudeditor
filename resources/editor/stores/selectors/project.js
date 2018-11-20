@@ -65,6 +65,8 @@ let getObjectsInGroup = (pageObjectsIds, allObjects, activePage) => {
 const documentBoxesSelector = state =>
   (state && state.project.configs.pages && state.project.configs.pages.boxes) ||
   {};
+const zoomSelector = state =>
+  (state && state.ui && state.ui.workArea && state.ui.workArea.zoom) || 1;
 const getPagesWithObjects = (
   activeGroupPages,
   pages,
@@ -202,5 +204,6 @@ module.exports = {
   selectedObjectsIdsSelector,
   pagesSelector,
   groupsSelector,
-  selectedPageIdSelector
+  selectedPageIdSelector,
+  zoomSelector
 };

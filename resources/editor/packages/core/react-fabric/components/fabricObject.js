@@ -1,6 +1,7 @@
 const logger = require("../../../../utils/LoggerUtils");
 const { objectTypes, objectDefaults } = require("./types/object");
-const { merge } = require("ramda");
+
+const _ = require("ramda");
 class FabricObject {
   constructor(props) {
     this.props = props;
@@ -17,9 +18,40 @@ class FabricObject {
     image: true,
     designerCallbacks: true
   };
+  mapValueStateToFabric = {};
+  mapKeysStateToFabric = {};
+
   setPropsToSkip(propsToSkip) {
-    this.propsToSkip = merge(this.propsToSkip, propsToSkip);
+    this.propsToSkip = _.merge(this.propsToSkip, propsToSkip);
   }
+  setMapValueStateToFabric(mapValueStateToFabric) {
+    this.mapValueStateToFabric = _.merge(
+      this.mapValueStateToFabric,
+      mapValueStateToFabric
+    );
+  }
+  setMapKeysStateToFabric(mapKeysStateToFabric) {
+    this.mapKeysStateToFabric = _.merge(
+      this.mapKeysStateToFabric,
+      mapKeysStateToFabric
+    );
+  }
+  _mapStatePropsToFabric = obj => {
+    return _.reduce(
+      (acc, key) => {
+        this.mapKeysStateToFabric[key]
+          ? (acc[this.mapKeysStateToFabric[key]] = this.mapValueStateToFabric[
+              key
+            ][obj[key]])
+          : acc.hasOwnProperty(key)
+            ? (acc[key] = acc[key])
+            : (acc[key] = obj[key]);
+        return acc;
+      },
+      {},
+      _.keys(obj)
+    );
+  };
   _applyProps(props, oldProps) {
     const { instance } = this;
     let updatedProps = {};
@@ -63,8 +95,9 @@ class FabricObject {
 
     if (hasUpdates) {
       logger.info("hasUpdates", updatedProps);
+      updatedProps = this._mapStatePropsToFabric(updatedProps);
       instance.set(updatedProps);
-      console.log("marius ", updatedProps);
+
       this._updatePicture(instance);
       instance.setCoords();
     }

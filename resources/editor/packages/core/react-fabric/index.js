@@ -7,5 +7,21 @@ const IText = "IText";
 const Textbox = "Textbox";
 const Group = "Group";
 const Graphics = "Graphics";
+const Line = "Line";
+const TrimBox = "TrimBox";
+const BleedBox = "BleedBox";
+const Rect = "Rect";
 
-module.exports = { Image, Text, IText, Fabric, Group, Textbox, Graphics };
+module.exports = {
+  Image,
+  Text,
+  IText,
+  Fabric,
+  Group,
+  Textbox,
+  Graphics,
+  Line,
+  TrimBox,
+  BleedBox,
+  Rect
+};

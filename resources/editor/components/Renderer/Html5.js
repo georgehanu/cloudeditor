@@ -6,6 +6,7 @@ const randomColor = require("randomcolor");
 const uuidv4 = require("uuid/v4");
 const { connect } = require("react-redux");
 const { snapLinesSelector } = require("../../stores/selectors/Html5/SnapLines");
+const { zoomSelector } = require("../../stores/selectors/project");
 const {
   changeObjectPosition,
   changeObjectDimensions,
@@ -73,20 +74,28 @@ class Html5Renderer extends React.Component {
     if (this.state.componentReady) {
       let { width, height, objects } = this.props;
       const scale = this.state.scale;
+      let zoom = this.props.zoom;
+      if (this.props.viewOnly) {
+        zoom = 1;
+      }
+      const zoomScale = scale + ((zoom * 100 - 100) / 100) * scale;
+      const widthScale = width * zoomScale;
+      const heightScale = height * zoomScale;
       width *= scale;
       height *= scale;
+
       let LinesRender = null;
       let BoxesRender = null;
       if (!this.props.viewOnly) {
-        LinesRender = <Lines lines={this.props.snapLines} scale={scale} />;
-        BoxesRender = <Boxes scale={scale} />;
+        LinesRender = <Lines lines={this.props.snapLines} scale={zoomScale} />;
+        BoxesRender = <Boxes scale={zoomScale} />;
       }
       let overlays = null;
       if (!this.props.viewOnly) {
         overlays = this.props.overlays.map(overlay => {
           const overlayStyle = {
-            width: overlay.width * scale,
-            left: overlay.left * scale
+            width: overlay.width * zoomScale,
+            left: overlay.left * zoomScale
           };
           return (
             <div
@@ -105,22 +114,30 @@ class Html5Renderer extends React.Component {
       }
       page = (
         <div
-          className="page-container page"
+          className="zoom-container"
           style={{
             width: width,
             height: height
           }}
         >
-          <Objects
-            viewOnly={this.props.viewOnly}
-            items={this.props.objects}
-            onUpdateProps={this.props.onUpdatePropsHandler}
-            scale={scale}
-          />
-          {BoxesRender}
-          {LinesRender}
-          {overlays}
-          <div id="fitTextEscaper" />
+          <div
+            className="page-container page"
+            style={{
+              width: widthScale,
+              height: heightScale
+            }}
+          >
+            <Objects
+              viewOnly={this.props.viewOnly}
+              items={this.props.objects}
+              onUpdateProps={this.props.onUpdatePropsHandler}
+              scale={zoomScale}
+            />
+            {BoxesRender}
+            {LinesRender}
+            {overlays}
+            <div id="fitTextEscaper" />
+          </div>
         </div>
       );
     }
@@ -151,7 +168,8 @@ Html5Renderer.defaultProps = {
 };
 const mapStateToProps = state => {
   return {
-    snapLines: snapLinesSelector(state)
+    snapLines: snapLinesSelector(state),
+    zoom: zoomSelector(state)
   };
 };
 const mapDispatchToProps = dispatch => {

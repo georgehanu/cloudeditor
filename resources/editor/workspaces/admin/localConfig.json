@@ -12,13 +12,10 @@
       "AddButton",
       "TabBar",
       "Html5Renderer",
-
-      {
-        "name": "Renderer",
-        "hide": "{true}"
-      },
+      "Snap",
+      "Toolbar",
       "Pagination",
-      "Toolbar"
+      "ZoomButtons"
     ]
   },
   "project": {
