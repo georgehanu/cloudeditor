@@ -123,7 +123,6 @@ export const LoadTextSettings = (toolbar, activeItem, activeLayer) => {
     let group = toolbar.groups[groupIndex];
     for (let itemIndex in group.items) {
       let item = group.items[itemIndex];
-
       if (item.type === Types.POPTEXT_VALIGN) {
         item.selected = activeItem.vAlign + "_valign";
       } else if (item.type === Types.BUTTON_LEFT_ALIGNED) {
@@ -145,7 +144,8 @@ export const LoadTextSettings = (toolbar, activeItem, activeLayer) => {
       } else if (item.type === Types.SLIDER_TEXT_SPACEING) {
         item.defaultValue = parseInt(activeItem.charSpacing);
       } else if (item.type === Types.INCREMENTAL_FONT_SIZE) {
-        item.defaultValue = activeItem.fontSize + ".00";
+        item.defaultValue = activeItem.fontSize.toFixed(2);
+        item.value = activeItem.fontSize.toFixed(2);
       } else if (item.type === Types.POPTEXT_FONT) {
         item.value = activeItem.fontFamily;
       } else if (item.type === Types.POPTEXT_LAYER) {
@@ -183,7 +183,7 @@ export const LoadTextAdditionalInfo = activeItem => {
   };
 };
 
-export const CreatePayload = (activeitem, itemPayload) => {
+export const CreatePayload = (activeitem, itemPayload, options) => {
   let attrs = {};
   switch (itemPayload.type) {
     case Types.POPTEXT_VALIGN:
@@ -233,7 +233,6 @@ export const CreatePayload = (activeitem, itemPayload) => {
     case Types.INCREMENTAL_FONT_SIZE:
       attrs = { fontSize: parseFloat(itemPayload.value) };
       break;
-
     case Types.POPTEXT_FONT:
       attrs = { fontFamily: itemPayload.value };
       break;

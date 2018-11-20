@@ -101,7 +101,10 @@ const selectedObjectSelector = createSelector(
     return activeObjects;
   }
 );
-
+const uiSelector = state => (state && state.ui) || {};
+const uiScaleSelector = createSelector([uiSelector], ui => {
+  return ui.workArea.scale;
+});
 module.exports = {
   activePageSelector,
   activePageIdSelector,
@@ -110,5 +113,6 @@ module.exports = {
   objectsSelector,
   selectedActionsIdsSelector,
   selectedObjectsIdsSelector,
-  pagesSelector
+  pagesSelector,
+  uiScaleSelector
 };

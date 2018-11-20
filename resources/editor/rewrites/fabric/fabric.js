@@ -572,11 +572,14 @@ fabric.ActiveSelection.prototype.initialize = (function(_initialize) {
 
 fabric.Textbox.prototype.getMainProps = function() {
   return fabric.util.object.extend(this.callSuper("getMainProps"), {
-    fontSize: this.fontSize,
+    fontSize: this.getFontSizePdf(),
     text: this.text,
     textAlign: this.textAlign,
     vAlign: this.vAlign
   });
+};
+fabric.Textbox.prototype.getFontSizePdf = function() {
+  return this.fontSize / this.canvasScale;
 };
 fabric.Object.prototype.render = (function(_render) {
   return function(ctx) {
@@ -689,12 +692,40 @@ fabric.Textbox.prototype.initDimensions = function() {
   var textHeight = this.calcTextHeight();
   if (textWidth > this.width) {
     this.fontSize -= 1;
-    this.width = this.maxWidth;
+    //this.width = this.maxWidth;
     this.initDimensions();
   } else if (textHeight > this.height) {
     this.fontSize -= 1;
     this.initDimensions();
   }
+};
+fabric.Textbox.prototype.set = function(key, value) {
+  this.callSuper("set", key, value);
+  var needsDims = false;
+  if (typeof key === "object") {
+    for (var _key in key) {
+      needsDims =
+        needsDims || this._dimensionAffectingProps.indexOf(_key) !== -1;
+    }
+  } else {
+    needsDims = this._dimensionAffectingProps.indexOf(key) !== -1;
+  }
+  if (needsDims) {
+    this.initDimensions();
+    this.setCoords();
+    if (
+      !this.__skipDimension &&
+      (key == "fontSize" || (typeof key === "object" && key.fontSize)) &&
+      this.designerCallbacks &&
+      typeof this.designerCallbacks.updateObjectProps === "function"
+    ) {
+      this.designerCallbacks.updateObjectProps({
+        id: this.id,
+        props: { fontSize: this.getFontSizePdf() }
+      });
+    }
+  }
+  return this;
 };
 fabric.Textbox.prototype.initialize = (function(_initialize) {
   return function(text, options) {
@@ -706,7 +737,7 @@ fabric.Textbox.prototype.initialize = (function(_initialize) {
       this.designerCallbacks.updateObjectProps({
         id: this.id,
         props: {
-          fontSize: this.fontSize
+          fontSize: this.getFontSizePdf()
         }
       });
     }

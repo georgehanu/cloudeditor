@@ -373,12 +373,13 @@ const getRandomProject = cfg => {
   let text1 = getEmptyObject({
     type: "textbox",
     width: 400,
-    height: 150,
+    height: 400,
     left: 100,
     top: 100,
-    fontSize: 70,
-    bold: true,
-    italic: true,
+    fontSize: 14,
+    bold: false,
+    italic: false,
+    fontFamily: "Arial",
     text:
       "Lorem\nIpsum is simply dummy text of the \nprinting and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever \nsince the 1500s, when an unknown printer took a galley of type \nand scrambled it to make a type specimen book ",
     fill: "red"
@@ -490,7 +491,8 @@ const getEmptyObject = cfg => {
           fontSize: cfg.fontSize || 90,
           text: cfg.text || "Lorem Ipsum",
           bold: cfg.bold || false,
-          italic: cfg.italic || false
+          italic: cfg.italic || false,
+          fontFamily: cfg.fontFamily || false
         };
       case "activeSelection":
         return { ...object, type: cfg.type, left: cfg.left, top: cfg.top };

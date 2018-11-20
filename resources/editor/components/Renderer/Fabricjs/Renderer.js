@@ -314,8 +314,10 @@ class FabricjsRenderer extends React.PureComponent {
           return (
             <Textbox
               key={object.id}
+              canvasScale={this.state.scale}
               {...object}
               designerCallbacks={this.designerCallbacks}
+              fontSize={object.fontSize * this.state.scale}
             />
           );
         case "group":

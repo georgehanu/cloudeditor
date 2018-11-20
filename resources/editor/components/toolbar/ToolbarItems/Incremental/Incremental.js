@@ -53,7 +53,7 @@ const validateInput = value => {
     ) {
       return null;
     }
-    if (parts[0].length < 1 || parts[0].length > 2 || parts[1].length > 2)
+    if (parts[0].length < 1 || parts[0].length > 3 || parts[1].length > 3)
       return null;
 
     if (parts[1].length === 0) {
@@ -70,7 +70,7 @@ const validateInput = value => {
         return null;
       }
       const intValue = parseInt(value);
-      if (intValue <= 0 || intValue > 99) {
+      if (intValue <= 0 || intValue > 999) {
         return null;
       }
       return "" + value + ".00";
