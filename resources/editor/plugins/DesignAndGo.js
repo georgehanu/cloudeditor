@@ -1,11 +1,11 @@
 import React from "react";
 import * as Types from "../components/designAndGo/DesignAndGoConfig/types";
-
+/*
 import Jam1 from "../assets/default/designAndGo/Jam1.png";
 import Jam2 from "../assets/default/designAndGo/Jam2.png";
 import Jam3 from "../assets/default/designAndGo/Jam3.png";
 import Jam4 from "../assets/default/designAndGo/Jam4.png";
-
+*/
 import Layout from "../components/designAndGo/DesignAndGoItems/LayoutItems/Layout";
 
 import "slick-carousel/slick/slick.css";
@@ -19,12 +19,13 @@ import SignInModal from "../components/designAndGo/DesignAndGoItems/UI/SignInMod
 const assign = require("object-assign");
 
 // this should be in store ???
+/*
 const pageData = [
   { image: Jam1, upload: true, classImg: "ImageJam1" },
   { image: Jam2, classImg: "ImageJam2" },
   { image: Jam3, upload: true, classImg: "ImageJam3" },
   { image: Jam4, classImg: "ImageJam4" }
-];
+];*/
 
 const Config = {
   data: {
@@ -87,23 +88,7 @@ const Config = {
         type: Types.COLOR,
         label: "Options",
         class: "Input ColorButtonGroup",
-        fieldName: "wineAlcool",
-        colors: [
-          {
-            containerColor: "red",
-            containerBgColor: "green",
-            color1: "blue",
-            color2: "yellow"
-          },
-          { color1: "blue", color2: "yellow" },
-          {},
-          {
-            colorPicker: true,
-            containerColor: "red",
-            containerBgColor: "green",
-            selected: true
-          }
-        ]
+        fieldName: "wineAlcool"
       },
       {
         type: Types.UPLOAD_IMAGE,
@@ -172,7 +157,7 @@ class DesignAndGo extends React.Component {
 
         <Layout
           data={Config.data}
-          sliderData={pageData}
+          //sliderData={pageData}
           onMenuOpenHandler={this.onMenuOpenHandler}
           onDataOpenHandler={this.onDataOpenHandler}
         />

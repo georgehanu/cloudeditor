@@ -6,10 +6,6 @@ import { withNamespaces } from "react-i18next";
 import SliderCarousel from "../SliderCarousel/SliderCarousel";
 
 class LeftPanel extends React.Component {
-  handleColorChange = color => {
-    console.log(color);
-  };
-
   render() {
     return (
       <div className="LeftPanel">
@@ -43,7 +39,7 @@ class LeftPanel extends React.Component {
             )}
             <Fields
               items={this.props.data.items}
-              handleColorChange={this.handleColorChange}
+              sliderData={this.props.sliderData}
             />
           </div>
         </div>

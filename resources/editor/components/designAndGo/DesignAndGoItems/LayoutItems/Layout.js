@@ -3,6 +3,9 @@ import React from "react";
 import LeftPanel from "../LeftPanel/LeftPanel";
 import RightPanel from "../RightPanel/RightPanel";
 import SliderCarousel from "../SliderCarousel/SliderCarousel";
+import { dagSliderDataSelector } from "../../../../stores/selectors/designAndGo";
+
+const { connect } = require("react-redux");
 
 const MobileBreakpoint = 842;
 
@@ -49,4 +52,17 @@ class Layout extends React.Component {
   }
 }
 
-export default Layout;
+const mapStateToProps = state => {
+  return {
+    sliderData: dagSliderDataSelector(state)
+  };
+};
+
+const mapDispatchToProps = dispatch => {
+  return {};
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Layout);

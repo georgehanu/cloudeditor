@@ -17,4 +17,4 @@ const MenuHeader = props => {
   );
 };
 
-export default withNamespaces("designAndGoMenu")(MenuHeader);
+export default withNamespaces("designAndGo")(MenuHeader);

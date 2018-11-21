@@ -1,25 +1,22 @@
 import React from "react";
-
-import * as Utils from "../../DesignAndGoConfig/utils";
 import { HuePicker } from "react-color";
 
 const ColorButton = props => {
-  const containerColorStyle = props.containerColor
-    ? { backgroundColor: props.containerColor }
-    : {};
+  const className = "ColorButton" + (props.active ? " ColorButtonActive" : "");
+
   const containerBgColorStyle = props.containerBgColor
     ? { backgroundColor: props.containerBgColor }
     : {};
 
   return (
     <React.Fragment>
-      <div className="ColorButton" style={{ ...containerColorStyle }}>
+      <div className={className} onClick={props.clicked}>
         <div className="ColorButtonBg" style={{ ...containerBgColorStyle }} />
       </div>
-      {props.selected && (
+      {props.active && (
         <div className="ColorPicker">
           <HuePicker
-            onChangeComplete={props.handleColorChange}
+            onChangeComplete={color => props.handleColorChange(color)}
             color={props.containerBgColor}
           />
         </div>

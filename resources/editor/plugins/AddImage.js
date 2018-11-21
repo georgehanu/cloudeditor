@@ -28,7 +28,6 @@ class AddImage extends React.Component {
     ) {
       return;
     }
-    console.log("IMAGE");
 
     this.props.addImageToGallery({ name: event.target.files[0].name });
     event.target.value = null;

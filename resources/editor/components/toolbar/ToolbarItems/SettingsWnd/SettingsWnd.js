@@ -11,7 +11,6 @@ import ChangeShapeWnd from "../ChangeShapeWnd/ChangeShapeWnd";
 
 const SettingsWnd = props => {
   /* Merge the props with the data from Config */
-  console.log(props);
   const item = { ...props.payload, ...Config[props.item] }; // second should be config
   let itemData = null;
 

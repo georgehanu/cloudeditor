@@ -2,17 +2,23 @@ import React from "react";
 import { withNamespaces } from "react-i18next";
 import CustomSlider from "../ReWrite/CustomSlider";
 import UploadImage from "../LayoutItems/UploadImage";
+import { dagChangeSlider } from "../../../../stores/actions/designAndGo";
+
+const { connect } = require("react-redux");
 
 class SliderCarousel extends React.Component {
   state = {
     showFullSlider: false
   };
 
-  changeSlider = value => {
+  changeSlider = (value, increment) => {
     if (value && this.state.showFullSlider) {
       return false;
     }
     this.setState({ showFullSlider: !this.state.showFullSlider });
+    if (increment !== undefined) {
+      this.props.dagChangeSlider(increment);
+    }
     return !this.state.showFullSlider;
   };
 
@@ -28,7 +34,7 @@ class SliderCarousel extends React.Component {
       return (
         <div key={index}>
           <div className={className} />
-          {el.upload && <UploadImage />}
+          {el.upload && <UploadImage alwaysShow={true} />}
         </div>
       );
     });
@@ -38,7 +44,7 @@ class SliderCarousel extends React.Component {
       speed: 500,
       slidesToShow: 1,
       slidesToScroll: 1,
-      swipe: true,
+      swipe: false,
       draggable: false,
       verticalSwiping: false
     };
@@ -50,4 +56,17 @@ class SliderCarousel extends React.Component {
   }
 }
 
-export default withNamespaces("designAndGo")(SliderCarousel);
+const mapStateToProps = state => {
+  return {};
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    dagChangeSlider: increment => dispatch(dagChangeSlider(increment))
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(withNamespaces("designAndGo")(SliderCarousel));

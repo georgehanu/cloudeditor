@@ -18,4 +18,4 @@ const Title = props => {
   );
 };
 
-export default withNamespaces("designAndGoMenu")(Title);
+export default withNamespaces("designAndGo")(Title);

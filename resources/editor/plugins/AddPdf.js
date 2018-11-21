@@ -25,7 +25,6 @@ class AddPdf extends React.Component {
     ) {
       return;
     }
-    console.log("PDFFFF");
 
     this.props.addPdfToGallery({ name: event.target.files[0].name });
     event.target.value = null;

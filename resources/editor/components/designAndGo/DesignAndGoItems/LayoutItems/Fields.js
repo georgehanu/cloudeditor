@@ -15,13 +15,7 @@ const Fields = props => {
     } else if (el.type === Types.UPLOAD_IMAGE) {
       return <UploadImage key={index} {...el} />;
     } else if (el.type === Types.COLOR) {
-      return (
-        <ColorButtonGroup
-          key={index}
-          {...el}
-          handleColorChange={props.handleColorChange}
-        />
-      );
+      return <ColorButtonGroup key={index} {...el} />;
     }
   });
 
