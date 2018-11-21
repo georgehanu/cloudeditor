@@ -70,7 +70,7 @@ class PaginationItemContainer extends React.Component {
                     lastGroups = null;
                   }
                   if (
-                    groupsAux[indexGroup].length >
+                    groupsAux[indexGroup].length !=
                     _this.props.groups[indexGroup].length
                   ) {
                     const diff =

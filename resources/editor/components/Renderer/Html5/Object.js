@@ -21,7 +21,7 @@ class ObjectBlock extends React.Component {
   constructor(props) {
     super(props);
     this.el = React.createRef();
-    this.chilNode = React.createRef();
+    this.childNode = React.createRef();
     this.blurSelectors = ["test", "index"];
     const element = this.el.current;
     this.state = {
@@ -154,7 +154,8 @@ class ObjectBlock extends React.Component {
         resize: (event, ui) => {
           var resizable = $(event.target).data("ui-resizable");
           const { type } = this.props;
-          const childNode = $(this.chilNode.current.el.current);
+          const childNode = $(this.childNode.current.el.current);
+
           childNode.css({
             width: ui.size.width,
             "max-width": ui.size.width,
@@ -225,12 +226,12 @@ class ObjectBlock extends React.Component {
     switch (type) {
       case "image":
         element = (
-          <ImageBlock ref={this.chilNode} {...this.state} {...this.props} />
+          <ImageBlock ref={this.childNode} {...this.state} {...this.props} />
         );
         break;
       case "text":
       case "textflow":
-        element = <TextBlock ref={this.chilNode} {...this.props} />;
+        element = <TextBlock ref={this.childNode} {...this.props} />;
         break;
       default:
         break;

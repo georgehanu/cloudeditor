@@ -1,6 +1,6 @@
 const React = require("react");
 const { merge } = require("ramda");
-class CropperImage extends React.Component {
+class CropperImage extends React.PureComponent {
   constructor(props) {
     super(props);
     this.el = React.createRef();
@@ -13,7 +13,7 @@ class CropperImage extends React.Component {
         x: 0,
         y: 0
       },
-      initialRestore: true,
+      initialRestore: false,
       dragImageCoords: {},
       isDragging: false,
       resizeTimes: 2,
@@ -44,20 +44,19 @@ class CropperImage extends React.Component {
     $(image).css(imageStyle);
     $(wrapper).css(styleWrapper);
   }
-  shouldComponentUpdate() {
-    return false;
-  }
   componentDidUpdate() {
-    // this.initializeDimensions(false);
+    this.initializeDimensions(false);
   }
   componentDidMount() {
-    return;
-    document.addEventListener("mousemove", this.handleMouseMove.bind(this));
-    document.addEventListener("mouseup", this.handleMouseUp.bind(this));
+    if (!this.props.viewOnly) {
+      document.addEventListener("mousemove", this.handleMouseMove.bind(this));
+      document.addEventListener("mouseup", this.handleMouseUp.bind(this));
+    }
     document.addEventListener(
       "cropperUpdateMiddle",
       this.updateCropMiddle.bind(this)
     );
+    document.addEventListener("cropperUpdate", this.updateCrop.bind(this));
     document.addEventListener("cropperUpdate", this.updateCrop.bind(this));
   }
   updateCropMiddle() {
@@ -65,7 +64,7 @@ class CropperImage extends React.Component {
     this.updateCrop();
   }
   updateCrop() {
-    //  this.initializeDimensions(false);
+    this.initializeDimensions(false);
     this.setZoom();
     this.options = merge(this.options, { initialRestore: true });
   }
@@ -85,7 +84,6 @@ class CropperImage extends React.Component {
     const { initialRestore } = this.options;
     let { workingPercent, minPercent, focalPoint } = this.options;
     const { alternateZoom, parent } = this.props;
-
     const targetWidth = parent.offsetWidth;
     const targetHeight = parent.offsetHeight;
     let { cropX, cropY, cropH, cropW } = this.props;
@@ -117,10 +115,6 @@ class CropperImage extends React.Component {
         x: Math.round(originalWidth / 2),
         y: Math.round(originalHeight / 2)
       };
-      // cropX = ((originalWidth * minPercent - targetWidth) / 2 / minPercent) * -1;
-      // cropY = ((originalHeight * minPercent - targetHeight) / 2 / minPercent) * -1;
-      // cropW = targetWidth / minPercent;
-      // cropH = targetHeight / minPercent;
     } else {
       const { leftSlider } = this.props;
       const { resizeTimes } = this.options;
@@ -165,7 +159,6 @@ class CropperImage extends React.Component {
     let { cropX, cropY } = this.options;
     const width = originalWidth * workingPercent;
     const height = originalHeight * workingPercent;
-
     const leftImage = this.fillContainer(
       Math.round(focalPoint.x * workingPercent - targetWidth / 2) * -1,
       width,
@@ -264,7 +257,7 @@ class CropperImage extends React.Component {
       this.options = merge({ ...this.options }, { topImage, leftImage });
       this.updateImage();
       this.storeFocalPoint();
-      this.updateResult(false);
+      this.updateResult(true);
     }
   }
   handleMouseUp() {
@@ -281,14 +274,10 @@ class CropperImage extends React.Component {
       cropY
     } = this.options;
     $(this.el.current).css({ width: "" });
-
     const { leftSlider } = this.props;
     const { resizeTimes, minPercent } = this.options;
     const resizeUnit = parseFloat(resizeTimes * minPercent) / 100;
     workingPercent = minPercent + resizeUnit * leftSlider;
-
-    //cropX -= (newWidth - oldWidth) / 2 / (workingPercent / oldWorking);
-    //cropY -= (newHeight - oldHeight) / 2 / (workingPercent / oldWorking);
     const widthImage = Math.ceil(originalWidth * workingPercent);
     this.options = merge(
       { ...this.options },
@@ -356,7 +345,7 @@ class CropperImage extends React.Component {
       <div ref={this.wrapper} className="jwc_frame" style={styleWrapper}>
         <img
           onLoad={() => {
-            if (!this.props.viewOnly) this.initializeDimensions();
+            this.initializeDimensions();
           }}
           onMouseDown={e => this.handleMouseDown(e)}
           src={this.props.src}

@@ -87,6 +87,7 @@ const getPagesWithObjects = (
   let left = 0;
   let initialWidth = activePage.width;
   const lastPageId = takeLast(1, activeGroupPages);
+  const lastPage = pages[lastPageId];
   forEach(currentPageId => {
     const page = pages[currentPageId];
     let pageObjects = {};
@@ -107,6 +108,9 @@ const getPagesWithObjects = (
         group_id: activeGroupId,
         id: currentPageId,
         left: left,
+        height: useTrimbox
+          ? boxes["trimbox"]["top"] + lastPage.height + activePage.height
+          : lastPage.height + activePage.height,
         width:
           lastPageId == currentPageId && useTrimbox
             ? page.width + boxes["trimbox"]["right"]
@@ -117,7 +121,6 @@ const getPagesWithObjects = (
     left = activePage.width;
     initialWidth = 0;
   }, activeGroupPages);
-  const lastPage = pages[lastPageId];
   activePage.width += useTrimbox ? boxes["trimbox"]["right"] : 0;
   activePage.height += useTrimbox
     ? boxes["trimbox"]["top"] + lastPage.height

@@ -13,6 +13,7 @@ const {
   updateObjectProps,
   changePage
 } = require("./../../stores/actions/project");
+const { changeWorkareaProps } = require("./../../stores/actions/ui");
 
 const Objects = require("./Html5/Objects");
 const Lines = require("./Html5/SnapLines");
@@ -27,6 +28,7 @@ class Html5Renderer extends React.Component {
   constructor(props) {
     super(props);
     this.canvasContainerRef = React.createRef();
+    this.pageContainerRef = React.createRef();
   }
   changePageHandler(params) {
     this.props.onChangePageHandler(params);
@@ -60,10 +62,31 @@ class Html5Renderer extends React.Component {
         canvas.height / page.height
       );
 
-      this.setState({ scale: scale, componentReady: true });
+      this.setState({ scale: scale, componentReady: true }, () => {
+        this.updateWorkArea();
+      });
     }
   };
 
+  updateWorkArea() {
+    const canvasContainer = this.canvasContainerRef.current;
+    const scale = this.state.scale;
+    if (canvasContainer && !this.props.viewOnly) {
+      const pageContainerRef = this.pageContainerRef.current;
+      if (pageContainerRef) {
+        const pageContainerRefBounding = pageContainerRef.getBoundingClientRect();
+        const canvasContainerParent = canvasContainer.parentElement.getBoundingClientRect();
+        const workArea = {
+          scale: scale,
+          pageOffset: {
+            x: pageContainerRefBounding.x - canvasContainerParent.x,
+            y: pageContainerRefBounding.y - canvasContainerParent.y
+          }
+        };
+        this.props.onChangeWorkAreaProps(workArea);
+      }
+    }
+  }
   componentDidMount() {
     this.updatePageOffset();
     window.addEventListener("resize", debounce(this.updatePageOffset));
@@ -95,6 +118,7 @@ class Html5Renderer extends React.Component {
         overlays = this.props.overlays.map(overlay => {
           const overlayStyle = {
             width: overlay.width * zoomScale,
+            height: overlay.height * zoomScale,
             left: overlay.left * zoomScale
           };
           return (
@@ -114,18 +138,15 @@ class Html5Renderer extends React.Component {
       }
       page = (
         <div
-          className="zoom-container"
-          style={{
-            width: width,
-            height: height
-          }}
+          ref={this.pageContainerRef}
+          className={["zoom-container", zoom > 1 ? "zoom-active" : ""].join(
+            " "
+          )}
+          style={{ width: width, height: height }}
         >
           <div
             className="page-container page"
-            style={{
-              width: widthScale,
-              height: heightScale
-            }}
+            style={{ width: widthScale, height: heightScale }}
           >
             <Objects
               viewOnly={this.props.viewOnly}
@@ -175,7 +196,8 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     onUpdatePropsHandler: payload => dispatch(updateObjectProps(payload)),
-    onChangePageHandler: payload => dispatch(changePage(payload))
+    onChangePageHandler: payload => dispatch(changePage(payload)),
+    onChangeWorkAreaProps: payload => dispatch(changeWorkareaProps(payload))
   };
 };
 module.exports = connect(
