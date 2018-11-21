@@ -26,7 +26,6 @@ class Textbox extends Text {
     });
 
     let props = this.props;
-
     props = this._mapStatePropsToFabric(props);
     this.instance = new fabric.Textbox(this.props.text, props);
     this.attachEvents();
@@ -45,7 +44,7 @@ class Textbox extends Text {
           this.instance.designerCallbacks.updateObjectProps({
             id: this.instance.id,
             props: {
-              fontSize: this.instance.fontSize / this.canvas.canvasScale,
+              fontSize: this.instance.fontSize / this.instance.canvasScale,
               text: this.instance.text
             }
           });

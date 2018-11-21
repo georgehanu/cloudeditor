@@ -15,6 +15,7 @@ const {
   TrimBox
 } = require("../../../packages/core/react-fabric");
 const ImageLoad = require("../../../packages/core/react-fabric/components/Helpers/ImageLoad");
+const TextLoad = require("../../../packages/core/react-fabric/components/Helpers/TextLoad");
 const GraphicsLoad = require("../../../packages/core/react-fabric/components/Helpers/GraphicsLoad");
 const { fabric } = require("../../../rewrites/fabric/fabric");
 const { map, concat } = require("ramda");
@@ -312,7 +313,7 @@ class FabricjsRenderer extends React.PureComponent {
           return <IText key={object.id} {...object} />;
         case "textbox":
           return (
-            <Textbox
+            <TextLoad
               key={object.id}
               canvasScale={this.state.scale}
               {...object}

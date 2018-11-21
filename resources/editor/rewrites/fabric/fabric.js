@@ -2,6 +2,7 @@ const { fabric } = require("fabric");
 const logger = require("../../utils/LoggerUtils");
 const uuidv4 = require("uuid/v4");
 const { forEach } = require("ramda");
+var WebFont = require("webfontloader");
 fabric.util.object.extend(fabric.StaticCanvas.prototype, {
   snap: 10,
   canvasScale: 1,
@@ -54,7 +55,9 @@ fabric.util.object.extend(fabric.Object.prototype, {
   ignoreSnap: false,
   isLoaded: false,
   lockSkewingX: false,
-  lockSkewingY: false
+  lockSkewingY: false,
+  borderBlockColor: "",
+  borderBlockWidth: 0
 });
 fabric.util.object.extend(fabric.Image.prototype, {
   cropX: 0,
@@ -587,9 +590,26 @@ fabric.Object.prototype.render = (function(_render) {
       return;
     }
     _render.call(this, ctx);
+    this.renderBorderBlock(ctx);
   };
 })(fabric.Object.prototype.render);
+fabric.Object.prototype.renderBorderBlock = function(ctx) {
+  if (this.borderBlockWidth) {
+    ctx.save();
+    var center = this.getCenterPoint(),
+      wh = this._calculateCurrentDimensions(),
+      vpt = this.canvas.viewportTransform;
+    ctx.translate(center.x, center.y);
+    ctx.scale(1 / vpt[0], 1 / vpt[3]);
+    ctx.rotate(fabric.util.degreesToRadians(this.angle));
 
+    ctx.lineWidth = this.borderBlockWidth;
+    ctx.strokeStyle = this.borderBlockColor;
+    ctx.strokeRect(-wh.x / 2, -wh.y / 2, wh.x, wh.y);
+    ctx.restore();
+    return this;
+  }
+};
 fabric.Graphics = fabric.util.createClass(fabric.Group, {
   type: "graphics",
   initialize: function(objects, options, isAlreadyGrouped) {
@@ -690,12 +710,17 @@ fabric.Textbox.prototype.initDimensions = function() {
   // If fontResizing mode enabled
   var textWidth = this.calcTextWidth();
   var textHeight = this.calcTextHeight();
+  var unit = 1;
   if (textWidth > this.width) {
-    this.fontSize -= 1;
-    //this.width = this.maxWidth;
+    this.fontSize -= unit;
+    this.fontSize =
+      Math.round(this.fontSize / this.canvasScale) * this.canvasScale;
+
     this.initDimensions();
   } else if (textHeight > this.height) {
-    this.fontSize -= 1;
+    this.fontSize -= unit;
+    this.fontSize =
+      Math.round(this.fontSize / this.canvasScale) * this.canvasScale;
     this.initDimensions();
   }
 };
@@ -756,4 +781,127 @@ fabric.Textbox.prototype._getTopOffset = function() {
       return this.height / 2 - this.calcTextHeight();
   }
 };
-module.exports = { fabric };
+fabric.util.object.extend(fabric.util, {
+  fontsLoaded: function(object, callback) {
+    var fonts = [];
+    var processedFontsCount = 0;
+    if (object.fontFamily && typeof object.fontFamily === "string") {
+      fonts.push(object.fontFamily);
+    }
+    if (object.styles && typeof object.styles === "object") {
+      var objStyles = object.styles;
+      for (var i in objStyles) {
+        // per line
+        if (objStyles.hasOwnProperty(i)) {
+          var lineStyles = objStyles[i];
+          for (var j in lineStyles) {
+            // per char
+            if (lineStyles.hasOwnProperty(j)) {
+              if (
+                lineStyles[j].fontFamily &&
+                typeof lineStyles[j].fontFamily === "string"
+              ) {
+                fonts.push(lineStyles[j].fontFamily);
+              }
+            }
+          }
+        }
+      }
+    }
+
+    if (fonts.length <= 0) {
+      callback && callback(null);
+      return;
+    }
+    var fontCount = fonts.length,
+      loadedFonts = [];
+    WebFont &&
+      WebFont.load({
+        custom: {
+          families: fonts
+        },
+        fontactive: function(familyName) {
+          if (fontCount === processedFontsCount + 1) {
+            loadedFonts.push(familyName);
+            callback && callback(loadedFonts);
+          } else {
+            processedFontsCount += 1;
+            loadedFonts.push(familyName);
+          }
+        },
+        fontinactive: function() {
+          if (fontCount === processedFontsCount + 1) {
+            callback && callback(null);
+          } else {
+            processedFontsCount += 1;
+          }
+        }
+      });
+  }
+});
+fabric.Textbox.prototype.fromObject = (function(_fromObject) {
+  return function(object, callback) {
+    fabric.util.fontsLoaded(
+      object,
+      (function(object, callback) {
+        return function(loadedFonts) {
+          return _fromObject.call(this, object, callback);
+        };
+      })(object, callback)
+    );
+  };
+})(fabric.Textbox.prototype.fromObject);
+
+(fabric.IText.prototype.getSelectionStartFromPointer = function(e) {
+  var mouseOffset = this.getLocalPointer(e),
+    prevWidth = 0,
+    width = 0,
+    height = 0,
+    charIndex = 0,
+    lineIndex = 0,
+    lineLeftOffset,
+    line;
+  switch (this.vAlign) {
+    case "top":
+      height = 0;
+      break;
+    case "center":
+      height = (this.height - this.calcTextHeight()) / 2;
+      break;
+    case "bottom":
+      height = this.height - this.calcTextHeight();
+      break;
+  }
+  for (var i = 0, len = this._textLines.length; i < len; i++) {
+    if (height <= mouseOffset.y) {
+      height += this.getHeightOfLine(i) * this.scaleY;
+      lineIndex = i;
+      if (i > 0) {
+        charIndex += this._textLines[i - 1].length + 1;
+      }
+    } else {
+      break;
+    }
+  }
+  lineLeftOffset = this._getLineLeftOffset(lineIndex);
+  width = lineLeftOffset * this.scaleX;
+  line = this._textLines[lineIndex];
+  for (var j = 0, jlen = line.length; j < jlen; j++) {
+    prevWidth = width;
+    // i removed something about flipX here, check.
+    width += this.__charBounds[lineIndex][j].kernedWidth * this.scaleX;
+    if (width <= mouseOffset.x) {
+      charIndex++;
+    } else {
+      break;
+    }
+  }
+  return this._getNewSelectionStartFromOffset(
+    mouseOffset,
+    prevWidth,
+    width,
+    charIndex,
+    jlen
+  );
+}),
+  (module.exports = { fabric });

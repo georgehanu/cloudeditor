@@ -379,7 +379,7 @@ const getRandomProject = cfg => {
     fontSize: 14,
     bold: false,
     italic: false,
-    fontFamily: "Arial",
+    fontFamily: "Roboto-Regular",
     text:
       "Lorem\nIpsum is simply dummy text of the \nprinting and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever \nsince the 1500s, when an unknown printer took a galley of type \nand scrambled it to make a type specimen book ",
     fill: "red"

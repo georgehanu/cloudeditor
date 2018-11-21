@@ -1,5 +1,5 @@
 import React from "react";
-
+const { debounce } = require("underscore");
 const ColorBorderWidth = props => {
   return (
     <div className="ColorTabWidthContainer">
@@ -12,13 +12,16 @@ const ColorBorderWidth = props => {
           type="range"
           defaultValue={props.defaultValue}
           min="0"
-          max="100"
-          step="1"
+          max="10"
+          step="0.1"
           onChange={event =>
             debounce(
               props.selectWidth({
                 mainHandler: true,
-                payloadMainHandler: { [props.type]: event.target.value },
+                payloadMainHandler: {
+                  type: props.type,
+                  value: event.target.value
+                },
                 keepDetailsWnd: true
               })
             )

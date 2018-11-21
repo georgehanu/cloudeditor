@@ -120,6 +120,7 @@ const enhance = compose(
           mainHandler: true,
           payloadMainHandler: { type: props.type, value: val }
         });
+        props.setValue(null);
       }
     },
     handleIncrement: props => opType => {
@@ -134,7 +135,7 @@ const enhance = compose(
       } else {
         val = increment(val, opType);
       }
-      props.setValue(val);
+      props.setValue(null);
 
       props.ToolbarHandler({
         mainHandler: true,

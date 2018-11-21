@@ -144,8 +144,8 @@ export const LoadTextSettings = (toolbar, activeItem, activeLayer) => {
       } else if (item.type === Types.SLIDER_TEXT_SPACEING) {
         item.defaultValue = parseInt(activeItem.charSpacing);
       } else if (item.type === Types.INCREMENTAL_FONT_SIZE) {
-        item.defaultValue = activeItem.fontSize.toFixed(2);
-        item.value = activeItem.fontSize.toFixed(2);
+        item.defaultValue = parseFloat(activeItem.fontSize).toFixed(2);
+        item.value = parseFloat(activeItem.fontSize).toFixed(2);
       } else if (item.type === Types.POPTEXT_FONT) {
         item.value = activeItem.fontFamily;
       } else if (item.type === Types.POPTEXT_LAYER) {
@@ -177,7 +177,7 @@ export const LoadTextAdditionalInfo = activeItem => {
         [Types.COLOR_TAB_FG]: 0,
         [Types.COLOR_TAB_BG]: 2,
         [Types.COLOR_TAB_BORDER_COLOR]: null,
-        [Types.COLOR_TAB_BORDER_WIDTH]: 80
+        [Types.COLOR_TAB_BORDER_WIDTH]: 0
       }
     }
   };
@@ -198,8 +198,17 @@ export const CreatePayload = (activeitem, itemPayload, options) => {
     case Types.BUTTON_RIGHT_ALIGNED:
       attrs = { textAlign: "right" };
       break;
+    case Types.COLOR_TAB_BORDER_COLOR:
+      attrs = { borderBlockColor: itemPayload.value };
+      break;
+    case Types.COLOR_TAB_BORDER_WIDTH:
+      attrs = { borderBlockWidth: parseFloat(itemPayload.value) };
+      break;
     case Types.BUTTON_JUSTIFY_ALIGNED:
       attrs = { textAlign: "justify" };
+      break;
+    case Types.COLOR_TAB_BG:
+      attrs = { backgroundColor: itemPayload.value };
       break;
     case Types.FLIP_CHOOSER:
       attrs = { flip: itemPayload.value };
