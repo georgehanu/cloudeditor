@@ -26,6 +26,9 @@ class ClubsSearch extends React.Component {
           onChange={event => this.inputChangedHandler(event.target.value)}
           onKeyPress={this._handleKeyPress}
         />
+        <button onClick={() => this.props.searchClubs(this.state.value)}>
+          Go>>
+        </button>
       </div>
     );
   }

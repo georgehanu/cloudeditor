@@ -1,3 +1,5 @@
+import Standings from "./components/TeamSelection/Standings/Standings";
+
 const React = require("react");
 const { connect } = require("react-redux");
 const { isEmpty, isNil, propEq, find, defaultTo, pipe } = require("ramda");
@@ -28,6 +30,7 @@ class FupaBuilder extends React.Component {
     const { clubSelection, clubTeams, teamSelection } = this.props;
     return (
       <div className="fupa">
+        <Standings />
         <ClubsSearch />
         <ClubSelection
           {...clubSelection}
