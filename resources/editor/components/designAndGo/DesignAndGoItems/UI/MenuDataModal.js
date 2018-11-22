@@ -12,7 +12,7 @@ class MenuDataModal extends Component {
         <div className="MenuDataModal">
           <MenuHeader modalClosed={this.props.modalClosed} title="Edit Label" />
           <div className="MenuDataModalContainer">
-            <Fields items={this.props.data.items} />
+            <Fields />
           </div>
           <div className="MenuDataButton">
             <button>{this.props.t("Ok")}</button>

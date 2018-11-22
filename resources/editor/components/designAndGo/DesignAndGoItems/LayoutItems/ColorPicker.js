@@ -1,28 +1,54 @@
 import React from "react";
 import { HuePicker } from "react-color";
 
-const ColorButton = props => {
-  const className = "ColorButton" + (props.active ? " ColorButtonActive" : "");
+class ColorButton extends React.Component {
+  state = {
+    showPicker: false
+  };
 
-  const containerBgColorStyle = props.containerBgColor
-    ? { backgroundColor: props.containerBgColor }
-    : {};
+  onColorClicked = () => {
+    this.props.clicked();
+    this.setState({ showPicker: !this.state.showPicker });
+  };
 
-  return (
-    <React.Fragment>
-      <div className={className} onClick={props.clicked}>
-        <div className="ColorButtonBg" style={{ ...containerBgColorStyle }} />
-      </div>
-      {props.active && (
-        <div className="ColorPicker">
-          <HuePicker
-            onChangeComplete={color => props.handleColorChange(color)}
-            color={props.containerBgColor}
-          />
+  static getDerivedStateFromProps(nextProps, prevState) {
+    if (nextProps.active === false) {
+      return {
+        ...prevState,
+        showPicker: false
+      };
+    }
+    return {
+      ...prevState
+    };
+  }
+
+  render() {
+    const className =
+      "ColorButton" + (this.props.active ? " ColorButtonActive" : "");
+
+    const containerBgColorStyle = this.props.containerBgColor
+      ? { backgroundColor: this.props.containerBgColor }
+      : {};
+
+    console.log("aa " + this.state.showPicker);
+
+    return (
+      <React.Fragment>
+        <div className={className} onClick={this.onColorClicked}>
+          <div className="ColorButtonBg" style={{ ...containerBgColorStyle }} />
         </div>
-      )}
-    </React.Fragment>
-  );
-};
+        {this.state.showPicker && (
+          <div className="ColorPicker">
+            <HuePicker
+              onChangeComplete={color => this.props.handleColorChange(color)}
+              color={this.props.containerBgColor}
+            />
+          </div>
+        )}
+      </React.Fragment>
+    );
+  }
+}
 
 export default ColorButton;

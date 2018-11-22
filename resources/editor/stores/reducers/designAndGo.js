@@ -4,10 +4,17 @@ import {
   DAG_UPLOAD_IMAGE_FAILED,
   DAG_CHANGE_SLIDER,
   DAG_CHANGE_ACTIVE_COLOR_SCHEMA,
-  DAG_CHANGE_COLOR_PICKER
+  DAG_CHANGE_COLOR_PICKER,
+  DAG_CHANGE_INPUT,
+  DAG_SIGNIN_START,
+  DAG_SIGNIN_FAILED,
+  DAG_SIGNIN_SUCCESS,
+  DAG_SIGNIN_CLEAR_MESSAGE
 } from "../actionTypes/designAndGo";
 
 import { handleActions } from "redux-actions";
+import * as Types from "../../components/designAndGo/DesignAndGoConfig/types";
+
 /*
 import Jam1 from "../../assets/default/designAndGo/Jam1.png";
 import Jam2 from "../../assets/default/designAndGo/Jam2.png";
@@ -18,6 +25,8 @@ const initialState = {
   loading: false,
   imagePath: null,
   errorMessage: null,
+  loadingSignIn: false,
+  errorMessageSignIn: null,
   activeSlider: 0,
   sliderData: [
     {
@@ -32,6 +41,7 @@ const initialState = {
         },
         { color1: "blue", color2: "yellow" },
         {},
+        { color1: "blue", color2: "yellow" },
         {
           colorPicker: true,
           containerBgColor: "green"
@@ -94,7 +104,81 @@ const initialState = {
       ],
       activeColorButton: 3
     }
-  ]
+  ],
+  data: {
+    title: {
+      type: Types.TITLE,
+      class: "Title"
+    },
+    description: [
+      {
+        type: Types.TEXT,
+        text: "Create your own jar label",
+        class: "DescriptionHeader"
+      },
+      {
+        type: Types.TEXT,
+        text:
+          "Add the details about your beer and a custom label will be created for you. Use the arrows beside the bottle to try out different designs.",
+        class: "Description"
+      }
+    ],
+    items: [
+      {
+        type: Types.INPUT,
+        label: "Jam name",
+        class: "Input InputName",
+        name: "wineName",
+        text: "Sarah's Special"
+      },
+      {
+        type: Types.INPUT,
+        label: "Jam type",
+        class: "Input InputType",
+        name: "wineType",
+        text: "Mixed Berry Jam"
+      },
+      {
+        type: Types.INPUT,
+        label: "Tag line - Part one",
+        class: "Input",
+        name: "wineTagOne",
+        text: "Homemade in Aotearoa"
+      },
+      {
+        type: Types.INPUT,
+        label: "Tag line - Part two",
+        class: "Input",
+        name: "wineTagTwo",
+        text: "by Sarah Crompton"
+      },
+      {
+        type: Types.INPUT,
+        label: "Batch date",
+        class: "Input InputDate",
+        name: "wineAlcool",
+        text: "Nov 2018",
+        maxLenght: 12
+      },
+      {
+        type: Types.COLOR,
+        label: "Options",
+        class: "Input ColorButtonGroup",
+        name: "wineAlcool"
+      },
+      {
+        type: Types.UPLOAD_IMAGE,
+        class: "Button Input",
+        name: "send"
+      },
+      {
+        type: Types.BUTTON,
+        label: "Buy Stickers",
+        class: "Button",
+        name: "send"
+      }
+    ]
+  }
 };
 
 module.exports = handleActions(
@@ -124,7 +208,9 @@ module.exports = handleActions(
     [DAG_CHANGE_SLIDER]: (state, action) => {
       const sliderElements = state.sliderData.length;
       let newActiveSlider = state.activeSlider;
-      if (action.payload) {
+      if (action.payload === null) {
+        newActiveSlider = 0;
+      } else if (action.payload) {
         newActiveSlider = ++newActiveSlider % sliderElements;
       } else {
         newActiveSlider =
@@ -168,6 +254,54 @@ module.exports = handleActions(
       return {
         ...state,
         sliderData: newSliderData
+      };
+    },
+    [DAG_CHANGE_INPUT]: (state, action) => {
+      let newItems = [...state.data.items];
+      let index = state.data.items.findIndex(el => {
+        return el.name === action.payload.target.name;
+      });
+      if (index === -1) return state;
+
+      newItems[index] = {
+        ...newItems[index],
+        text: action.payload.target.value
+      };
+
+      return {
+        ...state,
+        data: {
+          ...state.data,
+          items: newItems
+        }
+      };
+    },
+    [DAG_SIGNIN_START]: (state, action) => {
+      return {
+        ...state,
+        loadingSignIn: true
+      };
+    },
+    [DAG_SIGNIN_SUCCESS]: (state, action) => {
+      //console.log(action.email);
+      //console.log(action.password);
+      return {
+        ...state,
+        loadingSignIn: false,
+        errorMessageSignIn: "LogedIn"
+      };
+    },
+    [DAG_SIGNIN_FAILED]: (state, action) => {
+      return {
+        ...state,
+        loadingSignIn: false,
+        errorMessageSignIn: action.payload
+      };
+    },
+    [DAG_SIGNIN_CLEAR_MESSAGE]: (state, action) => {
+      return {
+        ...state,
+        errorMessageSignIn: null
       };
     }
   },

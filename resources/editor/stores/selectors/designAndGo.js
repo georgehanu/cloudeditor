@@ -4,6 +4,12 @@ const dagLoadingSelector = state =>
 const dagErrorMessageSelector = state =>
   (state && state.designAndGo && state.designAndGo.errorMessage) || null;
 
+const dagLoadingSignInSelector = state =>
+  (state && state.designAndGo && state.designAndGo.loadingSignIn) || false;
+
+const dagErrorMessageSignInSelector = state =>
+  (state && state.designAndGo && state.designAndGo.errorMessageSignIn) || null;
+
 const dagImagePathSelector = state =>
   (state && state.designAndGo && state.designAndGo.imagePath) || null;
 
@@ -32,6 +38,30 @@ const dagActiveColorButtonSelector = state =>
       .activeColorButton) ||
   0;
 
+const dagDataSelector = state =>
+  (state && state.designAndGo && state.designAndGo.data) || [];
+
+const dagDataItemsSelector = state =>
+  (state &&
+    state.designAndGo &&
+    state.designAndGo.data &&
+    state.designAndGo.data.items) ||
+  [];
+
+const dagDataTitleSelector = state =>
+  (state &&
+    state.designAndGo &&
+    state.designAndGo.data &&
+    state.designAndGo.data.title) ||
+  [];
+
+const dagDataDescriptionSelector = state =>
+  (state &&
+    state.designAndGo &&
+    state.designAndGo.data &&
+    state.designAndGo.data.description) ||
+  [];
+
 module.exports = {
   dagLoadingSelector,
   dagErrorMessageSelector,
@@ -40,5 +70,11 @@ module.exports = {
   dagActiveSliderSelector,
   dagShowUploadImageSelector,
   dagColorsSelector,
-  dagActiveColorButtonSelector
+  dagActiveColorButtonSelector,
+  dagDataSelector,
+  dagDataItemsSelector,
+  dagDataTitleSelector,
+  dagDataDescriptionSelector,
+  dagLoadingSignInSelector,
+  dagErrorMessageSignInSelector
 };

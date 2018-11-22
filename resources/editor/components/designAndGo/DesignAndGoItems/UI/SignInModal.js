@@ -4,6 +4,19 @@ import Input from "../LayoutItems/Input";
 import Backdrop from "./Backdrop";
 import { withNamespaces } from "react-i18next";
 
+import {
+  dagLoadingSignInSelector,
+  dagErrorMessageSignInSelector
+} from "../../../../stores/selectors/designAndGo";
+//import { dagSignInStart } from "../../../../stores/actions/designAndGo";
+
+const {
+  dagSigninStart,
+  dagSigninClearMessage
+} = require("../../../../stores/actions/designAndGo");
+
+const { connect } = require("react-redux");
+
 class SignInModal extends Component {
   state = {
     email: "",
@@ -41,16 +54,47 @@ class SignInModal extends Component {
   };
 
   onSignInButton = () => {
-    this.validateEmail(this.state.email) &&
-      this.validatePassword(this.state.password);
+    if (
+      this.validateEmail(this.state.email) &&
+      this.validatePassword(this.state.password)
+    ) {
+      this.props.signIn(this.state.email, this.state.password);
+    }
   };
 
+  componentWillUnmount() {
+    this.props.signinClearMessage();
+  }
+
   render() {
+    const errorMessage =
+      this.state.invalidMessage !== null
+        ? this.state.invalidMessage
+        : this.props.errorMessage;
     return (
       <React.Fragment>
         <Backdrop show={this.props.show} clicked={this.props.modalClosed} />
         <div className="SignInModal">
-          <div className="SingInContainer">
+          {this.props.loading && (
+            <div className="SignInLoading">
+              <div className="sk-circle">
+                <div className="sk-circle1 sk-child" />
+                <div className="sk-circle2 sk-child" />
+                <div className="sk-circle3 sk-child" />
+                <div className="sk-circle4 sk-child" />
+                <div className="sk-circle5 sk-child" />
+                <div className="sk-circle6 sk-child" />
+                <div className="sk-circle7 sk-child" />
+                <div className="sk-circle8 sk-child" />
+                <div className="sk-circle9 sk-child" />
+                <div className="sk-circle10 sk-child" />
+                <div className="sk-circle11 sk-child" />
+                <div className="sk-circle12 sk-child" />
+              </div>
+            </div>
+          )}
+
+          <div className="SignInContainer">
             <MenuHeader
               modalClosed={this.props.modalClosed}
               title={this.props.t("Members Login")}
@@ -70,7 +114,7 @@ class SignInModal extends Component {
                 name="password"
               />
             </div>
-            <div className="InvalidForm">{this.state.invalidMessage}</div>
+            <div className="InvalidForm">{errorMessage}</div>
             <div className="SingInButton">
               <button onClick={this.onSignInButton}>
                 {this.props.t("Log In")}
@@ -83,4 +127,21 @@ class SignInModal extends Component {
   }
 }
 
-export default withNamespaces("designAndGo")(SignInModal);
+const mapStateToProps = state => {
+  return {
+    loading: dagLoadingSignInSelector(state),
+    errorMessage: dagErrorMessageSignInSelector(state)
+  };
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    signIn: (email, password) => dispatch(dagSigninStart({ email, password })),
+    signinClearMessage: () => dispatch(dagSigninClearMessage())
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(withNamespaces("designAndGo")(SignInModal));

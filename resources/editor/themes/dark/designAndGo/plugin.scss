@@ -471,7 +471,7 @@
 
 .MenuModal,
 .MenuDataModal,
-.SingInContainer {
+.SignInContainer {
   width: 100%;
   z-index: 500;
   background-color: white;
@@ -676,7 +676,7 @@
   text-align: center;
 }
 
-.SingInContainer {
+.SignInContainer {
   display: inline-block;
   height: 100%;
   width: 400px;
@@ -730,6 +730,25 @@ section.dropzone {
   padding-bottom: 10px;
   margin-top: -6px;
 }
+
+.SignInLoading {
+  display: inline-block;
+  height: 100%;
+  width: 400px;
+  position: absolute;
+  z-index: 600;
+  text-align: center;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.SignInLoading .sk-circle {
+  width: 200px !important;
+  height: 200px !important;
+  display: inline-block;
+  margin-left: -100px;
+  top: 50px;
+}
+
 /* for Mobile */
 @media (max-width: 842px) {
   .ColorPicker .hue-picker {
@@ -821,7 +840,7 @@ section.dropzone {
     margin-right: 30px;
   }
 
-  .SingInContainer {
+  .SignInContainer {
     width: 100%;
   }
 
@@ -1032,5 +1051,27 @@ section.dropzone {
 @media (max-width: 330px) {
   .SliderPage {
     min-width: 200px;
+  }
+}
+
+@media screen and (min-width: 842px) {
+  .MenuDataModal .ColorButtonGroup,
+  .MenuDataModal .dropzone {
+    display: none;
+  }
+
+  .MenuDataModal {
+    width: 400px;
+  }
+
+  .MenuDataModal .Input {
+    width: 360px;
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+  .MenuDataModal .InputName.Input,
+  .MenuDataModal .InputType.Input {
+    margin-right: 0px;
+    margin-left: 0px;
   }
 }

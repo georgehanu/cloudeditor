@@ -24,6 +24,7 @@ class SliderCarousel extends React.Component {
 
   componentDidMount() {
     window.changeSlider = this.changeSlider;
+    this.props.dagChangeSlider(null); // reset to 0 slider the active slider from store
   }
 
   render() {

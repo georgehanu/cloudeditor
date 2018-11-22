@@ -26,13 +26,12 @@ const pageData = [
   { image: Jam3, upload: true, classImg: "ImageJam3" },
   { image: Jam4, classImg: "ImageJam4" }
 ];*/
-
+/*
 const Config = {
   data: {
     title: {
       type: Types.TITLE,
-      class: "Title",
-      image: Image
+      class: "Title"
     },
     description: [
       {
@@ -103,7 +102,7 @@ const Config = {
       }
     ]
   }
-};
+};*/
 
 class DesignAndGo extends React.Component {
   state = {
@@ -144,7 +143,6 @@ class DesignAndGo extends React.Component {
             <MenuDataModal
               show={this.state.dataOpened}
               modalClosed={this.onMenuCloseHandler}
-              data={Config.data}
             />
           )}
         </div>
@@ -156,8 +154,6 @@ class DesignAndGo extends React.Component {
         )}
 
         <Layout
-          data={Config.data}
-          //sliderData={pageData}
           onMenuOpenHandler={this.onMenuOpenHandler}
           onDataOpenHandler={this.onDataOpenHandler}
         />

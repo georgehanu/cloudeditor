@@ -5,11 +5,15 @@ import ColorButtonGroup from "./ColorButtonGroup";
 import UploadImage from "./UploadImage";
 
 import * as Types from "../../DesignAndGoConfig/types";
+import { dagDataItemsSelector } from "../../../../stores/selectors/designAndGo";
+import { dagChangeInput } from "../../../../stores/actions/designAndGo";
+
+const { connect } = require("react-redux");
 
 const Fields = props => {
   const items = props.items.map((el, index) => {
     if (el.type === Types.INPUT) {
-      return <Input key={index} {...el} />;
+      return <Input key={index} {...el} onInputChange={props.dagChangeInput} />;
     } else if (el.type === Types.TEXT) {
       return <Text key={index} {...el} />;
     } else if (el.type === Types.UPLOAD_IMAGE) {
@@ -22,4 +26,19 @@ const Fields = props => {
   return <div className="FieldsContainer">{items}</div>;
 };
 
-export default Fields;
+const mapStateToProps = state => {
+  return {
+    items: dagDataItemsSelector(state)
+  };
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    dagChangeInput: field => dispatch(dagChangeInput(field))
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Fields);

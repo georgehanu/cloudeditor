@@ -4,6 +4,12 @@ import Title from "../LayoutItems/Title";
 import Description from "../LayoutItems/Description";
 import { withNamespaces } from "react-i18next";
 import SliderCarousel from "../SliderCarousel/SliderCarousel";
+import {
+  dagDataTitleSelector,
+  dagDataDescriptionSelector
+} from "../../../../stores/selectors/designAndGo";
+
+const { connect } = require("react-redux");
 
 class LeftPanel extends React.Component {
   render() {
@@ -17,10 +23,10 @@ class LeftPanel extends React.Component {
         <div className="LeftPaneHorizontal">
           <div className="LeftPaneHorizontalStyled">
             <Title
-              {...this.props.data.title}
+              {...this.props.title}
               onMenuOpenHandler={this.props.onMenuOpenHandler}
             />
-            <Description items={this.props.data.description} />
+            <Description items={this.props.description} />
             {this.props.showSlider && (
               <React.Fragment>
                 <SliderCarousel
@@ -37,10 +43,7 @@ class LeftPanel extends React.Component {
                 </div>
               </React.Fragment>
             )}
-            <Fields
-              items={this.props.data.items}
-              sliderData={this.props.sliderData}
-            />
+            <Fields sliderData={this.props.sliderData} />
           </div>
         </div>
       </div>
@@ -48,4 +51,18 @@ class LeftPanel extends React.Component {
   }
 }
 
-export default withNamespaces("designAndGo")(LeftPanel);
+const mapStateToProps = state => {
+  return {
+    title: dagDataTitleSelector(state),
+    description: dagDataDescriptionSelector(state)
+  };
+};
+
+const mapDispatchToProps = dispatch => {
+  return {};
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(withNamespaces("designAndGo")(LeftPanel));
