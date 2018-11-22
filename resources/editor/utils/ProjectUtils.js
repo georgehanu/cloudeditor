@@ -130,8 +130,8 @@ const getDocumentDefaults = cfg => {
       facingNumber: 2,
       showTrimbox: true,
       groups: {
-        group_1: ["page_1", "page_2", "page_3"],
-        group_3: ["page_4"]
+        group_1: ["page_1"],
+        group_3: ["page_4", "page_2", "page_3"]
       }
     },
     cfg || {}

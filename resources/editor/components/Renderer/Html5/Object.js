@@ -38,6 +38,7 @@ class ObjectBlock extends React.Component {
       return { targetWidth: nextProps.width, targetHeight: nextProps.height };
     return null;
   }
+
   componentDidUpdate() {
     if (!this.props.viewOnly) {
       var element = this.el.current;
@@ -56,6 +57,7 @@ class ObjectBlock extends React.Component {
       $(element).data("rotateAngle", this.props.rotateAngle);
     }
   }
+
   addSnapElements(ui, snapElements, handler) {
     if (this.props.ispSnap) {
       $(".drag_alignLines:visible").toggleClass("snaped", false);

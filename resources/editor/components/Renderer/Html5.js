@@ -136,17 +136,26 @@ class Html5Renderer extends React.Component {
           );
         });
       }
+      const canvasContainer = this.canvasContainerRef.current;
+      const canvasContainerBounding = canvasContainer.getBoundingClientRect();
+      let marginTop = (canvasContainerBounding.height - heightScale) / 2;
+      if (heightScale > canvasContainerBounding.height) {
+        marginTop = 0;
+      }
       page = (
         <div
           ref={this.pageContainerRef}
           className={["zoom-container", zoom > 1 ? "zoom-active" : ""].join(
             " "
           )}
-          style={{ width: width, height: height }}
         >
           <div
             className="page-container page"
-            style={{ width: widthScale, height: heightScale }}
+            style={{
+              width: widthScale,
+              height: heightScale,
+              marginTop: marginTop
+            }}
           >
             <Objects
               viewOnly={this.props.viewOnly}
