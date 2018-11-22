@@ -1,5 +1,6 @@
 const uuidv4 = require("uuid/v4");
 const { merge, mergeAll, pathOr } = require("ramda");
+const randomcolor = require("randomcolor");
 
 const getObjectColorTemplate = cfg => {
   return merge(
@@ -126,7 +127,12 @@ const getDocumentDefaults = cfg => {
   const defaults = merge(
     {
       facingPages: false,
-      facingNumber: 2
+      facingNumber: 2,
+      showTrimbox: true,
+      groups: {
+        group_1: ["page_1"],
+        group_3: ["page_4", "page_2", "page_3"]
+      }
     },
     cfg || {}
   );
@@ -173,6 +179,8 @@ const getProjectTemplate = cfg => {
     pages: {},
     pagesOrder: [],
     activePage: null,
+    selectedPage: null,
+    activeGroup: null,
     objects: {},
     selectedObjectsIds: [],
     activeSelection: null,
@@ -200,7 +208,8 @@ const getProjectPageTemplate = cfg => {
     height: (cfg && cfg.height) || 1080,
     objectsIds: [],
     background: {
-      type: "color"
+      type: "color",
+      color: randomcolor()
     }
   };
 };
@@ -271,7 +280,8 @@ const getEmptyProject = cfg => {
       [emptyPage.id]: emptyPage
     },
     pagesOrder: [emptyPage.id],
-    activePage: emptyPage.id
+    activePage: emptyPage.id,
+    selectedPage: emptyPage.id
   };
 };
 
@@ -295,45 +305,13 @@ const getRandomProject = cfg => {
 
   let img1 = getEmptyObject({
     type: "image",
-    width: Math.random() * 500,
-    height: Math.random() * 500,
-    left: Math.random() * 500,
+    width: 343.16999999999996,
+    height: 921.4480733944953,
+    left: 0,
     orientation: "north",
-    top: Math.random() * 500,
-    src: defaultImages[1]
-  });
-  let img2 = getEmptyObject({
-    type: "image",
-    width: Math.random() * 500,
-    height: Math.random() * 500,
-    left: Math.random() * 500,
-    top: Math.random() * 500,
-    orientation: "north",
-    src: defaultImages[2]
-  });
-  let img6 = getEmptyObject({
-    type: "image",
-    width: 100,
-    height: 100,
-    left: -250,
-    top: -250,
-    src: defaultImages[parseInt(Math.random() * defaultImages.length)]
-  });
-  let img7 = getEmptyObject({
-    type: "image",
-    width: 100,
-    height: 100,
-    left: 100,
-    top: 100,
-    src: defaultImages[3]
-  });
-  let group = getEmptyObject({
-    type: "group",
-    width: 500,
-    height: 500,
-    left: 400,
-    top: 400,
-    _objectsIds: [img6.id, img7.id]
+    top: 0,
+    src:
+      "https://images.pexels.com/photos/414171/pexels-photo-414171.jpeg?auto=compress&cs=tinysrgb&h=350"
   });
 
   let img3 = getEmptyObject({
@@ -372,6 +350,16 @@ const getRandomProject = cfg => {
     top: Math.random() * 500,
     value: "this is a default value for text"
   });
+  let image_22 = getEmptyObject({
+    type: "image",
+    width: 343.16999999999996,
+    height: 921.4480733944953,
+    left: 0,
+    orientation: "north",
+    top: 0,
+    src:
+      "https://images.pexels.com/photos/414171/pexels-photo-414171.jpeg?auto=compress&cs=tinysrgb&h=350"
+  });
   let text1 = getEmptyObject({
     type: "textbox",
     width: 400,
@@ -386,7 +374,20 @@ const getRandomProject = cfg => {
       "Lorem\nIpsum is simply dummy text of the \nprinting and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever \nsince the 1500s, when an unknown printer took a galley of type \nand scrambled it to make a type specimen book ",
     fill: "red"
   });
-
+  let text22 = getEmptyObject({
+    type: "textbox",
+    width: 400,
+    height: 400,
+    left: 100,
+    top: 100,
+    fontSize: 14,
+    bold: false,
+    italic: false,
+    fontFamily: "Roboto-Regular",
+    text:
+      "Lorem\nIpsum is simply dummy text of the \nprinting and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever \nsince the 1500s, when an unknown printer took a galley of type \nand scrambled it to make a type specimen book ",
+    fill: "red"
+  });
   let graphics = getEmptyObject({
     type: "graphics",
     width: Math.random() * 500,
@@ -398,18 +399,24 @@ const getRandomProject = cfg => {
 
   page1 = {
     ...page1,
-    objectsIds: [
-      /*img3.id, graphics.id, img1.id, img2.id, img7.id, img5.id,*/ text1.id
-    ]
+    id: "page_1",
+    objectsIds: [img1.id, text1.id]
   };
 
   page4 = {
     ...page4,
+    id: "page_4",
     objectsIds: [img1.id, text1.id]
   };
 
+  page3 = {
+    ...page3,
+    id: "page_3",
+    objectsIds: [text22.id, image_22.id]
+  };
   page2 = {
     ...page2,
+    id: "page_2",
     objectsIds: []
   };
   return {
@@ -423,17 +430,13 @@ const getRandomProject = cfg => {
     objects: {
       [img1.id]: img1,
       [text1.id]: text1,
-      [img2.id]: img2,
-      [img3.id]: img3,
-      [img4.id]: img4,
-      [img5.id]: img5,
-      [img6.id]: img6,
-      [img7.id]: img7,
-      [group.id]: group,
-      [graphics.id]: graphics
+      [text22.id]: text22,
+      [image_22.id]: image_22
     },
     pagesOrder: [page1.id, page2.id, page3.id, page4.id],
-    activePage: page1.id
+    activePage: page3.id,
+    selectedPage: page3.id,
+    activeGroup: "group_3"
   };
 };
 
@@ -452,8 +455,8 @@ const getEmptyObject = cfg => {
     type: cfg.type || false,
     width: cfg.width || 500,
     height: cfg.height || 500,
-    left: cfg.left || 500,
-    top: cfg.top || 500,
+    left: cfg.left,
+    top: cfg.top,
     editable: cfg.editable || 1,
     value: cfg.value || "default value",
     resizable: cfg.resizable || 1,
@@ -473,15 +476,15 @@ const getEmptyObject = cfg => {
           ...object,
           src: cfg.src,
           cropH: 0,
-          cropW: 12,
           cropX: 538,
           cropY: 0,
           cropW: 0,
           cropH: 0,
           ratio: 1,
           brightness: 0,
+          leftSlider: 0,
           contrast: 0,
-          filter: null,
+          filter: "",
           imageWidth: 0,
           imageHeight: 0
         };
@@ -524,8 +527,8 @@ const getEmptyObject = cfg => {
         return {
           ...object,
           font: cfg.font || "Arial",
-          alignment: cfg.alignment || "left",
-          valignment: cfg.valignment || "top",
+          textAlign: cfg.textAlign || "left",
+          vAlign: cfg.vAlign || "top",
           font_size: cfg.font_size || "top",
           bold: cfg.bold || false,
           underline: cfg.underline || false,

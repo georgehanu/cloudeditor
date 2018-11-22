@@ -20,3 +20,11 @@
   border: 1px solid #000;
   position: relative;
 }
+.overlayHelper {
+  background: white;
+  height: 100%;
+  opacity: 0.3;
+  z-index: 99999999999999999999999;
+  position: absolute;
+  cursor: pointer;
+}

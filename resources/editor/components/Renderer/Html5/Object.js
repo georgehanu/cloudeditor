@@ -21,7 +21,7 @@ class ObjectBlock extends React.Component {
   constructor(props) {
     super(props);
     this.el = React.createRef();
-    this.chilNode = React.createRef();
+    this.childNode = React.createRef();
     this.blurSelectors = ["test", "index"];
     const element = this.el.current;
     this.state = {
@@ -38,6 +38,7 @@ class ObjectBlock extends React.Component {
       return { targetWidth: nextProps.width, targetHeight: nextProps.height };
     return null;
   }
+
   componentDidUpdate() {
     if (!this.props.viewOnly) {
       var element = this.el.current;
@@ -56,6 +57,7 @@ class ObjectBlock extends React.Component {
       $(element).data("rotateAngle", this.props.rotateAngle);
     }
   }
+
   addSnapElements(ui, snapElements, handler) {
     if (this.props.ispSnap) {
       $(".drag_alignLines:visible").toggleClass("snaped", false);
@@ -95,8 +97,8 @@ class ObjectBlock extends React.Component {
           this.props.onUpdateProps({
             id: this.props.id,
             props: {
-              top: ui.position.top / this.props.scale,
-              left: ui.position.left / this.props.scale
+              top: ui.position.top / this.props.scale - this.props.offsetTop,
+              left: ui.position.left / this.props.scale - this.props.offsetLeft
             }
           });
           this.props.onStopActionHandler(this.props.id);
@@ -154,7 +156,8 @@ class ObjectBlock extends React.Component {
         resize: (event, ui) => {
           var resizable = $(event.target).data("ui-resizable");
           const { type } = this.props;
-          const childNode = $(this.chilNode.current.el.current);
+          const childNode = $(this.childNode.current.el.current);
+
           childNode.css({
             width: ui.size.width,
             "max-width": ui.size.width,
@@ -225,12 +228,12 @@ class ObjectBlock extends React.Component {
     switch (type) {
       case "image":
         element = (
-          <ImageBlock ref={this.chilNode} {...this.state} {...this.props} />
+          <ImageBlock ref={this.childNode} {...this.state} {...this.props} />
         );
         break;
       case "text":
       case "textflow":
-        element = <TextBlock ref={this.chilNode} {...this.props} />;
+        element = <TextBlock ref={this.childNode} {...this.props} />;
         break;
       default:
         break;

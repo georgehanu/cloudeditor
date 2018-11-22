@@ -19,6 +19,8 @@ body {
   -o-transform: translate(-50%, -50%);
   transform: translate(-50%, -50%);
   z-index: 500;
+  height: 90%;
+  width: 90%;
 }
 .canvasContainer {
   position: absolute;
@@ -132,4 +134,21 @@ body {
 @font-face {
   font-family: "Roboto-Regular";
   src: url("../../fonts/Roboto-Regular.woff") format("woff");
+}
+.zoomContainer {
+  position: absolute;
+  bottom: 120px;
+  width: 100%;
+  color: #ffff;
+  text-align: center;
+}
+.zoomContainer .zoomInButton,
+.zoomContainer .zoomOutButton {
+  cursor: pointer;
+  height: 30px;
+  line-height: 30px;
+}
+.zoomContainer .zoomButton.disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
 }

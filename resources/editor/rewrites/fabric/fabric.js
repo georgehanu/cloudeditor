@@ -57,7 +57,9 @@ fabric.util.object.extend(fabric.Object.prototype, {
   lockSkewingX: false,
   lockSkewingY: false,
   borderBlockColor: "",
-  borderBlockWidth: 0
+  borderBlockWidth: 0,
+  offsetLeft: 0,
+  offsetTop: 0
 });
 fabric.util.object.extend(fabric.Image.prototype, {
   cropX: 0,
@@ -509,7 +511,9 @@ fabric.Object.prototype.getMainProps = function() {
     cropX: this.cropX,
     cropY: this.cropY,
     cropW: this.cropW,
-    cropH: this.cropH
+    cropH: this.cropH,
+    offsetLeft: this.offsetLeft,
+    offsetTop: this.offsetTop
   };
 };
 fabric.Image.prototype.initialize = (function(initialize) {

@@ -14,7 +14,8 @@
       "Renderer",
       "Snap",
       "Toolbar",
-      "Zoom"
+      "Zoom",
+      "Pagination"
     ]
   },
   "project": {

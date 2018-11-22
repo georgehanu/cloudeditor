@@ -220,8 +220,16 @@ class FabricjsRenderer extends React.PureComponent {
         objectProps: map(obj => {
           return {
             id: obj.id,
-            left: (obj.left - this.state.canvasOffsetX) / this.state.scale,
-            top: (obj.top - this.state.canvasOffsetY) / this.state.scale,
+            left:
+              (obj.left -
+                this.state.canvasOffsetX -
+                objProps.offsetLeft * this.state.scale) /
+              this.state.scale,
+            top:
+              (obj.top -
+                this.state.canvasOffsetY -
+                objProps.offsetTop * this.state.scale) /
+              this.state.scale,
             angle: obj.angle
           };
         }, args.deselected)
@@ -242,9 +250,15 @@ class FabricjsRenderer extends React.PureComponent {
       } else {
         let objProps = args.target.getMainProps();
         objProps.left =
-          (objProps.left - this.state.canvasOffsetX) / this.state.scale;
+          (objProps.left -
+            this.state.canvasOffsetX -
+            objProps.offsetLeft * this.state.scale) /
+          this.state.scale; //;
         objProps.top =
-          (objProps.top - this.state.canvasOffsetY) / this.state.scale;
+          (objProps.top -
+            this.state.canvasOffsetY -
+            objProps.offsetTop * this.state.scale) /
+          this.state.scale; // ;
         objProps.width =
           (objProps.width / this.state.scale) * args.target.scaleX;
         objProps.height =
@@ -296,8 +310,14 @@ class FabricjsRenderer extends React.PureComponent {
       object.left = object.left * this.state.scale;
       object.top = object.top * this.state.scale;
       if (needOffset) {
-        object.left += this.state.canvasOffsetX;
-        object.top += this.state.canvasOffsetY;
+        object.left =
+          object.left +
+          this.state.canvasOffsetX +
+          object.offsetLeft * this.state.scale;
+        object.top =
+          object.top +
+          this.state.canvasOffsetY +
+          object.offsetTop * this.state.scale;
       }
 
       switch (object.type) {

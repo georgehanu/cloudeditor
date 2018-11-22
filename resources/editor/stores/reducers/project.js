@@ -21,7 +21,8 @@ const {
   DUPLICATE_OBJ,
   UPDATE_CROP_PARAMS,
   DELETE_OBJ,
-  CHANGE_PAGE
+  CHANGE_PAGE,
+  CHANGE_GROUPS
 } = require("../actionTypes/project");
 
 const ProjectUtils = require("../../utils/ProjectUtils");
@@ -48,14 +49,31 @@ const addObject = (state, action) => {
 const changePage = (state, payload) => {
   return {
     ...state,
-    activePage: payload
+    selectedPage: payload.page_id,
+    activeGroup: payload.group_id
+  };
+};
+const changeGroups = (state, payload) => {
+  return {
+    ...state,
+    configs: {
+      ...state.configs,
+      document: {
+        ...state.configs.document,
+        groups: {
+          ...state.configs.document.groups,
+          ...payload
+        }
+      }
+    }
   };
 };
 
 const addObjectToPage = (state, action) => {
-  const { object, pageId } = action;
+  const { object } = action;
+  const pageId = state.selectedPage;
   const page = {
-    ...state.pages[pageId],
+    ...state.pages[state],
     objectsIds: state.pages[pageId].objectsIds.concat(object.id)
   };
 
@@ -148,6 +166,9 @@ module.exports = handleActions(
   {
     [CHANGE_PROJECT_TITLE]: (state, action) => {
       return changeProjectTitle(state, action.payload);
+    },
+    [CHANGE_GROUPS]: (state, action) => {
+      return changeGroups(state, action.payload);
     },
     [CHANGE_PAGE]: (state, action) => {
       return changePage(state, action.payload);

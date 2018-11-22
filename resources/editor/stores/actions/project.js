@@ -9,6 +9,7 @@ const {
   UPDATE_SELECTION_OBJECTS_COORDS,
   UPDATE_OBJECT_PROPS,
   CHANGE_PAGE,
+  CHANGE_GROUPS,
   UPDATE_CROP_PARAMS
 } = require("../actionTypes/project");
 const { createActions } = require("redux-actions");
@@ -24,7 +25,8 @@ const {
   updateSelectionObjectsCoords,
   updateObjectProps,
   changePage,
-  updateCropParams
+  updateCropParams,
+  changeGroups
 } = createActions(
   CHANGE_PROJECT_TITLE,
   ADD_OBJECT,
@@ -36,7 +38,8 @@ const {
   UPDATE_SELECTION_OBJECTS_COORDS,
   UPDATE_OBJECT_PROPS,
   CHANGE_PAGE,
-  UPDATE_CROP_PARAMS
+  UPDATE_CROP_PARAMS,
+  CHANGE_GROUPS
 );
 
 module.exports = {
@@ -50,5 +53,6 @@ module.exports = {
   updateSelectionObjectsCoords,
   updateObjectProps,
   changePage,
-  updateCropParams
+  updateCropParams,
+  changeGroups
 };
