@@ -21,6 +21,7 @@
           }
         }
       },
+      "DI",
       "Html5Renderer"
     ]
   },
