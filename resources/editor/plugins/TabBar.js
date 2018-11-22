@@ -37,8 +37,10 @@ const TabBarPlugin = connect(
 module.exports = {
   TabBar: assign(TabBarPlugin, {
     SideBar: {
-      position: 2,
-      priority: 1
+      position: 1,
+      priority: 1,
+      text: "Tabbar",
+      icon: "printqicon-newtext"
     }
   }),
   reducers: {

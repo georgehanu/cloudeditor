@@ -15,7 +15,20 @@
       "Snap",
       "Toolbar",
       "Pagination",
-      "ZoomButtons"
+      "ZoomButtons",
+      {
+        "name": "Fupa",
+        "hide": true,
+        "cfg": {
+          "className": "test"
+        },
+        "override": {
+          "SideBar": {
+            "text": "Fupa"
+          }
+        }
+      },
+      "DI"
     ]
   },
   "project": {

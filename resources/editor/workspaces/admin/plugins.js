@@ -8,6 +8,8 @@ const Toolbar = require("../../plugins/Toolbar");
 const Zoom = require("../../plugins/Zoom");
 const Pagination = require("../../plugins/Html5Plugins/Pagination");
 const ZoomButtons = require("../../plugins/ZoomButtons");
+const Fupa = require("../../plugins/Fupa");
+const DI = require("../../plugins/DI");
 
 const plugins = {
   SideBar: SideBar,
@@ -19,7 +21,10 @@ const plugins = {
   Toolbar: Toolbar,
   Zoom: Zoom,
   Pagination: Pagination,
-  ZoomButtons: ZoomButtons
+  ZoomButtons: ZoomButtons,
+  //Renderer: Renderer,
+  Fupa: Fupa,
+  DI: DI
 };
 
 const requires = {};

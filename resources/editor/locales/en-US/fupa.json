@@ -1,0 +1,8 @@
+{
+  "clubsTableTitle": "Clubs",
+  "clubsFetchFail": "Failed to fetch clubs!",
+  "clubTeamsFail": "Failed to fetch club teams!",
+  "Club": "Club",
+  "Team": "Team",
+  "Back to Clubs": "Back"
+}

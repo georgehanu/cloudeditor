@@ -26,6 +26,7 @@ const Group = props => {
           key={idx}
           className={item.parentClassName}
           selected={item.selected}
+          tooltip={item.tooltip}
           clicked={() =>
             item.settingsHandler === undefined
               ? props.ToolbarHandler({

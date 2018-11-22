@@ -4,12 +4,14 @@ export const Config = {
   [Types.BUTTON_LETTER_BOLD]: {
     baseType: Types.BUTTON,
     className: "icon printqicon-bold",
-    parentClassName: "LetterItem"
+    parentClassName: "LetterItem",
+    tooltip: { title: "Bold", description: "Dees" }
   },
   [Types.BUTTON_LETTER_ITALIC]: {
     baseType: Types.BUTTON,
     className: "icon printqicon-italic",
-    parentClassName: "LetterItem"
+    parentClassName: "LetterItem",
+    tooltip: "Italic"
   },
   [Types.BUTTON_LETTER_UNDERLINE]: {
     baseType: Types.BUTTON,
@@ -146,7 +148,8 @@ export const Config = {
     baseType: Types.SLIDER,
     className: "icon printqicon-spacing ButtonTextSpaceing",
     parentClassName: "",
-    settingsHandler: Types.SLIDER_FONT_WND
+    settingsHandler: Types.SLIDER_FONT_WND,
+    tooltip: { title: "Change Letter", description: "Change Letter Spacing" }
   },
   [Types.SLIDER_FONT_WND]: {
     baseType: Types.SLIDER_WND,
