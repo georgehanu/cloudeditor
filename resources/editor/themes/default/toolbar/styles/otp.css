@@ -1680,21 +1680,7 @@ aside.sidebar ul.mainMenu li.mainItem.disabled a.mainTrigger div.icon.active {
 
 /*tooltip end*/
 /*pagination start*/
-.paginationContainer,
-.paginationPreviewContainer {
-  position: absolute;
-  top: -200px;
-  left: 118px;
-  -webkit-transition: top 0.4s ease;
-  -moz-transition: top 0.4s ease;
-  -o-transition: top 0.4s ease;
-  transition: top 0.4s ease;
-  background-color: #ffffff;
-  border: 1px solid rgba(0, 0, 0, 0.099);
-  box-shadow: 1px 1.732px 5px 0 rgba(0, 0, 0, 0.05);
-  width: 200px;
-  z-index: 53;
-}
+
 .expand .paginationContainer,
 .expand .paginationPreviewContainer {
   left: 200px;

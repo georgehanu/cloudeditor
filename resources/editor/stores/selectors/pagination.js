@@ -9,26 +9,45 @@ const {
   splitEvery,
   forEach,
   prepend,
-  append
+  append,
+  pick
 } = require("ramda");
-const { pagesSelector, activePageIdSelector } = require("./project");
+const {
+  pagesSelector,
+  activePageIdSelector,
+  objectsSelector
+} = require("./project");
 
 const groupNumberSelector = state =>
   (state &&
     state.project &&
     state.project.configs &&
     state.project.configs.document &&
-    state.project.configs.facingNumber) ||
+    state.project.configs.document.facingNumber) ||
   1;
 const pagesOrderSelector = state =>
   (state && state.project && state.project.pagesOrder) || {};
 const paginationPagesSelector = createSelector(
-  [activePageIdSelector, groupNumberSelector, pagesOrderSelector],
-  (activePageId, numberOfPagesInGroup, pagesOrder) => {
+  [
+    objectsSelector,
+    pagesSelector,
+    activePageIdSelector,
+    groupNumberSelector,
+    pagesOrderSelector
+  ],
+  (allObjects, pages, activePageId, numberOfPagesInGroup, pagesOrder) => {
     let pagesIds = [];
     forEach(pageId => {
       const active = pageId == activePageId ? true : false;
-      pagesIds.push([{ id: pageId, active: active }]);
+      const pageObjectsIds = pages[pageId]["objectsIds"];
+      const pageObjects = pick(pageObjectsIds, allObjects);
+      pagesIds.push([
+        {
+          id: pageId,
+          active: active,
+          page: { objects: pageObjects, ...pages[pageId] }
+        }
+      ]);
     }, pagesOrder);
     const firstPage = head(pagesIds);
     const lastPage = last(pagesIds);

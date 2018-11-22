@@ -125,7 +125,8 @@ const getObjectsDefaults = cfg => {
 const getDocumentDefaults = cfg => {
   const defaults = merge(
     {
-      facingPages: false
+      facingPages: false,
+      facingNumber: 2
     },
     cfg || {}
   );
@@ -290,6 +291,7 @@ const getRandomProject = cfg => {
   let page1 = getProjectPageTemplate(cfg);
   let page2 = getProjectPageTemplate(cfg);
   let page3 = getProjectPageTemplate(cfg);
+  let page4 = getProjectPageTemplate(cfg);
 
   let img1 = getEmptyObject({
     type: "image",
@@ -401,13 +403,23 @@ const getRandomProject = cfg => {
     ]
   };
 
+  page4 = {
+    ...page4,
+    objectsIds: [img1.id, text1.id]
+  };
+
   page2 = {
     ...page2,
     objectsIds: []
   };
   return {
     ...project,
-    pages: { [page1.id]: page1, [page2.id]: page2, [page3.id]: page3 },
+    pages: {
+      [page1.id]: page1,
+      [page2.id]: page2,
+      [page3.id]: page3,
+      [page4.id]: page4
+    },
     objects: {
       [img1.id]: img1,
       [text1.id]: text1,
@@ -420,7 +432,7 @@ const getRandomProject = cfg => {
       [group.id]: group,
       [graphics.id]: graphics
     },
-    pagesOrder: [page1.id, page2.id, page3.id],
+    pagesOrder: [page1.id, page2.id, page3.id, page4.id],
     activePage: page1.id
   };
 };

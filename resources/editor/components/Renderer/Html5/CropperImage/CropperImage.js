@@ -354,9 +354,6 @@ class CropperImage extends React.Component {
     return (
       <div ref={this.wrapper} className="jwc_frame" style={styleWrapper}>
         <img
-          onLoad={() => {
-            this.initializeDimensions(true);
-          }}
           onMouseDown={e => this.handleMouseDown(e)}
           src={this.props.src}
           ref={this.el}

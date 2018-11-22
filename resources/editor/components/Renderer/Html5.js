@@ -1,6 +1,7 @@
 const React = require("react");
 const PropTypes = require("prop-types");
 const { debounce } = require("underscore");
+const randomColor = require("randomcolor");
 
 const uuidv4 = require("uuid/v4");
 const { connect } = require("react-redux");
@@ -25,7 +26,18 @@ class Html5Renderer extends React.Component {
     super(props);
     this.canvasContainerRef = React.createRef();
   }
-
+  shouldComponentUpdate() {
+    if (!this.props.viewOnly) {
+      return true;
+    }
+    if (this.props.viewOnly) {
+      if (this.props.active || this.props.initial) {
+        return true;
+      }
+      return false;
+    }
+    return true;
+  }
   updatePageOffset = () => {
     const canvasContainer = this.canvasContainerRef.current;
     if (canvasContainer) {
@@ -59,18 +71,29 @@ class Html5Renderer extends React.Component {
       const scale = this.state.scale;
       width *= scale;
       height *= scale;
+      let LinesRender = null;
+      let BoxesRender = null;
+      if (!this.props.viewOnly) {
+        LinesRender = <Lines lines={this.props.snapLines} scale={scale} />;
+        BoxesRender = <Boxes scale={scale} />;
+      }
       page = (
         <div
           className="page-container page"
-          style={{ width: width, height: height }}
+          style={{
+            width: width,
+            height: height,
+            backgroundColor: randomColor()
+          }}
         >
           <Objects
+            viewOnly={this.props.viewOnly}
             items={this.props.objects}
             onUpdateProps={this.props.onUpdatePropsHandler}
             scale={scale}
           />
-          <Lines lines={this.props.snapLines} scale={scale} />
-          <Boxes scale={scale} />
+          {BoxesRender}
+          {LinesRender}
           <div id="fitTextEscaper" />
         </div>
       );
