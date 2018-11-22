@@ -269,7 +269,7 @@ export const CreatePayload = (activeitem, itemPayload) => {
 export const calculateToolBarPosition = (activeItem, workArea) => {
   let scale = workArea.scale;
   const zoom = workArea.zoom;
-  scale = scale + ((zoom * 100 - 100) / 100) * scale;
+  // scale = scale + ((zoom * 100 - 100) / 100) * scale;
   return {
     top:
       (activeItem.offsetTop + activeItem.top) * scale +

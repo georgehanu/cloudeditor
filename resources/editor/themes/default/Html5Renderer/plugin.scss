@@ -5,11 +5,12 @@
   margin: 0 auto;
 }
 .zoom-container {
-  display: block;
+  display: inline-block;
   height: 100%;
   margin: 0 auto;
   position: relative;
   padding: 0;
+  width: 100%;
 }
 .zoom-container.zoom-active {
   overflow: auto;
@@ -45,4 +46,16 @@
 
 .zoom-container::-webkit-scrollbar-track {
   background-color: #fff;
+}
+#fitTextCorrector {
+  position: absolute;
+  top: -1500px;
+  left: -1500px;
+  white-space: nowrap;
+}
+#fitTextCorrector.textflow {
+  position: absolute;
+  top: -1500px;
+  left: -1500px;
+  white-space: normal;
 }

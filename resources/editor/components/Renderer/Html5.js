@@ -5,13 +5,13 @@ const randomColor = require("randomcolor");
 
 const uuidv4 = require("uuid/v4");
 const { connect } = require("react-redux");
+const { forEach } = require("ramda");
 const { snapLinesSelector } = require("../../stores/selectors/Html5/SnapLines");
 const { zoomSelector } = require("../../stores/selectors/project");
 const {
-  changeObjectPosition,
-  changeObjectDimensions,
   updateObjectProps,
-  changePage
+  changePage,
+  removeSelection
 } = require("./../../stores/actions/project");
 const { changeWorkareaProps } = require("./../../stores/actions/ui");
 
@@ -22,7 +22,8 @@ const Boxes = require("./Html5/Boxes/Boxes");
 class Html5Renderer extends React.Component {
   state = {
     scale: 1,
-    componentReady: false
+    componentReady: false,
+    blurSelectors: ["page-block active", "ToolbarContainer", "Toolbar"]
   };
 
   constructor(props) {
@@ -87,9 +88,32 @@ class Html5Renderer extends React.Component {
       }
     }
   }
+  blurPage(event) {
+    let isBlur = true;
+    const target = event.target;
+    const blurSelectors = this.state.blurSelectors;
+    forEach(blurselector => {
+      const elements = document.getElementsByClassName(blurselector);
+      forEach(element => {
+        if (element == target) {
+          isBlur = false;
+        }
+        if (element.contains(target)) {
+          isBlur = false;
+        }
+      }, elements);
+    }, blurSelectors);
+    if (isBlur) {
+      this.props.onRemoveActiveBlockHandler({});
+    }
+  }
   componentDidMount() {
     this.updatePageOffset();
     window.addEventListener("resize", debounce(this.updatePageOffset));
+    if (!this.props.viewOnly) {
+      document.removeEventListener("click", this.blurPage);
+      document.addEventListener("click", this.blurPage.bind(this));
+    }
   }
   render() {
     let page = null;
@@ -139,22 +163,27 @@ class Html5Renderer extends React.Component {
       const canvasContainer = this.canvasContainerRef.current;
       const canvasContainerBounding = canvasContainer.getBoundingClientRect();
       let marginTop = (canvasContainerBounding.height - heightScale) / 2;
+      let marginLeft = (canvasContainerBounding.width - widthScale) / 2;
       if (heightScale > canvasContainerBounding.height) {
         marginTop = 0;
       }
+      if (widthScale > canvasContainerBounding.width) {
+        marginLeft = 0;
+      }
       page = (
         <div
-          ref={this.pageContainerRef}
           className={["zoom-container", zoom > 1 ? "zoom-active" : ""].join(
             " "
           )}
         >
           <div
+            ref={this.pageContainerRef}
             className="page-container page"
             style={{
               width: widthScale,
               height: heightScale,
-              marginTop: marginTop
+              marginTop: marginTop,
+              marginLeft: marginLeft
             }}
           >
             <Objects
@@ -206,7 +235,8 @@ const mapDispatchToProps = dispatch => {
   return {
     onUpdatePropsHandler: payload => dispatch(updateObjectProps(payload)),
     onChangePageHandler: payload => dispatch(changePage(payload)),
-    onChangeWorkAreaProps: payload => dispatch(changeWorkareaProps(payload))
+    onChangeWorkAreaProps: payload => dispatch(changeWorkareaProps(payload)),
+    onRemoveActiveBlockHandler: payload => dispatch(removeSelection(payload))
   };
 };
 module.exports = connect(

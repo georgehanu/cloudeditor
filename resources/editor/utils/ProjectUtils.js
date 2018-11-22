@@ -351,12 +351,13 @@ const getRandomProject = cfg => {
     value: "this is a default value for text"
   });
   let text1 = getEmptyObject({
-    type: "textbox",
+    type: "textflow",
     width: 100,
     height: 100,
     left: 0,
     top: 0,
     text: "Enter text here",
+    fontFamily: "Dax",
     fill: "red"
   });
 
@@ -498,7 +499,8 @@ const getEmptyObject = cfg => {
           font_size: cfg.font_size || "top",
           bold: cfg.bold || false,
           underline: cfg.underline || false,
-          italic: cfg.italic || false
+          italic: cfg.italic || false,
+          fontFamily: cfg.fontFamily || false
         };
         break;
       default:

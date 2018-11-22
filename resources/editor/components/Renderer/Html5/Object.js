@@ -243,6 +243,7 @@ class ObjectBlock extends React.Component {
         className={[
           "page-block",
           type,
+          this.props.active && !this.props.viewOnly ? "active" : "",
           this.props.editable ? "editable" : ""
         ].join(" ")}
         style={style}

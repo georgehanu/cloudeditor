@@ -178,7 +178,11 @@ class Toolbar extends React.Component {
         }
       );
       attributes = Utils.LoadImageAdditionalInfo(activeItem);
-    } else if (activeItem.type === "text" || activeItem.type === "textbox") {
+    } else if (
+      activeItem.type === "text" ||
+      activeItem.type === "textbox" ||
+      activeItem.type === "textflow"
+    ) {
       toolbarData = Utils.LoadTextSettings(
         TextToolbar,
         activeItem,
