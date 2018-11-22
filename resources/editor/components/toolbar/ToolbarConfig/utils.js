@@ -141,6 +141,8 @@ export const LoadTextSettings = (toolbar, activeItem, activeLayer) => {
         item.selected = activeItem.underline;
       } else if (item.type === Types.COLOR_SELECTOR) {
         item.color = activeItem.fill;
+      } else if (item.type === Types.COLOR_TAB_BORDER_WIDTH) {
+        item.defaultValue = parseInt(activeItem.borderBlockWidth);
       } else if (item.type === Types.SLIDER_TEXT_SPACEING) {
         item.defaultValue = parseInt(activeItem.charSpacing);
       } else if (item.type === Types.INCREMENTAL_FONT_SIZE) {
@@ -177,7 +179,7 @@ export const LoadTextAdditionalInfo = activeItem => {
         [Types.COLOR_TAB_FG]: 0,
         [Types.COLOR_TAB_BG]: 2,
         [Types.COLOR_TAB_BORDER_COLOR]: null,
-        [Types.COLOR_TAB_BORDER_WIDTH]: 0
+        [Types.COLOR_TAB_BORDER_WIDTH]: activeItem.borderBlockWidth || 0
       }
     }
   };
