@@ -4,20 +4,16 @@ const { updateObject } = require("../../../utils/UtilUtils");
 const { handleActions } = require("redux-actions");
 const initialState = {
   searchValue: null,
+  clubs: [],
+  teams: [],
+  currentClub: null,
+  currentTeam: null,
   clubsState: {
-    error: null,
-    loading: false,
-    clubs: []
+    error: false,
+    loading: false
   },
-  currentClub: {},
-  clubTeamsState: {
-    error: null,
-    loading: false,
-    teams: []
-  },
-  currentTeam: {},
-  currentTeamState: {
-    error: null,
+  teamsState: {
+    error: false,
     loading: false
   }
 };
@@ -25,8 +21,10 @@ const initialState = {
 const changeSearchValue = (state, value) => {
   const updatedState = {
     searchValue: value,
-    currentClub: {},
-    currentTeam: {}
+    currentClub: null,
+    currentTeam: null,
+    clubs: [],
+    teams: []
   };
   return updateObject(state, updatedState);
 };
@@ -34,10 +32,11 @@ const changeSearchValue = (state, value) => {
 const fetchClubs = state => {
   return {
     ...state,
+    clubs: [],
     clubsState: {
       ...state.clubsState,
       loading: true,
-      error: ""
+      error: false
     }
   };
 };
@@ -45,23 +44,23 @@ const fetchClubs = state => {
 const updateClubs = (state, clubs) => {
   return {
     ...state,
+    clubs: clubs,
     clubsState: {
       ...state.clubsState,
       loading: false,
-      error: null,
-      clubs: clubs
+      error: false
     }
   };
 };
 
-const failUpdateClubs = (state, error) => {
+const failUpdateClubs = state => {
   return {
     ...state,
+    clubs: [],
     clubsState: {
       ...state.clubsState,
       loading: false,
-      error: error,
-      clubs: []
+      error: true
     }
   };
 };
@@ -69,12 +68,12 @@ const failUpdateClubs = (state, error) => {
 const changeCurrentClub = (state, club) => {
   return {
     ...state,
-    currentClub: club,
-    clubTeamsState: {
-      ...state.clubTeamsState,
+    currentClub: club || [],
+    teams: [],
+    teamsState: {
+      ...state.teamsState,
       loading: true,
-      error: null,
-      teams: []
+      error: false
     }
   };
 };
@@ -82,40 +81,43 @@ const changeCurrentClub = (state, club) => {
 const updateClubTeams = (state, teams) => {
   return {
     ...state,
-    clubTeamsState: {
-      ...state.clubTeamsState,
+    teams: teams || [],
+    teamsState: {
+      ...state.teamsState,
       loading: false,
-      error: null,
-      teams: teams
+      error: false
     }
   };
 };
 
-const failUpdateClubTeams = (state, error) => {
+const failUpdateClubTeams = state => {
   return {
     ...state,
-    clubTeamsState: {
-      ...state.clubTeamsState,
+    teams: [],
+    teamsState: {
+      ...state.teamsState,
       loading: false,
-      error: error,
-      teams: []
+      error: true
     }
   };
 };
 
 const changeCurrentTeam = (state, team) => {
-  return state;
+  return {
+    ...state,
+    currentTeam: team || []
+  };
 };
 
 const backToSearch = state => {
   return {
     ...state,
-    currentClub: {},
+    currentClub: null,
+    teams: [],
     clubTeamsState: {
       ...state.clubTeamsState,
       loading: false,
-      error: null,
-      teams: []
+      error: false
     }
   };
 };
@@ -135,7 +137,7 @@ module.exports = handleActions(
     },
     [actionTypes.FETCH_CLUBS_FAILED]: (state, action) => {
       console.log("FETCH_CLUBS_FAILED", action);
-      return failUpdateClubs(state, []);
+      return failUpdateClubs(state);
     },
     [actionTypes.CHANGE_CURRENT_CLUB]: (state, action) => {
       console.log("CHANGE_CURRENT_CLUB", action);
@@ -147,11 +149,11 @@ module.exports = handleActions(
     },
     [actionTypes.FETCH_CLUB_TEAMS_FAILED]: (state, action) => {
       console.log("FETCH_CLUB_TEAMS_FAILED", action);
-      return failUpdateClubTeams(state, action.payload);
+      return failUpdateClubTeams(state);
     },
-    [actionTypes.SELECT_CLUB_TEAM]: (state, action) => {
-      console.log("SELECT_CLUB_TEAM", action);
-      return selectClubTeam(state, action.payload);
+    [actionTypes.CHANGE_CURRENT_TEAM]: (state, action) => {
+      console.log("CHANGE_CURRENT_TEAM", action);
+      return changeCurrentTeam(state, action.payload);
     },
     [actionTypes.BACK_TO_SEARCH]: (state, action) => {
       console.log("BACK_TO_SEARCH", action);

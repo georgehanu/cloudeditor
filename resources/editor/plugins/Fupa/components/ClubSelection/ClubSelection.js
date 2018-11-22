@@ -29,7 +29,7 @@ const clubSelection = props => {
       <tr
         style={{ cursor: "pointer" }}
         key={club.id}
-        onClick={() => props.selected(club)}
+        onClick={() => props.selected(club.slug)}
       >
         <td width="40" align="center">
           <div

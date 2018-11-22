@@ -1,68 +1,133 @@
 const React = require("react");
 const { connect } = require("react-redux");
-const { isEmpty } = require("ramda");
+const { isEmpty, isNil, propEq, find, defaultTo, pipe } = require("ramda");
+const {
+  createSelectorWithDependencies: createSelector
+} = require("reselect-tools");
 const ClubsSearch = require("./components/ClubsSearch/ClubsSearch");
 const ClubSelection = require("./components/ClubSelection/ClubSelection");
 const ClubTeams = require("./components/ClubTeams/ClubTeams");
 const TeamSelection = require("./components/TeamSelection/TeamSelection");
 const {
-  clubsStateSelector,
   currentClubSelector,
-  clubTeamsSelector,
-  currentTeamSelector
+  currentTeamSelector,
+  clubsSelector,
+  teamsSelector,
+  clubsStateSelector,
+  teamsStateSelector
 } = require("./store/selectors");
 const {
   changeCurrentClub,
-  selectClubTeam,
+  changeCurrentTeam,
   backToSearch
 } = require("./store/actions");
 require("./Fupa.css");
 
 class FupaBuilder extends React.Component {
   render() {
-    const { currentClub, clubsState, clubTeams, currentTeam } = this.props;
+    const { clubSelection, clubTeams, teamSelection } = this.props;
     return (
       <div className="fupa">
         <ClubsSearch />
         <ClubSelection
-          clubs={clubsState.clubs}
-          loading={clubsState.loading}
-          error={clubsState.error}
-          hide={!isEmpty(currentClub) || false}
+          {...clubSelection}
           limit={15}
           selected={this.props.selectClub}
         />
         <ClubTeams
-          club={currentClub}
-          loading={clubTeams.loading}
-          error={clubTeams.error}
-          teams={clubTeams.teams}
+          {...clubTeams}
           limit={99}
           backToSearch={this.props.backToSearch}
-          selected={this.props.selectClubTeam}
+          selected={this.props.changeCurrentTeam}
         />
         <TeamSelection
-          club={currentClub}
-          teams={clubTeams.teams}
-          team={currentTeam}
+          {...teamSelection}
+          changed={this.props.changeCurrentTeam}
         />
       </div>
     );
   }
 }
+
+const clubSelector = createSelector(
+  [clubsSelector, currentClubSelector],
+  (clubs, clubId) => {
+    if (isNil(clubId)) return {};
+    return pipe(
+      find(propEq("slug", clubId)),
+      defaultTo({})
+    )(clubs);
+  }
+);
+
+const teamSelector = createSelector(
+  [teamsSelector, currentTeamSelector],
+  (teams, teamId) => {
+    if (isNil(teamId)) return {};
+    return pipe(
+      find(propEq("id", teamId)),
+      defaultTo({})
+    )(teams);
+  }
+);
+
+const clubSelectionSelector = createSelector(
+  [clubsSelector, clubSelector, clubsStateSelector],
+  (clubs, club, state) => {
+    return {
+      clubs,
+      loading: state.loading || false,
+      error: state.error || false,
+      hide: !isEmpty(club)
+    };
+  }
+);
+
+const clubTeamsSelector = createSelector(
+  [
+    clubsSelector,
+    clubSelector,
+    teamsSelector,
+    teamSelector,
+    teamsStateSelector
+  ],
+  (clubs, club, teams, team, state) => {
+    return {
+      club,
+      teams,
+      loading: state.loading || false,
+      error: state.error || false,
+      hide: isEmpty(club) || !isEmpty(team)
+    };
+  }
+);
+
+const teamSelectionSelector = createSelector(
+  [clubSelector, teamsSelector, teamSelector, teamsStateSelector],
+  (club, teams, team, state) => {
+    return {
+      club,
+      teams,
+      team,
+      loading: state.loading || false,
+      error: state.error || false,
+      hide: isEmpty(club) || isEmpty(team)
+    };
+  }
+);
+
 const mapStateToProps = state => {
   return {
-    clubsState: clubsStateSelector(state),
-    currentClub: currentClubSelector(state),
+    clubSelection: clubSelectionSelector(state),
     clubTeams: clubTeamsSelector(state),
-    currentTeam: currentTeamSelector(state)
+    teamSelection: teamSelectionSelector(state)
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
     selectClub: value => dispatch(changeCurrentClub(value)),
-    selectClubTeam: value => dispatch(selectClubTeam(value)),
+    changeCurrentTeam: value => dispatch(changeCurrentTeam(value)),
     backToSearch: () => dispatch(backToSearch())
   };
 };

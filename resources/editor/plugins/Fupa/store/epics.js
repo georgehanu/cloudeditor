@@ -44,7 +44,7 @@ module.exports = {
           axios
             .get("/teams", {
               params: {
-                club: payload.slug,
+                club: payload,
                 additionalFields: "competition,currentRank"
               }
             })

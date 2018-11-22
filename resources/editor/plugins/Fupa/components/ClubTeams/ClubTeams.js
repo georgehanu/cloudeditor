@@ -8,7 +8,7 @@ const Error = require("../../UI/Error/Error");
 const Back = require("../../UI/Back/Back");
 
 const clubTeams = props => {
-  const { t, tReady, club, teams } = props;
+  const { t, tReady, club, hide, teams } = props;
   let component = null;
   let renderTeams = null;
 
@@ -28,7 +28,7 @@ const clubTeams = props => {
         className="dachzeile"
         style={{ cursor: "pointer" }}
         key={clubTeam.id}
-        onClick={() => props.selected(club)}
+        onClick={() => props.selected(clubTeam.id)}
       >
         <span>
           <strong>{teamName}</strong>
@@ -43,7 +43,7 @@ const clubTeams = props => {
   };
 
   if (!tReady) return null;
-  if (isEmpty(club)) return null;
+  if (hide) return null;
   if (props.error) {
     renderTeams = <Error errorMsg={t("clubTeamsFail")} />;
   } else if (props.loading) {
