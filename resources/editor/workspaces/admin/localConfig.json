@@ -15,7 +15,7 @@
       "Snap",
       "Toolbar",
       "Zoom",
-      "Pagination"
+      "CanvasPagination"
     ]
   },
   "project": {

@@ -147,6 +147,11 @@ class FabricjsRenderer extends React.PureComponent {
     this.updatePageOffset();
     window.addEventListener("resize", debounce(this.updatePageOffset));
   }
+  componentDidUpdate(prevProps, prevState) {
+    if (prevProps.activePage.id != this.props.activePage.id) {
+      this.updatePageOffset();
+    }
+  }
 
   /**
    * Remove event listener
@@ -154,9 +159,7 @@ class FabricjsRenderer extends React.PureComponent {
   componentWillUnmount() {
     window.removeEventListener("resize", this.updatePageOffset);
   }
-  // shouldComponentUpdate(nextProps, nextState) {
-  //   return false;
-  // }
+
   onBeforeOverlayHandler = params => {
     if (params.canvas.interactive) {
       var lowPoint = fabric.util.transformPoint(
@@ -201,8 +204,16 @@ class FabricjsRenderer extends React.PureComponent {
             objectProps: map(obj => {
               return {
                 id: obj.id,
-                left: (obj.left - this.state.canvasOffsetX) / this.state.scale,
-                top: (obj.top - this.state.canvasOffsetY) / this.state.scale
+                left:
+                  (obj.left -
+                    this.state.canvasOffsetX -
+                    obj.offsetLeft * this.state.scale) /
+                  this.state.scale,
+                top:
+                  (obj.top -
+                    this.state.canvasOffsetY -
+                    obj.offsetTop * this.state.scale) /
+                  this.state.scale
               };
             }, args.selected)
           };
@@ -223,12 +234,12 @@ class FabricjsRenderer extends React.PureComponent {
             left:
               (obj.left -
                 this.state.canvasOffsetX -
-                objProps.offsetLeft * this.state.scale) /
+                obj.offsetLeft * this.state.scale) /
               this.state.scale,
             top:
               (obj.top -
                 this.state.canvasOffsetY -
-                objProps.offsetTop * this.state.scale) /
+                obj.offsetTop * this.state.scale) /
               this.state.scale,
             angle: obj.angle
           };
@@ -291,7 +302,10 @@ class FabricjsRenderer extends React.PureComponent {
     return this.props.toolCfg || {};
   };
   renderTools = () => {
-    const tools = this.getTools();
+    let tools = [];
+    if (!this.props.viewOnly) {
+      this.getTools();
+    }
     return tools.map((tool, i) => {
       const Tool = this.getTool(tool);
       const toolCfg = this.getToolConfig(tool);
@@ -392,8 +406,10 @@ class FabricjsRenderer extends React.PureComponent {
     const { activePage: page } = this.props;
     const { objects } = page;
     let elements = this.drawElements(objects, 1);
-    let helperElements = this.drawHelperLines();
-
+    let helperElements = null;
+    if (!this.props.viewOnly) {
+      helperElements = this.drawHelperLines();
+    }
     let isReadyComponent = this.state.isReadyComponent;
 
     return (

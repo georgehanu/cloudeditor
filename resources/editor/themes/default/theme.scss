@@ -152,3 +152,6 @@ body {
   cursor: not-allowed;
   opacity: 0.5;
 }
+.paginationContainer .render-container .canvasContainer {
+  pointer-events: none;
+}

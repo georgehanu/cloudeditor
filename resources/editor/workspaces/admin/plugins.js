@@ -7,6 +7,7 @@ const Snap = require("../../plugins/Snap");
 const Toolbar = require("../../plugins/Toolbar");
 const Zoom = require("../../plugins/Zoom");
 const Pagination = require("../../plugins/Html5Plugins/Pagination");
+const CanvasPagination = require("../../plugins/Html5Plugins/CanvasPagination");
 const ZoomButtons = require("../../plugins/ZoomButtons");
 
 const plugins = {
@@ -19,6 +20,7 @@ const plugins = {
   Toolbar: Toolbar,
   Zoom: Zoom,
   Pagination: Pagination,
+  CanvasPagination: CanvasPagination,
   ZoomButtons: ZoomButtons
 };
 

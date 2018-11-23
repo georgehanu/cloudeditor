@@ -4,10 +4,10 @@ const { head, forEachObjIndexed, prepend, takeLast, slice } = require("ramda");
 const { connect } = require("react-redux");
 const { changePage, changeGroups } = require("./../stores/actions/project");
 const { groupsSelector } = require("./../stores/selectors/project");
-const Html5 = require("./../components/Renderer/Html5");
+const FabricjsRenderer = require("./../components/Renderer/Fabricjs/Renderer");
 const Sortable = require("react-sortablejs");
 
-class PaginationItemContainer extends React.Component {
+class PaginationItemCanvasContainer extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -28,6 +28,7 @@ class PaginationItemContainer extends React.Component {
       const items = group.map(item => {
         const page = head(item);
         group_key = page.group_id;
+        //debugger;
         return (
           <div
             data-id={page.id}
@@ -40,11 +41,12 @@ class PaginationItemContainer extends React.Component {
               })
             }
           >
-            <Html5
+            <FabricjsRenderer
               viewOnly={true}
               initial={this.state.initial}
               active={page.active}
               key={page.group_id}
+              activePage={page.page}
               init
               {...page.page}
             />
@@ -117,4 +119,4 @@ const mapStateToProps = state => {
 module.exports = connect(
   mapStateToProps,
   mapDispatchToProps
-)(PaginationItemContainer);
+)(PaginationItemCanvasContainer);
