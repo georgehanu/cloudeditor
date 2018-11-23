@@ -360,6 +360,16 @@ const getRandomProject = cfg => {
     fontFamily: "Dax",
     fill: "red"
   });
+  let text2 = getEmptyObject({
+    type: "textflow",
+    width: 200,
+    height: 200,
+    left: 100,
+    top: 100,
+    text: "Enter text number 2 here",
+    fontFamily: "Dax",
+    fill: "red"
+  });
 
   let graphics = getEmptyObject({
     type: "graphics",
@@ -373,7 +383,7 @@ const getRandomProject = cfg => {
   page1 = {
     ...page1,
     id: "page_1",
-    objectsIds: [img1.id, text1.id]
+    objectsIds: [img1.id, text1.id, text2.id]
   };
 
   page4 = {
@@ -402,7 +412,8 @@ const getRandomProject = cfg => {
     },
     objects: {
       [img1.id]: img1,
-      [text1.id]: text1
+      [text1.id]: text1,
+      [text2.id]: text2
     },
 
     pagesOrder: [page1.id, page2.id, page3.id, page4.id],

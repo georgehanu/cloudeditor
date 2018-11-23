@@ -1,27 +1,33 @@
 const React = require("react");
 const randomColor = require("randomcolor");
 const ReactDOM = require("react-dom");
+const ContentEditable = require("react-contenteditable").default;
 
 const Escaper = require("../../../plugins/Html5Renderer/helpers/PrintqEscaper");
 
 class TextBlock extends React.PureComponent {
   constructor(props) {
     super(props);
-    this.el = React.createRef();
+    this.contentEditable = React.createRef();
+    this.state = {
+      text: "defaultText"
+    };
   }
-  componentDidUpdate() {
-    if (this.props.active) this.focusEditArea();
-  }
-  componentDidMount() {
-    const element = this.el.current;
-    element.addEventListener("keyup", this.onKeyupHandler.bind(this), false);
-  }
+
+  handleChange = evt => {
+    const text = evt.target.value;
+    this.props.onUpdateProps({
+      id: this.props.id,
+      props: {
+        value: text
+      }
+    });
+  };
+
   onKeyupHandler(event) {
     const text = Escaper.pqDecodeEntities(this.el.current);
   }
-  focusEditArea() {
-    this.el.current.focus();
-  }
+
   render() {
     const { key, width, height, top, left, ...otherProps } = this.props;
     const style = {
@@ -32,18 +38,18 @@ class TextBlock extends React.PureComponent {
       textAlign: this.props.textAlign,
       textDecoration: this.props.underline ? "underline" : "none",
       fontWeight: this.props.bold ? "bold" : "normal",
-      fontStyle: this.props.italic ? "italic" : "normal",
-      backgroundColor: randomColor()
+      fontStyle: this.props.italic ? "italic" : "normal"
     };
     return (
-      <div
-        ref={this.el}
+      <ContentEditable
+        innerRef={this.contentEditable}
+        ref={this.contentEditable}
         className={this.props.type}
         style={style}
-        contentEditable={this.props.active || false}
-      >
-        {this.props.value ? this.props.value : null}
-      </div>
+        html={this.props.value}
+        onChange={this.handleChange}
+        tagName="div"
+      />
     );
   }
 }

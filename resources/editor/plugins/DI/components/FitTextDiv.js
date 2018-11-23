@@ -1,4 +1,5 @@
 const React = require("react");
+const randomColor = require("randomcolor");
 
 class FitTextDiv extends React.Component {
   constructor(props) {
@@ -22,23 +23,29 @@ class FitTextDiv extends React.Component {
     return false;
   }
   render() {
+    const debug = this.props.debug;
     const styleText = {
       width: this.props.width,
+      left: this.props.left,
       height: this.props.height,
       fontSize: this.props.fontSize,
       lineHeight: this.props.lineHeight,
       wordSpacing: this.props.wordSpacing,
       letterSpacing: this.props.letterSpacing,
-      fontFamily: this.props.fontFamily
+      fontFamily: this.props.fontFamily,
+      backgroundColor: randomColor()
     };
     return (
       <div
-        className={this.props.type}
+        className={[
+          this.props.type,
+          "fitTextCorrector",
+          debug ? "debug" : ""
+        ].join(" ")}
         ref={this.el}
         style={styleText}
-        id="fitTextCorrector"
       >
-        {this.props.text}
+        {this.props.value ? this.props.value : null}
       </div>
     );
   }

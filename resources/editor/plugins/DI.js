@@ -1,7 +1,32 @@
 const React = require("react");
+const { activePageSelector } = require("../../editor/stores/selectors/project");
+const { pipe, filter, map, values } = require("ramda");
 const assign = require("object-assign");
+const FitTextDiv = require("./DI/components/FitTextDiv");
+const { connect } = require("react-redux");
 
 const di = props => {
+  const objects = props.activePage.objects;
+  const elements = pipe(
+    filter(object => object.type == "textflow"),
+    map(object => {
+      const {
+        top,
+        text,
+        left,
+        fontFamily,
+        fontSize,
+        width,
+        height,
+        lineHeight,
+        wordSpacing,
+        letterSpacing,
+        type
+      } = object;
+      return <FitTextDiv debug={true} {...object} key={"fit_" + object.id} />;
+    }),
+    values
+  )(objects);
   const isFit = value => {
     return value <= 51;
   };
@@ -28,10 +53,17 @@ const di = props => {
     return process(mid, tmp);
   };
   console.log("process", process(0, 100), iterations);
-
-  return null;
+  console.log("elements fit", elements);
+  return elements;
 };
+const mapStateToProps = state => {
+  return { activePage: activePageSelector(state) };
+};
+const DiPlugin = connect(
+  mapStateToProps,
+  null
+)(di);
 
 module.exports = {
-  DI: assign(di, {})
+  DI: assign(DiPlugin, {})
 };
