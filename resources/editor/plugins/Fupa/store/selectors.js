@@ -1,4 +1,8 @@
 const { pathOr } = require("ramda");
+const { isEmpty, isNil, propEq, find, defaultTo, pipe } = require("ramda");
+const {
+  createSelectorWithDependencies: createSelector
+} = require("reselect-tools");
 
 const searchValueSelector = state =>
   pathOr(null, ["fupa", "searchValue"], state);
@@ -10,6 +14,25 @@ const clubsSelector = state => pathOr(null, ["fupa", "clubs"], state);
 const teamsSelector = state => pathOr(null, ["fupa", "teams"], state);
 const clubsStateSelector = state => pathOr(null, ["fupa", "clubsState"], state);
 const teamsStateSelector = state => pathOr(null, ["fupa", "teamsState"], state);
+const teamStandingsStateSelector = state =>
+  pathOr(null, ["fupa", "teamStandingsState"], state);
+const teamStandingsSelector = state =>
+  pathOr([], ["fupa", "teamStandings"], state);
+
+const teamSelector = createSelector(
+  [teamsSelector, currentTeamSelector],
+  (teams, teamId) => {
+    if (isNil(teamId)) return {};
+    return pipe(
+      find(propEq("id", teamId)),
+      defaultTo({})
+    )(teams);
+  }
+);
+
+const teamCompetitionSelector = createSelector([teamSelector], team => {
+  return team.competition.slug;
+});
 
 module.exports = {
   searchValueSelector,
@@ -18,5 +41,9 @@ module.exports = {
   clubsSelector,
   teamsSelector,
   clubsStateSelector,
-  teamsStateSelector
+  teamsStateSelector,
+  teamStandingsStateSelector,
+  teamStandingsSelector,
+  teamSelector,
+  teamCompetitionSelector
 };

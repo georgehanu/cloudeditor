@@ -6,6 +6,7 @@ const { ofType } = require("redux-observable");
 const actionTypes = require("./actionTypes");
 const actions = require("./actions");
 const axios = require("../axios");
+const { teamCompetitionSelector } = require("./selectors");
 
 module.exports = {
   initSearchEpic: (action$, store) =>
@@ -57,6 +58,31 @@ module.exports = {
           }),
           catchError(error => {
             return Rx.of(actions.fetchClubTeamsFailed());
+          })
+        );
+      })
+    ),
+  fetchClubTeamCompetitionEpic: (action$, store) =>
+    action$.pipe(
+      ofType(actionTypes.CHANGE_CURRENT_TEAM),
+      switchMap(action => {
+        const competition = teamCompetitionSelector(store.value);
+        return Rx.from(
+          axios
+            .get("/standings", {
+              params: {
+                competition: competition
+              }
+            })
+            .then(res => res.data)
+        ).pipe(
+          switchMap(data => {
+            if (data.errors === false)
+              return Rx.of(actions.fetchTeamCompetitionFulfilled(data.data));
+            return Rx.of(actions.fetchTeamCompetitionFailed());
+          }),
+          catchError(error => {
+            return Rx.of(actions.fetchTeamCompetitionFailed());
           })
         );
       })

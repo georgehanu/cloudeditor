@@ -10,7 +10,9 @@ const actionCreators = createActions(
   actionTypes.FETCH_CLUB_TEAMS_FULFILLED,
   actionTypes.FETCH_CLUB_TEAMS_FAILED,
   actionTypes.CHANGE_CURRENT_TEAM,
-  actionTypes.BACK_TO_SEARCH
+  actionTypes.BACK_TO_SEARCH,
+  actionTypes.FETCH_TEAM_COMPETITION_FULFILLED,
+  actionTypes.FETCH_TEAM_COMPETITION_FAILED
 );
 
 module.exports = actionCreators;

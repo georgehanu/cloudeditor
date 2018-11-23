@@ -1,11 +1,10 @@
+import Standings from "./Standings/Standings";
+import Matches from "./Matches/Matches";
+
 const React = require("react");
 const { withNamespaces } = require("react-i18next");
 const { isEmpty, filter, propEq, map, pipe, pathOr, slice } = require("ramda");
 const { classes } = require("./TeamSelection.css");
-
-const Spinner = require("../../UI/Spinner/Spinner");
-const Error = require("../../UI/Error/Error");
-const Back = require("../../UI/Back/Back");
 
 const teamSelection = props => {
   const { t, tReady, club, teams, team, hide } = props;
@@ -48,7 +47,8 @@ const teamSelection = props => {
         <select onChange={event => props.changed(Number(event.target.value))}>
           {teamsList}
         </select>
-        <select />
+        <Standings {...props.teamStandings} />
+        <Matches />
       </div>
     </div>
   );

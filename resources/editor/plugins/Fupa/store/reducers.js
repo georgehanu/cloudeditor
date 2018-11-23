@@ -8,11 +8,16 @@ const initialState = {
   teams: [],
   currentClub: null,
   currentTeam: null,
+  teamStandings: [],
   clubsState: {
     error: false,
     loading: false
   },
   teamsState: {
+    error: false,
+    loading: false
+  },
+  teamStandingsState: {
     error: false,
     loading: false
   }
@@ -105,7 +110,11 @@ const failUpdateClubTeams = state => {
 const changeCurrentTeam = (state, team) => {
   return {
     ...state,
-    currentTeam: team || []
+    currentTeam: team || [],
+    teamStandingsState: {
+      ...state.teamStandingsState,
+      loading: true
+    }
   };
 };
 
@@ -118,6 +127,30 @@ const backToSearch = state => {
       ...state.clubTeamsState,
       loading: false,
       error: false
+    }
+  };
+};
+
+const teamCompetitionFulfilled = (state, standings) => {
+  return {
+    ...state,
+    teamStandings: standings,
+    teamStandingsState: {
+      ...state.teamStandingsState,
+      loading: false,
+      error: false
+    }
+  };
+};
+
+const teamCompetitionFailed = state => {
+  return {
+    ...state,
+    teamStandings: [],
+    teamStandingsState: {
+      ...state.standingsState,
+      loading: false,
+      error: true
     }
   };
 };
@@ -153,11 +186,17 @@ module.exports = handleActions(
     },
     [actionTypes.CHANGE_CURRENT_TEAM]: (state, action) => {
       console.log("CHANGE_CURRENT_TEAM", action);
-      return changeCurrentTeam(state, action.payload);
+      return changeCurrentTeam(state, action.payload.team);
     },
     [actionTypes.BACK_TO_SEARCH]: (state, action) => {
       console.log("BACK_TO_SEARCH", action);
       return backToSearch(state);
+    },
+    [actionTypes.FETCH_TEAM_COMPETITION_FULFILLED]: (state, action) => {
+      return teamCompetitionFulfilled(state, action.payload);
+    },
+    [actionTypes.FETCH_TEAM_COMPETITION_FAILED]: state => {
+      return teamCompetitionFailed(state);
     }
   },
   initialState

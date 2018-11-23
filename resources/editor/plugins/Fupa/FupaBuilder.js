@@ -1,5 +1,3 @@
-import Standings from "./components/TeamSelection/Standings/Standings";
-
 const React = require("react");
 const { connect } = require("react-redux");
 const { isEmpty, isNil, propEq, find, defaultTo, pipe } = require("ramda");
@@ -16,7 +14,10 @@ const {
   clubsSelector,
   teamsSelector,
   clubsStateSelector,
-  teamsStateSelector
+  teamsStateSelector,
+  teamStandingsSelector,
+  teamStandingsStateSelector,
+  teamSelector
 } = require("./store/selectors");
 const {
   changeCurrentClub,
@@ -30,7 +31,6 @@ class FupaBuilder extends React.Component {
     const { clubSelection, clubTeams, teamSelection } = this.props;
     return (
       <div className="fupa">
-        <Standings />
         <ClubsSearch />
         <ClubSelection
           {...clubSelection}
@@ -46,6 +46,7 @@ class FupaBuilder extends React.Component {
         <TeamSelection
           {...teamSelection}
           changed={this.props.changeCurrentTeam}
+          teamStandings={this.props.teamStandings}
         />
       </div>
     );
@@ -60,17 +61,6 @@ const clubSelector = createSelector(
       find(propEq("slug", clubId)),
       defaultTo({})
     )(clubs);
-  }
-);
-
-const teamSelector = createSelector(
-  [teamsSelector, currentTeamSelector],
-  (teams, teamId) => {
-    if (isNil(teamId)) return {};
-    return pipe(
-      find(propEq("id", teamId)),
-      defaultTo({})
-    )(teams);
   }
 );
 
@@ -119,18 +109,32 @@ const teamSelectionSelector = createSelector(
   }
 );
 
+const standingsSelector = createSelector(
+  [teamStandingsSelector, teamStandingsStateSelector, currentTeamSelector],
+  (standings, state, teamId) => {
+    return {
+      standings,
+      loading: state.loading || false,
+      error: state.error || false,
+      teamId
+      //hide: isEmpty(club) || isEmpty(team)
+    };
+  }
+);
+
 const mapStateToProps = state => {
   return {
     clubSelection: clubSelectionSelector(state),
     clubTeams: clubTeamsSelector(state),
-    teamSelection: teamSelectionSelector(state)
+    teamSelection: teamSelectionSelector(state),
+    teamStandings: standingsSelector(state)
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
     selectClub: value => dispatch(changeCurrentClub(value)),
-    changeCurrentTeam: value => dispatch(changeCurrentTeam(value)),
+    changeCurrentTeam: team => dispatch(changeCurrentTeam({ team })),
     backToSearch: () => dispatch(backToSearch())
   };
 };
