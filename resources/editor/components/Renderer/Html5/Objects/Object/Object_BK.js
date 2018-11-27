@@ -1,21 +1,24 @@
 const React = require("react");
-
-const randomColor = require("randomcolor");
-const ImageBlock = require("./Image");
-const TextBlock = require("./Text");
 const { merge } = require("ramda");
 const uuidv4 = require("uuid/v4");
+const randomColor = require("randomcolor");
 const { connect } = require("react-redux");
+const PropTypes = require("prop-types");
+
+const ImageBlock = require("../Image/Image");
+const TextBlock = require("../Text/Text");
+const Border = require("./Border/Border");
 const {
   addObjectIdToSelected,
   addObjectIdActionSelected,
   removeActionSelection,
   removeSelection
-} = require("./../../../stores/actions/project");
+} = require("../../../../../stores/actions/project");
 
-require("./../../rewrites/draggable");
-require("./../../rewrites/resizable");
-require("./../../rewrites/rotatable");
+require("../../../../rewrites/draggable");
+require("../../../../rewrites/resizable");
+require("../../../../rewrites/rotatable");
+require("./Object.css");
 
 class ObjectBlock extends React.Component {
   constructor(props) {
@@ -211,50 +214,89 @@ class ObjectBlock extends React.Component {
     el.draggable("enable");
   }
   onClickHandler = event => {
-    if (!this.props.viewOnly) this.props.onSetActiveBlockHandler(this.props.id);
+    if (!this.props.viewOnly && !this.props.active)
+      this.props.onSetActiveBlockHandler(this.props.id);
   };
   render() {
-    const { width, height, top, left, type, ...otherProps } = this.props;
+    const {
+      width,
+      height,
+      top,
+      left,
+      type,
+      active,
+      editable,
+      viewOnly,
+      ...otherProps
+    } = this.props;
     const style = {
       width: width,
       height: height,
       left: left,
       top: top,
-      position: "absolute",
       backgroundColor: randomColor()
     };
     let element = null;
 
+    const contentEditable = !(this.props.viewOnly || 0) && editable;
+
     switch (type) {
       case "image":
         element = (
-          <ImageBlock ref={this.childNode} {...this.state} {...this.props} />
+          <ImageBlock
+            ref={this.childNode}
+            contentEditable={contentEditable}
+            {...this.state}
+            {...this.props}
+          />
         );
         break;
       case "text":
       case "textflow":
-        element = <TextBlock ref={this.childNode} {...this.props} />;
+        const textProps = {
+          id: this.props.id,
+          width: width,
+          maxWidth: width,
+          fontFamily: this.props.fontFamily,
+          fontSize: this.props.fontSize * this.props.scale,
+          textAlign: this.props.textAlign,
+          underline: this.props.underline,
+          bold: this.props.bold,
+          italic: this.props.italic,
+          type: this.props.type,
+          value: this.props.value,
+          onUpdateProps: this.props.onUpdateProps,
+          contentEditable
+        };
+        element = <TextBlock ref={this.childNode} {...textProps} />;
         break;
       default:
         break;
     }
+
+    let border = null;
+    if (!viewOnly) border = <Border width={width} height={height} />;
+
+    const blockClasses = [
+      "pageBlock",
+      type,
+      active && !viewOnly ? "active" : "",
+      editable ? "editable" : ""
+    ].join(" ");
+
     return (
       <div
-        className={[
-          "page-block",
-          type,
-          this.props.active && !this.props.viewOnly ? "active" : "",
-          this.props.editable ? "editable" : ""
-        ].join(" ")}
+        className={blockClasses}
         style={style}
         ref={this.el}
         onClick={this.onClickHandler}
         onMouseDown={this.onMouseDownHandler}
         onMouseUp={this.onMouseUpHandler}
       >
-        <div className={this.props.orientation}>{element}</div>
-        <div className="blockOrder" />
-        <u />
+        <div className={[this.props.orientation, "blockOrientation"].join(" ")}>
+          {element}
+        </div>
+        {border}
       </div>
     );
   }

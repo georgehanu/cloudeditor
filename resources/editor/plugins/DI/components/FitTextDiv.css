@@ -1,0 +1,17 @@
+.fitTextCorrector {
+  position: absolute;
+  top: -1500px;
+  left: -1500px;
+  white-space: nowrap;
+}
+.fitTextCorrector.textflow {
+  position: absolute;
+  top: -1500px;
+  left: -1500px;
+  white-space: pre-wrap;
+}
+.fitTextCorrector.debug {
+  left: 200px;
+  top: 200px;
+  z-index: 9999;
+}

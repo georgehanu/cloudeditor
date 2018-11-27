@@ -1,6 +1,6 @@
 const React = require("react");
 const randomColor = require("randomcolor");
-const CropperImage = require("./CropperImage/CropperImage");
+const CropperImage = require("../../CropperImage/CropperImage");
 
 class ImageBlock extends React.PureComponent {
   constructor(props) {

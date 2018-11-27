@@ -5,8 +5,8 @@ const SnapLines = props => {
   const scale = props.scale;
   lines = props.lines.map((line, index) => {
     const style = {
-      width: line.width == 1 ? line.width : line.width * scale,
-      height: line.height == 1 ? line.height : line.height * scale,
+      width: line.width === 1 ? line.width : line.width * scale,
+      height: line.height === 1 ? line.height : line.height * scale,
       top: line.y * scale,
       left: line.x * scale,
       position: "absolute",

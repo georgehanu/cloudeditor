@@ -10,7 +10,8 @@ const {
   UPDATE_OBJECT_PROPS,
   CHANGE_PAGE,
   CHANGE_GROUPS,
-  UPDATE_CROP_PARAMS
+  UPDATE_CROP_PARAMS,
+  ON_TEXT_CHANGE
 } = require("../actionTypes/project");
 const { createActions } = require("redux-actions");
 
@@ -26,7 +27,8 @@ const {
   updateObjectProps,
   changePage,
   updateCropParams,
-  changeGroups
+  changeGroups,
+  onTextChange
 } = createActions(
   CHANGE_PROJECT_TITLE,
   ADD_OBJECT,
@@ -39,7 +41,8 @@ const {
   UPDATE_OBJECT_PROPS,
   CHANGE_PAGE,
   UPDATE_CROP_PARAMS,
-  CHANGE_GROUPS
+  CHANGE_GROUPS,
+  ON_TEXT_CHANGE
 );
 
 module.exports = {
@@ -54,5 +57,6 @@ module.exports = {
   updateObjectProps,
   changePage,
   updateCropParams,
-  changeGroups
+  changeGroups,
+  onTextChange
 };

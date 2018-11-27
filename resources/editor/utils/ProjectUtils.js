@@ -105,7 +105,7 @@ const getObjectsDefaults = cfg => {
       type: "text",
       underline: 0,
       vAlignment: "middle",
-      wordSpacing: 0,
+      wordSpacing: "normal",
       value: "Edit Text Here"
     },
     text || {}
@@ -266,6 +266,18 @@ const getFontMetricTemplate = cfg => {
   );
 };
 
+const getUIPermissionsTemplate = cfg => {
+  return merge(
+    {
+      moveBlocks: 1,
+      rotateBlocks: 1,
+      resizeBlocks: 1,
+      snapBlocks: 1
+    },
+    cfg || {}
+  );
+};
+
 /**
  *
  * @param cfg
@@ -352,12 +364,13 @@ const getRandomProject = cfg => {
   });
   let text1 = getEmptyObject({
     type: "textflow",
-    width: 100,
+    width: 400,
     height: 100,
     left: 0,
     top: 0,
     text: "Enter text here",
     fontFamily: "Dax",
+    fontSize: 50,
     fill: "red"
   });
   let text2 = getEmptyObject({
@@ -383,13 +396,13 @@ const getRandomProject = cfg => {
   page1 = {
     ...page1,
     id: "page_1",
-    objectsIds: [img1.id, text1.id, text2.id]
+    objectsIds: [text1.id, text2.id]
   };
 
   page4 = {
     ...page4,
     id: "page_4",
-    objectsIds: [img1.id, text1.id]
+    objectsIds: [text1.id]
   };
 
   page3 = {
@@ -507,7 +520,7 @@ const getEmptyObject = cfg => {
           font: cfg.font || "Arial",
           textAlign: cfg.textAlign || "left",
           vAlign: cfg.vAlign || "top",
-          font_size: cfg.font_size || "top",
+          fontSize: cfg.fontSize || 12,
           bold: cfg.bold || false,
           underline: cfg.underline || false,
           italic: cfg.italic || false,
@@ -541,7 +554,8 @@ const getEmptyUI = cfg => {
         workingWidth: 0,
         workingHeight: 0
       }
-    }
+    },
+    permissions: getUIPermissionsTemplate(cfg)
   };
 };
 

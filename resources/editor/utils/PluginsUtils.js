@@ -229,7 +229,7 @@ const PluginsUtils = {
       .map(name => plugins[name])
       .reduce(
         (previous, current) =>
-          assign({}, previous, omit(["reducers", "sagas"], current)),
+          assign({}, previous, omit(["reducers", "epics"], current)),
         {}
       );
   },

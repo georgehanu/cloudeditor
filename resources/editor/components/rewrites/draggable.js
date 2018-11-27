@@ -7,6 +7,7 @@
  * @version         1.9.1
  */
 
+const $ = require("jquery");
 require("webpack-jquery-ui/draggable");
 (function($) {
   $.extend($.ui.draggable.prototype.options, {

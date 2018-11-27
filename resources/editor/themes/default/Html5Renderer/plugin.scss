@@ -1,20 +1,3 @@
-.page-container {
-  display: block;
-  background-color: rebeccapurple;
-  position: relative;
-  margin: 0 auto;
-}
-.zoom-container {
-  display: inline-block;
-  height: 100%;
-  margin: 0 auto;
-  position: relative;
-  padding: 0;
-  width: 100%;
-}
-.zoom-container.zoom-active {
-  overflow: auto;
-}
 .page-block {
   position: absolute;
   background: none repeat scroll 0 0 rgba(0, 0, 0, 0);
@@ -25,42 +8,4 @@
   z-index: 2;
   cursor: default;
   border: 1px dashed #ccc;
-}
-.zoom-container::-webkit-scrollbar {
-  -webkit-appearance: none;
-}
-
-.zoom-container::-webkit-scrollbar:vertical {
-  width: 11px;
-}
-
-.zoom-container::-webkit-scrollbar:horizontal {
-  height: 11px;
-}
-
-.zoom-container::-webkit-scrollbar-thumb {
-  border-radius: 8px;
-  border: 2px solid white; /* should match background, can't be transparent */
-  background-color: rgba(0, 0, 0, 0.5);
-}
-
-.zoom-container::-webkit-scrollbar-track {
-  background-color: #fff;
-}
-.fitTextCorrector {
-  position: absolute;
-  top: -1500px;
-  left: -1500px;
-  white-space: nowrap;
-}
-.fitTextCorrector.textflow {
-  position: absolute;
-  top: -1500px;
-  left: -1500px;
-  white-space: normal;
-}
-.fitTextCorrector.debug {
-  left: 200px;
-  top: 200px;
-  z-index: 9999;
 }

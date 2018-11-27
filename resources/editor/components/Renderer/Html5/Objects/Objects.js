@@ -1,5 +1,5 @@
 const React = require("react");
-const ObjectBlock = require("./Object");
+const ObjectBlock = require("./Object/Object");
 
 const objects = props => (
   <React.Fragment>
@@ -11,12 +11,15 @@ const objects = props => (
         top,
         offsetLeft,
         offsetTop,
+        rotatable,
+        resizable,
         ...otherProps
       } = props.items[obKey];
       if (props.viewOnly) {
         offsetLeft = 0;
         offsetTop = 0;
       }
+
       const scale = props.scale;
       return (
         <ObjectBlock
@@ -28,9 +31,9 @@ const objects = props => (
           offsetTop={offsetTop}
           left={(left + offsetLeft) * scale}
           top={(top + offsetTop) * scale}
-          viewOnly={props.viewOnly}
           {...otherProps}
           onUpdateProps={props.onUpdateProps}
+          onTextChange={props.onTextChange}
         />
       );
     })}
