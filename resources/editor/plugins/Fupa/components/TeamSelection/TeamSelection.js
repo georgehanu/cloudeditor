@@ -48,7 +48,7 @@ const teamSelection = props => {
           {teamsList}
         </select>
         <Standings {...props.teamStandings} />
-        <Matches />
+        <Matches {...props.teamMatches} />
       </div>
     </div>
   );

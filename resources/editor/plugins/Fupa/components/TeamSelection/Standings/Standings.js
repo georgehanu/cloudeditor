@@ -29,7 +29,8 @@ const fupaTdBase = {
   padding: "5px",
   paddingRight: "2px",
   margin: "0",
-  borderBottom: "1px solid #fff"
+  borderBottom: "1px solid #fff",
+  textAlign: "right"
 };
 
 const fupaImageWrapper = {
@@ -117,11 +118,12 @@ const Standings = props => {
   return (
     <div className="Standings">
       <div
-        className="TableContainer"
+        className="StandingsTableContainer"
         style={{
           fontSize: "12px",
           color: "#121212",
-          backgroundColor: "#ececec"
+          backgroundColor: "#ececec",
+          margin: "10px"
         }}
       >
         <table

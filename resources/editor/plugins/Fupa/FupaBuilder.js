@@ -17,7 +17,9 @@ const {
   teamsStateSelector,
   teamStandingsSelector,
   teamStandingsStateSelector,
-  teamSelector
+  teamSelector,
+  teamMatchesSelector,
+  teamMatchesStateSelector
 } = require("./store/selectors");
 const {
   changeCurrentClub,
@@ -47,6 +49,7 @@ class FupaBuilder extends React.Component {
           {...teamSelection}
           changed={this.props.changeCurrentTeam}
           teamStandings={this.props.teamStandings}
+          teamMatches={this.props.teamMatches}
         />
       </div>
     );
@@ -122,12 +125,25 @@ const standingsSelector = createSelector(
   }
 );
 
+const matchesSelector = createSelector(
+  [teamMatchesSelector, teamMatchesStateSelector, currentTeamSelector],
+  (matches, state, teamId) => {
+    return {
+      matches,
+      loading: state.loading || false,
+      error: state.error || false,
+      teamId
+    };
+  }
+);
+
 const mapStateToProps = state => {
   return {
     clubSelection: clubSelectionSelector(state),
     clubTeams: clubTeamsSelector(state),
     teamSelection: teamSelectionSelector(state),
-    teamStandings: standingsSelector(state)
+    teamStandings: standingsSelector(state),
+    teamMatches: matchesSelector(state)
   };
 };
 

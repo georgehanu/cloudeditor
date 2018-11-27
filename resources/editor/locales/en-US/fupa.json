@@ -4,5 +4,14 @@
   "clubTeamsFail": "Failed to fetch club teams!",
   "Club": "Club",
   "Team": "Team",
-  "Back to Clubs": "Back"
+  "Back to Clubs": "Back",
+  "HomeLetter": "H",
+  "AwayLetter": "A",
+  "Match_Monday": "Mo.",
+  "Match_Tuesday": "Tu.",
+  "Match_Wednesday": "We.",
+  "Match_Thursday": "Th.",
+  "Match_Friday": "Fr.",
+  "Match_Saturday": "Sa.",
+  "Match_Sunday": "Su."
 }

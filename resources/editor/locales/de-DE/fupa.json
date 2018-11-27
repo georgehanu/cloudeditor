@@ -1,3 +1,13 @@
 {
-  "clubsTableTitle": "Verein"
+  "clubsTableTitle": "Verein",
+  "HomeLetter": "H",
+  "AwayLetter": "A",
+  "Matches": "Matches",
+  "Match_Monday": "Mo.",
+  "Match_Tuesday": "Tu.",
+  "Match_Wednesday": "We.",
+  "Match_Thursday": "Th.",
+  "Match_Friday": "Fr.",
+  "Match_Saturday": "Sa.",
+  "Match_Sunday": "Su."
 }

@@ -1,12 +1,18 @@
+import {
+  FETCH_TEAM_MATCHES_FAILED,
+  FETCH_TEAM_MATCHES_FULFILLED
+} from "../store/actionTypes";
 //https://fupa.docs.stoplight.io/api-docs-v1/club/get-one-club
 const Rx = require("rxjs");
-const { switchMap, catchError } = require("rxjs/operators");
+const { Observable } = require("rxjs");
+
+const { switchMap, catchError, concatMap } = require("rxjs/operators");
 const { ofType } = require("redux-observable");
 
 const actionTypes = require("./actionTypes");
 const actions = require("./actions");
 const axios = require("../axios");
-const { teamCompetitionSelector } = require("./selectors");
+const { teamCompetitionSelector, teamSelector } = require("./selectors");
 
 module.exports = {
   initSearchEpic: (action$, store) =>
@@ -62,7 +68,7 @@ module.exports = {
         );
       })
     ),
-  fetchClubTeamCompetitionEpic: (action$, store) =>
+  fetchClubTeamStandingsEpic: (action$, store) =>
     action$.pipe(
       ofType(actionTypes.CHANGE_CURRENT_TEAM),
       switchMap(action => {
@@ -78,11 +84,70 @@ module.exports = {
         ).pipe(
           switchMap(data => {
             if (data.errors === false)
-              return Rx.of(actions.fetchTeamCompetitionFulfilled(data.data));
-            return Rx.of(actions.fetchTeamCompetitionFailed());
+              return Rx.of(actions.fetchTeamStandingsFulfilled(data.data));
+            return Rx.of(actions.fetchTeamStandingsFailed());
           }),
           catchError(error => {
-            return Rx.of(actions.fetchTeamCompetitionFailed());
+            return Rx.of(actions.fetchTeamStandingsFailed());
+          })
+        );
+      })
+    ),
+  fetchClubTeamMatchesEpic: (action$, store) =>
+    action$.pipe(
+      ofType(actionTypes.CHANGE_CURRENT_TEAM),
+      switchMap(action => {
+        const competition = teamCompetitionSelector(store.value);
+        const team = teamSelector(store.value);
+        /* we need to make 2 calls - one for the previous games, one for the next games */
+        return Rx.from(
+          axios
+            .get("/matches", {
+              params: {
+                club: team.clubSlug,
+                competition: competition,
+                section: "PRE",
+                limit: 6
+              }
+            })
+            .then(res => res.data)
+        ).pipe(
+          switchMap(data => {
+            if (data.errors === false) {
+              return Rx.from(
+                axios
+                  .get("/matches", {
+                    params: {
+                      club: team.clubSlug,
+                      competition: competition,
+                      section: "POST,LIVE",
+                      sort: "-kickoff",
+                      limit: 6
+                    }
+                  })
+                  .then(res => res.data)
+              ).pipe(
+                switchMap(postData => {
+                  if (postData.errors === false) {
+                    return Rx.of(
+                      actions.fetchTeamMatchesFulfilled([
+                        ...postData.data.reverse(),
+                        ...data.data
+                      ])
+                    );
+                  }
+                  return Rx.of(actions.fetchTeamMatchesFailed());
+                }),
+                catchError(error => {
+                  return Rx.of(actions.fetchTeamMatchesFailed());
+                })
+              );
+            }
+            return Rx.of(actions.fetchTeamMatchesFailed());
+          }),
+          catchError(error => {
+            console.log(error, "ERROR");
+            return Rx.of(actions.fetchTeamMatchesFailed());
           })
         );
       })

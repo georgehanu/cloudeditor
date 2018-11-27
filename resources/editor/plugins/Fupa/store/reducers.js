@@ -9,6 +9,7 @@ const initialState = {
   currentClub: null,
   currentTeam: null,
   teamStandings: [],
+  teamMatches: [],
   clubsState: {
     error: false,
     loading: false
@@ -18,6 +19,10 @@ const initialState = {
     loading: false
   },
   teamStandingsState: {
+    error: false,
+    loading: false
+  },
+  teamMatchesState: {
     error: false,
     loading: false
   }
@@ -114,6 +119,10 @@ const changeCurrentTeam = (state, team) => {
     teamStandingsState: {
       ...state.teamStandingsState,
       loading: true
+    },
+    teamMatchesState: {
+      ...state.teamMatchesState,
+      loading: true
     }
   };
 };
@@ -131,7 +140,7 @@ const backToSearch = state => {
   };
 };
 
-const teamCompetitionFulfilled = (state, standings) => {
+const teamStandingsFulfilled = (state, standings) => {
   return {
     ...state,
     teamStandings: standings,
@@ -143,12 +152,36 @@ const teamCompetitionFulfilled = (state, standings) => {
   };
 };
 
-const teamCompetitionFailed = state => {
+const teamStandingsFailed = state => {
   return {
     ...state,
     teamStandings: [],
     teamStandingsState: {
-      ...state.standingsState,
+      ...state.teamStandingsState,
+      loading: false,
+      error: true
+    }
+  };
+};
+
+const teamMatchesFulfilled = (state, matches) => {
+  return {
+    ...state,
+    teamMatches: matches,
+    teamMatchesState: {
+      ...state.teamMatchesState,
+      loading: false,
+      error: false
+    }
+  };
+};
+
+const teamMatchesFailed = state => {
+  return {
+    ...state,
+    teamMatches: [],
+    teamMatchesState: {
+      ...state.teamMatchesState,
       loading: false,
       error: true
     }
@@ -192,11 +225,17 @@ module.exports = handleActions(
       console.log("BACK_TO_SEARCH", action);
       return backToSearch(state);
     },
-    [actionTypes.FETCH_TEAM_COMPETITION_FULFILLED]: (state, action) => {
-      return teamCompetitionFulfilled(state, action.payload);
+    [actionTypes.FETCH_TEAM_STANDINGS_FULFILLED]: (state, action) => {
+      return teamStandingsFulfilled(state, action.payload);
     },
-    [actionTypes.FETCH_TEAM_COMPETITION_FAILED]: state => {
-      return teamCompetitionFailed(state);
+    [actionTypes.FETCH_TEAM_STANDINGS_FAILED]: state => {
+      return teamStandingsFailed(state);
+    },
+    [actionTypes.FETCH_TEAM_MATCHES_FULFILLED]: (state, action) => {
+      return teamMatchesFulfilled(state, action.payload);
+    },
+    [actionTypes.FETCH_TEAM_MATCHES_FAILED]: state => {
+      return teamMatchesFailed(state);
     }
   },
   initialState
