@@ -1,5 +1,5 @@
 .fupa {
-  height: 100%;
+  height: calc(100% - 25px);
   width: 100%;
   font-family: Arial, sans-serif;
   font-size: 12px;

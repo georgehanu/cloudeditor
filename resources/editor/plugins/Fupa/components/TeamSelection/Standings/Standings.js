@@ -2,6 +2,7 @@ import React from "react";
 import { withNamespaces } from "react-i18next";
 import "./Standings.css";
 import withProduction from "../../../hoc/withProduction";
+import withSpinner from "../../../../../hoc/withSpinner";
 
 const fupaTdBase = {
   padding: "5px",
@@ -99,4 +100,6 @@ const Standings = props => {
   return <React.Fragment>{teams}</React.Fragment>;
 };
 
-export default withProduction(withNamespaces("fupa")(Standings), "Standings");
+export default withSpinner(
+  withProduction(withNamespaces("fupa")(Standings), "Standings")
+);

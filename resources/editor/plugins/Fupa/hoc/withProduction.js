@@ -1,12 +1,8 @@
 import React from "react";
 import InsertInProduction from "../components/TeamSelection/InsertInProduction/InsertInProduction";
 import ToggleTable from "../components/TeamSelection/ToggleTable/ToggleTable";
-import Spinner from "../UI/Spinner/Spinner";
 
 const withProduction = (WrappedComponent, TableName) => props => {
-  console.log(TableName, "TableName");
-  if (props.loading) return <Spinner />;
-
   return (
     <div className="Container">
       <InsertInProduction />

@@ -133,7 +133,7 @@
   -o-transition: all 200ms ease;
   transition: all 200ms ease;
   width: 400px;
-  height: calc(100% - 50px);
+  height: calc(100% - 38px);
   z-index: -1;
   background-color: #1b2939;
   padding: 0px 0 5px 0px;
@@ -176,7 +176,6 @@
 }
 
 .BackButtonContainer button {
-  margin-right: 5px;
   float: right;
   background-color: transparent;
   border: none;
@@ -190,6 +189,7 @@
 
 .BackButtonContainer {
   height: 25px;
-  position: absolute;
-  right: 10px;
+  position: relative;
+  width: 100%;
+  display: block;
 }

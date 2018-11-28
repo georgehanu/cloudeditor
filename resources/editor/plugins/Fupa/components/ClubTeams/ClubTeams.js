@@ -1,9 +1,9 @@
+import withSpinner from "../../../../hoc/withSpinner";
 const React = require("react");
 const { withNamespaces } = require("react-i18next");
 const { isEmpty, filter, propEq, map, pipe, pathOr, slice } = require("ramda");
 const { classes } = require("./clubTeams.css");
 
-const Spinner = require("../../UI/Spinner/Spinner");
 const Error = require("../../UI/Error/Error");
 const Back = require("../../UI/Back/Back");
 
@@ -46,8 +46,6 @@ const clubTeams = props => {
   if (hide) return null;
   if (props.error) {
     renderTeams = <Error errorMsg={t("clubTeamsFail")} />;
-  } else if (props.loading) {
-    renderTeams = <Spinner />;
   } else {
     const renderedClubTeams = pipe(
       slice(0, props.limit),
@@ -69,4 +67,4 @@ const clubTeams = props => {
   return component;
 };
 
-module.exports = withNamespaces("fupa")(clubTeams);
+module.exports = withSpinner(withNamespaces("fupa")(clubTeams));

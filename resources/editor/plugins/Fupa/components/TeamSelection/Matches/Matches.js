@@ -2,6 +2,7 @@ import React from "react";
 import { withNamespaces } from "react-i18next";
 import "./Matches.css";
 import withProduction from "../../../hoc/withProduction";
+import withSpinner from "../../../../../hoc/withSpinner";
 
 const scoreCard = {
   color: "#212121",
@@ -133,4 +134,6 @@ const Matches = props => {
   return <React.Fragment>{matches}</React.Fragment>;
 };
 
-export default withProduction(withNamespaces("fupa")(Matches), "Matches");
+export default withSpinner(
+  withProduction(withNamespaces("fupa")(Matches), "Matches")
+);

@@ -1,6 +1,7 @@
 import React from "react";
 import { withNamespaces } from "react-i18next";
 import withProduction from "../../../hoc/withProduction";
+import withSpinner from "../../../../../hoc/withSpinner";
 
 const showColumnsPlayers = [
   "ID",
@@ -142,4 +143,6 @@ const Players = props => {
   );
 };
 
-export default withProduction(withNamespaces("fupa")(Players), "Players");
+export default withSpinner(
+  withProduction(withNamespaces("fupa")(Players), "Players")
+);

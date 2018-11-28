@@ -6,7 +6,7 @@
 .Loader {
   color: #521751;
   font-size: 11px;
-  text-indent: -99999em;
+  /*text-indent: -99999em;*/
   margin: 55px auto;
   position: relative;
   width: 10em;
@@ -64,4 +64,15 @@
     -webkit-transform: rotate(360deg);
     transform: rotate(360deg);
   }
+}
+
+.SpinnerText {
+  display: block;
+  z-index: 2000;
+  color: 521751;
+  height: 30px;
+  left: 28px;
+  position: relative;
+  top: 46px;
+  font-size: 14px;
 }
