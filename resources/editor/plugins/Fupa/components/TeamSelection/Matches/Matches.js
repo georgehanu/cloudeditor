@@ -1,7 +1,7 @@
 import React from "react";
 import { withNamespaces } from "react-i18next";
-import Spinner from "../../../UI/Spinner/Spinner";
 import "./Matches.css";
+import withProduction from "../../../hoc/withProduction";
 
 const scoreCard = {
   color: "#212121",
@@ -23,28 +23,6 @@ const matchesWeekDay = [
   "Match_Saturday",
   "Match_Sunday"
 ];
-
-const fupaThStyle = {
-  backgroundColor: "#002e5f",
-  color: "white",
-  height: "35px",
-  lineHeight: "35px",
-  overflow: "hidden",
-  position: "relative",
-  textAlign: "left",
-  verticalAlign: "middle",
-  fontWeight: "normal",
-  color: "white",
-  margin: "0",
-  textTransform: "uppercase",
-  fontSize: "14px",
-  padding: "0 0 0 10px"
-};
-
-const fupaThStyleSpan = {
-  fontWeight: "bold",
-  marginRight: "2px"
-};
 
 const fupaTdBase = {
   padding: "5px",
@@ -152,34 +130,7 @@ const Matches = props => {
     );
   });
 
-  if (props.loading) return <Spinner />;
-
-  return (
-    <div className="Matches">
-      <div
-        className="MatchesTableContainer"
-        style={{
-          fontSize: "12px",
-          color: "#121212",
-          backgroundColor: "#ececec",
-          margin: "10px"
-        }}
-      >
-        <table
-          style={{ marginBottom: "9px", width: "100%", borderSpacing: "0" }}
-        >
-          <tbody>
-            <tr>
-              <th colSpan="11" style={fupaThStyle}>
-                <span style={fupaThStyleSpan}>{props.t("Matches")}</span>
-              </th>
-            </tr>
-            {matches}
-          </tbody>
-        </table>
-      </div>
-    </div>
-  );
+  return <React.Fragment>{matches}</React.Fragment>;
 };
 
-export default withNamespaces("fupa")(Matches);
+export default withProduction(withNamespaces("fupa")(Matches), "Matches");

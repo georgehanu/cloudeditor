@@ -10,6 +10,7 @@ const initialState = {
   currentTeam: null,
   teamStandings: [],
   teamMatches: [],
+  teamPlayers: [],
   clubsState: {
     error: false,
     loading: false
@@ -23,6 +24,10 @@ const initialState = {
     loading: false
   },
   teamMatchesState: {
+    error: false,
+    loading: false
+  },
+  teamPlayersState: {
     error: false,
     loading: false
   }
@@ -123,6 +128,10 @@ const changeCurrentTeam = (state, team) => {
     teamMatchesState: {
       ...state.teamMatchesState,
       loading: true
+    },
+    teamPlayersState: {
+      ...state.teamPlayersState,
+      loading: true
     }
   };
 };
@@ -188,6 +197,30 @@ const teamMatchesFailed = state => {
   };
 };
 
+const teamPlayersFulfilled = (state, players) => {
+  return {
+    ...state,
+    teamPlayers: players,
+    teamPlayersState: {
+      ...state.teamPlayersState,
+      loading: false,
+      error: false
+    }
+  };
+};
+
+const teamPlayersFailed = state => {
+  return {
+    ...state,
+    teamPlayers: [],
+    teamPlayersState: {
+      ...state.teamPlayersState,
+      loading: false,
+      error: true
+    }
+  };
+};
+
 module.exports = handleActions(
   {
     [actionTypes.CHANGE_SEARCH_VALUE]: (state, action) => {
@@ -236,6 +269,12 @@ module.exports = handleActions(
     },
     [actionTypes.FETCH_TEAM_MATCHES_FAILED]: state => {
       return teamMatchesFailed(state);
+    },
+    [actionTypes.FETCH_TEAM_PLAYERS_FULFILLED]: (state, action) => {
+      return teamPlayersFulfilled(state, action.payload);
+    },
+    [actionTypes.FETCH_TEAM_PLAYERS_FAILED]: state => {
+      return teamPlayersFailed(state);
     }
   },
   initialState

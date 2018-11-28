@@ -1,13 +1,14 @@
 import SidebarButton from "../components/sidebar/SidebarButton";
 import PaneContainer from "../components/sidebar/PaneContainer";
-
+import ToggleSidebar from "../components/sidebar/ToggleSidebar";
 const React = require("react");
 const PropTypes = require("prop-types");
 
 class SideBarContainer extends React.Component {
   state = {
     showPane: false,
-    pluginIndex: null
+    pluginIndex: null,
+    expanded: true
   };
   getToolConfig = tool => {
     if (tool.tool) {
@@ -26,6 +27,10 @@ class SideBarContainer extends React.Component {
     } else {
       this.setState({ showPane: true, pluginIndex });
     }
+  };
+
+  toggleSidebarExpanded = () => {
+    this.setState({ expanded: !this.state.expanded });
   };
 
   renderTools = () => {
@@ -47,7 +52,10 @@ class SideBarContainer extends React.Component {
               <span className="icon More printqicon-lefttriangle" />
             )}
           </SidebarButton>
-          <PaneContainer visible={i === this.state.pluginIndex ? true : false}>
+          <PaneContainer
+            visible={i === this.state.pluginIndex ? true : false}
+            clicked={() => this.showPlugin(i)}
+          >
             <Tool {...toolCfg} items={tool.items || []} />
           </PaneContainer>
         </li>
@@ -57,14 +65,17 @@ class SideBarContainer extends React.Component {
 
   render() {
     const Container = this.props.container;
-
+    const className =
+      this.props.className +
+      " " +
+      (this.state.expanded ? "SidebarExpanded" : "SidebarMinimized");
     return (
-      <div
-        id={this.props.id}
-        style={{ color: "blue" }}
-        className={this.props.className}
-      >
+      <div id={this.props.id} style={{ color: "blue" }} className={className}>
         <div id={this.props.id + "-container"} style={this.props.style}>
+          <ToggleSidebar
+            clicked={this.toggleSidebarExpanded}
+            expanded={this.state.expanded}
+          />
           <ul>{this.renderTools()}</ul>
         </div>
       </div>

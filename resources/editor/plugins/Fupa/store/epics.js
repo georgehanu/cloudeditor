@@ -12,7 +12,11 @@ const { ofType } = require("redux-observable");
 const actionTypes = require("./actionTypes");
 const actions = require("./actions");
 const axios = require("../axios");
-const { teamCompetitionSelector, teamSelector } = require("./selectors");
+const {
+  teamCompetitionSelector,
+  teamSelector,
+  currentTeamSelector
+} = require("./selectors");
 
 module.exports = {
   initSearchEpic: (action$, store) =>
@@ -99,7 +103,7 @@ module.exports = {
       switchMap(action => {
         const competition = teamCompetitionSelector(store.value);
         const team = teamSelector(store.value);
-        /* we need to make 2 calls - one for the previous games, one for the next games */
+        // we need to make 2 calls - one for the previous games, one for the next games
         return Rx.from(
           axios
             .get("/matches", {
@@ -148,6 +152,35 @@ module.exports = {
           catchError(error => {
             console.log(error, "ERROR");
             return Rx.of(actions.fetchTeamMatchesFailed());
+          })
+        );
+      })
+    ),
+  fetchClubTeamPlayersEpic: (action$, store) =>
+    action$.pipe(
+      ofType(actionTypes.CHANGE_CURRENT_TEAM),
+      switchMap(action => {
+        const team = currentTeamSelector(store.value);
+        return Rx.from(
+          axios
+            .get("/players", {
+              params: {
+                team: team
+              }
+            })
+            .then(res => res.data)
+        ).pipe(
+          switchMap(data => {
+            if (data.errors === false)
+              return Rx.of(actions.fetchTeamPlayersFulfilled(data.data));
+
+            console.log(data);
+
+            return Rx.of(actions.fetchTeamPlayersFailed());
+          }),
+          catchError(error => {
+            console.log(error);
+            return Rx.of(actions.fetchTeamPlayersFulfilled());
           })
         );
       })

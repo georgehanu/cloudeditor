@@ -45,7 +45,8 @@
 }
 
 #sidebar-wrapper-container {
-  width: 250px;
+  /*width: 250px;*/
+  width: 100%;
   position: absolute;
   display: block;
   background-color: #213246;
@@ -83,6 +84,7 @@
   background-color: #1b2939;
   border: none;
   outline: none;
+  overflow: hidden;
 }
 
 #sidebar-wrapper-container .SidebarButton .icon {
@@ -124,17 +126,17 @@
   position: absolute;
   right: -400px;
   top: 0;
-  overflow: hidden;
+  overflow: auto;
   -webkit-transition: all 200ms ease;
   -moz-transition: all 200ms ease;
   -ms-transition: all 200ms ease;
   -o-transition: all 200ms ease;
   transition: all 200ms ease;
   width: 400px;
-  height: 100%;
+  height: calc(100% - 50px);
   z-index: -1;
   background-color: #1b2939;
-  padding: 5px 0 5px 0px;
+  padding: 0px 0 5px 0px;
 }
 
 #sidebar-wrapper-container .PaneHidden {
@@ -145,4 +147,49 @@
 #sidebar-wrapper-container .SidebarButtonSelected,
 #sidebar-wrapper-container .SidebarButton:hover {
   color: #99d122;
+}
+
+.ToggleSidebarContainer {
+  height: 50px;
+}
+
+#sidebar-wrapper-container .PaneContainer {
+  margin-top: 50px;
+  background-color: white;
+}
+
+.ToggleSidebarContainer button {
+  margin-right: 10px;
+  float: right;
+  background-color: transparent;
+  border: none;
+  outline: none;
+  color: rgb(255, 255, 255);
+  margin-top: 20px;
+}
+.ToggleSidebarContainer button:hover {
+  cursor: pointer;
+}
+
+#wrapper.toggled #sidebar-wrapper.SidebarMinimized {
+  width: 90px;
+}
+
+.BackButtonContainer button {
+  margin-right: 5px;
+  float: right;
+  background-color: transparent;
+  border: none;
+  outline: none;
+  color: black;
+  margin-top: 5px;
+}
+.BackButtonContainer button:hover {
+  cursor: pointer;
+}
+
+.BackButtonContainer {
+  height: 25px;
+  position: absolute;
+  right: 10px;
 }

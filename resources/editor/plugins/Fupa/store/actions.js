@@ -14,7 +14,9 @@ const actionCreators = createActions(
   actionTypes.FETCH_TEAM_STANDINGS_FULFILLED,
   actionTypes.FETCH_TEAM_STANDINGS_FAILED,
   actionTypes.FETCH_TEAM_MATCHES_FULFILLED,
-  actionTypes.FETCH_TEAM_MATCHES_FAILED
+  actionTypes.FETCH_TEAM_MATCHES_FAILED,
+  actionTypes.FETCH_TEAM_PLAYERS_FULFILLED,
+  actionTypes.FETCH_TEAM_PLAYERS_FAILED
 );
 
 module.exports = actionCreators;

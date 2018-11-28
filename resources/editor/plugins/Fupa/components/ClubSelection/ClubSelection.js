@@ -69,14 +69,16 @@ const clubSelection = props => {
     map(clubItem)
   )(clubs);
   component = (
-    <table>
-      <tbody>
-        <tr>
-          <th colSpan="2">{t("clubsTableTitle")}</th>
-        </tr>
-        {renderedClubs}
-      </tbody>
-    </table>
+    <div className="ClubSearch">
+      <table>
+        <tbody>
+          <tr>
+            <th colSpan="2">{t("clubsTableTitle")}</th>
+          </tr>
+          {renderedClubs}
+        </tbody>
+      </table>
+    </div>
   );
   return component;
 };

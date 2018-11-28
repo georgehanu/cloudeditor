@@ -59,10 +59,10 @@ const clubTeams = props => {
   component = (
     <div className="verein_teams_container">
       <Back msg={t("Back to Clubs")} clicked={props.backToSearch} />
-      <div>
+      <div className="ClubName">
         {t("Club")}: <strong>{club.name}</strong>
       </div>
-      <div>{t("Team")}:</div>
+      <div className="ClubTeam">{t("Team")}:</div>
       {renderTeams}
     </div>
   );

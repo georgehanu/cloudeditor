@@ -4,8 +4,8 @@ require("./Back.css");
 
 const back = props => {
   return (
-    <div className="backButton" onClick={() => props.clicked()}>
-      {props.msg}
+    <div className="backButton">
+      <button onClick={() => props.clicked()}>{props.msg}</button>
     </div>
   );
 };

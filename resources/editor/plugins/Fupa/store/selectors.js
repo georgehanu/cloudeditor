@@ -21,6 +21,9 @@ const teamStandingsSelector = state =>
 const teamMatchesStateSelector = state =>
   pathOr(null, ["fupa", "teamMatchesState"], state);
 const teamMatchesSelector = state => pathOr([], ["fupa", "teamMatches"], state);
+const teamPlayersStateSelector = state =>
+  pathOr(null, ["fupa", "teamPlayersState"], state);
+const teamPlayersSelector = state => pathOr([], ["fupa", "teamPlayers"], state);
 
 const teamSelector = createSelector(
   [teamsSelector, currentTeamSelector],
@@ -50,5 +53,7 @@ module.exports = {
   teamSelector,
   teamCompetitionSelector,
   teamMatchesStateSelector,
-  teamMatchesSelector
+  teamMatchesSelector,
+  teamPlayersStateSelector,
+  teamPlayersSelector
 };
