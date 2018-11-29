@@ -259,13 +259,13 @@ module.exports = handleActions(
     [DAG_CHANGE_INPUT]: (state, action) => {
       let newItems = [...state.data.items];
       let index = state.data.items.findIndex(el => {
-        return el.name === action.payload.target.name;
+        return el.name === action.payload.name;
       });
       if (index === -1) return state;
 
       newItems[index] = {
         ...newItems[index],
-        text: action.payload.target.value
+        text: action.payload.value
       };
 
       return {

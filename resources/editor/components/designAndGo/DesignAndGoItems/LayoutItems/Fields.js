@@ -34,7 +34,10 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    dagChangeInput: field => dispatch(dagChangeInput(field))
+    dagChangeInput: event =>
+      dispatch(
+        dagChangeInput({ name: event.target.name, value: event.target.value })
+      )
   };
 };
 
