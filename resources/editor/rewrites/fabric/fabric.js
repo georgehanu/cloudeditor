@@ -765,9 +765,7 @@ fabric.Textbox.prototype.initialize = (function(_initialize) {
     ) {
       this.designerCallbacks.updateObjectProps({
         id: this.id,
-        props: {
-          fontSize: this.getFontSizePdf()
-        }
+        props: { fontSize: this.getFontSizePdf(), text: this.text }
       });
     }
   };

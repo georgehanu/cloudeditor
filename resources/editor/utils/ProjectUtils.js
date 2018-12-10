@@ -384,6 +384,19 @@ const getRandomProject = cfg => {
       "Lorem\nIpsum is simply dummy text of the \nprinting and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever \nsince the 1500s, when an unknown printer took a galley of type \nand scrambled it to make a type specimen book ",
     fill: "red"
   });
+  let text_variable = getEmptyObject({
+    type: "textbox",
+    width: 400,
+    height: 400,
+    left: 100,
+    top: 400,
+    fontSize: 14,
+    bold: false,
+    italic: false,
+    fontFamily: "Roboto-Regular",
+    text: "His Name is %Full Name%",
+    fill: "red"
+  });
   let text2 = getEmptyObject({
     type: "textbox",
     width: 400,
@@ -421,7 +434,11 @@ const getRandomProject = cfg => {
     src: "http://localhost:8080/alfa006_top.svg"
   });
 
-  page1 = { ...page1, id: "page_1", objectsIds: [img2.id, text2.id] };
+  page1 = {
+    ...page1,
+    id: "page_1",
+    objectsIds: [img2.id, text2.id, text_variable.id]
+  };
 
   page4 = {
     ...page4,
@@ -453,7 +470,8 @@ const getRandomProject = cfg => {
       [text1.id]: text1,
       [text2.id]: text2,
       [text22.id]: text22,
-      [image_22.id]: image_22
+      [image_22.id]: image_22,
+      [text_variable.id]: text_variable
     },
     pagesOrder: [page1.id, page2.id, page3.id, page4.id],
     activePage: page3.id,
@@ -609,13 +627,24 @@ const getRandomUI = cfg => {
     }
   };
 };
-
+const getEmptyVariables = cfg => {
+  return [
+    {
+      name: "FullName",
+      display_name: "Full Name",
+      prefix: "",
+      sufix: "",
+      value: "Marius Turcu"
+    }
+  ];
+};
 const ProjectUtils = {
   getEmptyProject,
   getRandomProject,
   getEmptyPage,
   getEmptyObject,
   getEmptyUI,
+  getEmptyVariables,
   getRandomUI,
   getEmptyColor,
   getEmptyFont

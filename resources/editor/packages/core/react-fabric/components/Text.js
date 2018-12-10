@@ -7,6 +7,7 @@ const FabricObject = require("./fabricObject");
 class Text extends FabricObject {
   constructor(props) {
     super(props);
+
     this._initInstance();
   }
 

@@ -3,6 +3,8 @@ const logger = require("../../../../utils/LoggerUtils");
 const { TextboxTypes, TextboxDefaults } = require("./types/textbox");
 const { debounce } = require("underscore");
 const Text = require("./Text");
+const { forEach } = require("ramda");
+
 class Textbox extends Text {
   _initInstance() {
     this.setMapValueStateToFabric({
@@ -25,13 +27,30 @@ class Textbox extends Text {
       underline: "underline"
     });
 
-    let props = this.props;
+    let props = { ...this.props };
+    delete props.variables;
+    delete props.dispatch;
+
+    props.text = this.checkForVariables(this.props.variables, props.text);
+
     props = this._mapStatePropsToFabric(props);
-    this.instance = new fabric.Textbox(this.props.text, props);
+    this.instance = new fabric.Textbox(props.text, props);
     this.attachEvents();
     this.instance.isLoaded = 1;
     this._applyProps(props);
   }
+  checkForVariables(variables, text) {
+    if (variables && variables.length) {
+      forEach(variable => {
+        text = text.replace(
+          new RegExp("%" + variable.display_name + "%", "g"),
+          variable.prefix + variable.value + variable.sufix
+        );
+      }, variables);
+    }
+    return text;
+  }
+  deleteSkipProps(props) {}
   attachEvents() {
     this.instance.on(
       "changed",

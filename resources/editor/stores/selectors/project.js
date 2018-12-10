@@ -200,6 +200,7 @@ const uiSelector = state => (state && state.ui) || {};
 const uiScaleSelector = createSelector([uiSelector], ui => {
   return ui.workArea.scale;
 });
+const variablesSelector = state => (state && state.variables) || [];
 module.exports = {
   activePageSelector,
   activePageIdSelector,
@@ -212,5 +213,6 @@ module.exports = {
   uiScaleSelector,
   groupsSelector,
   selectedPageIdSelector,
-  zoomSelector
+  zoomSelector,
+  variablesSelector
 };

@@ -1,6 +1,10 @@
 import React, { Component } from "react";
-
+const {
+  variablesSelector
+} = require("../../../../../stores/selectors/project");
 const { Textbox } = require("../../../react-fabric");
+
+const { connect } = require("react-redux");
 const { fabric } = require("fabric");
 const { pushLoadedFont, isLoadedFont } = require("../../../../../globals");
 class TextLoad extends Component {
@@ -39,4 +43,15 @@ class TextLoad extends Component {
     return render;
   }
 }
-module.exports = TextLoad;
+//module.exports = TextLoad;
+
+const mapStateToProps = state => {
+  return {
+    variables: variablesSelector(state)
+  };
+};
+
+module.exports = connect(
+  mapStateToProps,
+  null
+)(TextLoad);

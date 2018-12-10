@@ -16,7 +16,9 @@ class FabricObject {
     key: true,
     style: true,
     image: true,
-    designerCallbacks: true
+    designerCallbacks: true,
+    dispatch: true,
+    variables: true
   };
   mapValueStateToFabric = {};
   mapKeysStateToFabric = {};
