@@ -1,10 +1,20 @@
 const React = require("react");
 const PropTypes = require("prop-types");
 const { connect } = require("react-redux");
+const randomColor = require("randomcolor");
 
 class Html5Renderer extends React.Component {
   render() {
-    return <div className="canvas-container" ref={this.canvasContainerRef} />;
+    const style = {
+      backgroundColor: randomColor()
+    };
+    return (
+      <div
+        style={style}
+        className="canvas-container"
+        ref={this.canvasContainerRef}
+      />
+    );
   }
 }
 Html5Renderer.propTypes = {};

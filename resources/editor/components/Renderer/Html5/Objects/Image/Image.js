@@ -3,6 +3,7 @@ const randomColor = require("randomcolor");
 const CropperImage = require("../../CropperImage/CropperImage");
 
 class ImageBlock extends React.PureComponent {
+  state = {};
   constructor(props) {
     super(props);
     this.el = React.createRef();

@@ -12,23 +12,24 @@ const {
   values,
   head,
   keys,
-  forEach
+  forEach,
+  pathOr
 } = require("ramda");
 
-const pagesSelector = state =>
-  (state && state.project && state.project.pages) || {};
-const groupsSelector = state =>
-  (state &&
-    state.project.configs &&
-    state.project.configs.document &&
-    state.project.configs.document.groups) ||
-  {};
-const useTrimboxSelector = state =>
-  (state &&
-    state.project.configs &&
-    state.project.configs.document &&
-    state.project.configs.document.showTrimbox) ||
-  false;
+const pagesSelector = state => {
+  return pathOr({}, ["project", "pages"], state);
+};
+const groupsSelector = state => {
+  return pathOr({}, ["project", "configs", "document", "groups"], state);
+};
+const useTrimboxSelector = state => {
+  return pathOr(
+    false,
+    ["project", "configs", "document", "showTrimbox"],
+    state
+  );
+};
+
 const objectsSelector = state =>
   (state && state.project && state.project.objects) || {};
 const activePageIdSelector = state =>
